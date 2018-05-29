@@ -43,10 +43,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Hsp.Novels.Common\Hsp.Novels.Common\Hsp.Novels.Common.csproj">
-      <Project>{52661eb6-7610-41dd-b196-0d2140bcf265}</Project>
-      <Name>Hsp.Novels.Common</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\Hsp.Novels.DbUtility\Hsp.Novels.DbUtility\Hsp.Novels.DbUtility.csproj">
       <Project>{b35afbb9-3966-412b-8c16-4017c2e867f5}</Project>
       <Name>Hsp.Novels.DbUtility</Name>
