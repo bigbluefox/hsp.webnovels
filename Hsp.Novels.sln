@@ -1,0 +1,71 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "Hsp.Novels.Web", "http://localhost:10240", "{151525FF-C026-41A0-A3B0-06DBCA21F00E}"
+	ProjectSection(WebsiteProperties) = preProject
+		UseIISExpress = "true"
+		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.5"
+		ProjectReferences = "{5f42bb4b-5935-4b6e-91c4-3232fff3980a}|Hsp.Novels.Bll.dll;{e17eaa52-938c-4822-b1ef-01026820f3ca}|Hsp.Novels.Common.dll;{cee53ddb-ef50-4524-961f-1a9e8ed62f69}|Hsp.Novels.Model.dll;{DFC92AF7-AFBE-429A-9263-A4B205F33AE9}|Hsp.Novels.Dal.dll;{49E67536-6BF3-4AE2-885A-7915D6E8C8A5}|Hsp.Novels.DbUtility.dll;"
+		Debug.AspNetCompiler.VirtualPath = "/localhost_10240"
+		Debug.AspNetCompiler.PhysicalPath = "Hsp.Novels.Web\"
+		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_10240\"
+		Debug.AspNetCompiler.Updateable = "true"
+		Debug.AspNetCompiler.ForceOverwrite = "true"
+		Debug.AspNetCompiler.FixedNames = "false"
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.VirtualPath = "/localhost_10240"
+		Release.AspNetCompiler.PhysicalPath = "Hsp.Novels.Web\"
+		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_10240\"
+		Release.AspNetCompiler.Updateable = "true"
+		Release.AspNetCompiler.ForceOverwrite = "true"
+		Release.AspNetCompiler.FixedNames = "false"
+		Release.AspNetCompiler.Debug = "False"
+		SlnRelativePath = "Hsp.Novels.Web\"
+		DefaultWebSiteLanguage = "Visual C#"
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hsp.Novels.Bll", "Hsp.Novels.Bll\Hsp.Novels.Bll.csproj", "{5F42BB4B-5935-4B6E-91C4-3232FFF3980A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hsp.Novels.Dal", "Hsp.Novels.Dal\Hsp.Novels.Dal.csproj", "{DFC92AF7-AFBE-429A-9263-A4B205F33AE9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hsp.Novels.Model", "Hsp.Novels.Model\Hsp.Novels.Model.csproj", "{CEE53DDB-EF50-4524-961F-1A9E8ED62F69}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hsp.Novels.DbUtility", "Hsp.Novels.DbUtility\Hsp.Novels.DbUtility.csproj", "{49E67536-6BF3-4AE2-885A-7915D6E8C8A5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hsp.Novels.Common", "Hsp.Novels.Common\Hsp.Novels.Common.csproj", "{E17EAA52-938C-4822-B1EF-01026820F3CA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{151525FF-C026-41A0-A3B0-06DBCA21F00E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{151525FF-C026-41A0-A3B0-06DBCA21F00E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{151525FF-C026-41A0-A3B0-06DBCA21F00E}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{151525FF-C026-41A0-A3B0-06DBCA21F00E}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{5F42BB4B-5935-4B6E-91C4-3232FFF3980A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5F42BB4B-5935-4B6E-91C4-3232FFF3980A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5F42BB4B-5935-4B6E-91C4-3232FFF3980A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5F42BB4B-5935-4B6E-91C4-3232FFF3980A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DFC92AF7-AFBE-429A-9263-A4B205F33AE9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DFC92AF7-AFBE-429A-9263-A4B205F33AE9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DFC92AF7-AFBE-429A-9263-A4B205F33AE9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DFC92AF7-AFBE-429A-9263-A4B205F33AE9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CEE53DDB-EF50-4524-961F-1A9E8ED62F69}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CEE53DDB-EF50-4524-961F-1A9E8ED62F69}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CEE53DDB-EF50-4524-961F-1A9E8ED62F69}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CEE53DDB-EF50-4524-961F-1A9E8ED62F69}.Release|Any CPU.Build.0 = Release|Any CPU
+		{49E67536-6BF3-4AE2-885A-7915D6E8C8A5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{49E67536-6BF3-4AE2-885A-7915D6E8C8A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{49E67536-6BF3-4AE2-885A-7915D6E8C8A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{49E67536-6BF3-4AE2-885A-7915D6E8C8A5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E17EAA52-938C-4822-B1EF-01026820F3CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E17EAA52-938C-4822-B1EF-01026820F3CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E17EAA52-938C-4822-B1EF-01026820F3CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E17EAA52-938C-4822-B1EF-01026820F3CA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
