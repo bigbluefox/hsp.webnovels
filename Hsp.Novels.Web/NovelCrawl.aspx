@@ -77,34 +77,61 @@
         <p class="lead">Use this document as a way to quickly start any new project.<br> All you get is this text and a mostly barebones HTML document.
         </p>--%>
 
-        <form>
+        <form class="form-horizontal">
             <div class="form-group">
-                <label for="txtChapterUrl">Url</label>
-                <input type="text" class="form-control" id="txtChapterUrl" placeholder="Url" value="https://www.dashubao.net/book/85/85429/27100366.html">
+                <label for="txtChapterUrl" class="col-xs-6 col-sm-2 control-label">Url</label>
+                <div class="col-xs-6 col-sm-10">
+                    <input type="text" class="form-control" id="txtChapterUrl" placeholder="Url" value="https://www.dashubao.net/book/85/85429/27100366.html">
+                </div>
+
             </div>
             <div class="form-group">
-                <label for="txtContentName">ContentName</label>
-                <input type="text" class="form-control" id="txtContentName" placeholder="ContentName" value=".novel .yd_text2 p">
+                <label for="txtContentName"class="col-xs-6 col-sm-2 control-label">ContentName</label>
+                <div class="col-xs-6 col-sm-4">
+                    <input type="text" class="form-control" id="txtContentName" placeholder="ContentName" value=".yd_text2 p">
+                </div>
+                <label for="txtHeaderName" class="col-xs-6 col-sm-2 control-label">HeaderName</label>
+                <div class="col-xs-6 col-sm-4">
+                    <input type="text" class="form-control" id="txtHeaderName" placeholder="HeaderName" value=".oneline">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="txtNextName"class="col-xs-6 col-sm-2 control-label">NextName</label>
+                <div class="col-xs-6 col-sm-4">
+                    <input type="text" class="form-control" id="txtNextName" placeholder="NextName" value=".pereview a:last-child">
+                </div>
+                <label for="txtNextName" class="col-xs-6 col-sm-2 control-label"></label>
+                <div class="col-xs-6 col-sm-4">
+                    <button type="button" class="btn btn-default">
+                        <span class="glyphicon glyphicon-picture" aria-hidden="true"></span> Crawl
+                    </button>
+                </div>
             </div>
 
             <div class="form-group">
-                <label for="txtHeaderName">HeaderName</label>
-                <input type="text" class="form-control" id="txtHeaderName" placeholder="HeaderName" value=".novel .oneline">
-            </div>
+                <label for="txtTitle" class="col-xs-6 col-sm-2 control-label">Title</label>
+                <div class="col-xs-6 col-sm-4">
+                    <input type="text" class="form-control" id="txtTitle" placeholder="Title" value="">
+                </div>
+                <label for="txtNextUrl"class="col-xs-6 col-sm-2 control-label">NextUrl</label>
+                <div class="col-xs-6 col-sm-4">
+                    <input type="text" class="form-control" id="txtNextUrl" placeholder="NextUrl" value="">
+                </div>
+            </div>            
+
             <div class="form-group">
-                <label for="txtNextName">NextName</label>
-                <input type="text" class="form-control" id="txtNextName" placeholder="NextName" value=".novel .pereview a:last-child">
+                <label for="txtContent" class="col-xs-6 col-sm-2 control-label">Content</label>
+                <div class="col-xs-6 col-sm-10">
+                    <textarea class="form-control" id="txtContent" placeholder="Content" rows="10"></textarea>
+                </div>
             </div>
             
-            <div class="form-group">
-                <label for="txtContent">Content</label>
-                <textarea class="form-control" id="txtContent" placeholder="Content" rows="10"></textarea>
-            </div>
-
-            <button type="button" class="btn btn-default">Submit</button>
         </form>
 
-
+    </div>
+    
+    <div class="row novel">
+            
     </div>
 
 </div><!-- /.container -->
@@ -118,145 +145,218 @@
 <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
 <script src="/Scripts/ie10-viewport-bug-workaround.js"></script>
-    
-    <script type="text/javascript">
+<script src="/Scripts/Hsp.Base.js"></script>
 
-        $(function() {
-            $("form button").unbind('click').bind('click', function () {
+<script type="text/javascript">
 
-                var chapterUrl = $("#txtChapterUrl").val();
-                chapterUrl = encodeURIComponent(chapterUrl);
-                var contentName = $("#txtContentName").val();
-                var headerName = $("#txtHeaderName").val();
-                var nextName = $("#txtNextName").val();
+    var isEnd = false;
 
-                getSource();
+    $(function() {
+        $("form button").unbind('click').bind('click', function() {
 
+            RecursiveCrawl();
 
-                //$.ajax({
-                //    url: '/Handler/Handler.ashx?rnd=' + (Math.random() * 16),
-                //    type: 'GET',
-                //    data: { chapterUrl: chapterUrl, contentName: contentName, headerName: headerName, nextName: nextName },
-                //    success: function (rst) {
-
-                //        alert(rst);
-
-                //        //if (rst.IsSuccess) {
-
-
-                //        //    //$('.Detail-heading').html(rst.Data.ArticleDesc);
-                //        //    //$('.detail-article').html(rst.Data.Contents);
-
-                //        //} else {
-                //        //    //$.messager.alert({ title: "操作提示", msg: rst.Message, showType: "error" });
-                //        //}
-                //    }
-                //    , complete: function (xhr, errorText, errorType) {
-
-                //        //debugger;
-                //        //var p = "";
-
-                //        alert("请求完成后");
-                //    }
-                //    , error: function(xhr, errorText, errorType) {
-                //        alert("请求错误后");
-                //    }
-                //    , beforSend: function() {
-                //        alert("请求之前");
-                //    }
-                //});
+            //$.ajax({
+            //    url: '/Handler/Handler.ashx?rnd=' + (Math.random() * 16),
+            //    type: 'GET',
+            //    data: { chapterUrl: chapterUrl, contentName: contentName, headerName: headerName, nextName: nextName },
+            //    success: function (rst) {
+            //        alert(rst);
+            //        //if (rst.IsSuccess) {
+            //        //    //$('.Detail-heading').html(rst.Data.ArticleDesc);
+            //        //    //$('.detail-article').html(rst.Data.Contents);
+            //        //} else {
+            //        //    //$.messager.alert({ title: "操作提示", msg: rst.Message, showType: "error" });
+            //        //}
+            //    }
+            //    , complete: function (xhr, errorText, errorType) {
+            //        //debugger;
+            //        //var p = "";
+            //        alert("请求完成后");
+            //    }
+            //    , error: function(xhr, errorText, errorType) {
+            //        alert("请求错误后");
+            //    }
+            //    , beforSend: function() {
+            //        alert("请求之前");
+            //    }
+            //});
 
 
-            });
         });
+    });
 
-        //用于创建XMLHttpRequest对象 
-        function createXmlHttp() {
-            //根据window.XMLHttpRequest对象是否存在使用不同的创建方式 
-            if (window.XMLHttpRequest) {
-                xmlHttp = new XMLHttpRequest(); //FireFox、Opera等浏览器支持的创建方式 
-            } else {
-                xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");//IE浏览器支持的创建方式 
-            }
-        }
+    function RecursiveCrawl() {
 
-        //直接通过XMLHttpRequest对象获取远程网页源代码 
-        function getSource() {
-            var url = document.getElementById("txtChapterUrl").value; //获取目标地址信息 
-            //地址为空时提示用户输入 
-            if (url == "") {
-                alert("请输入网页地址。");
-                return;
-            }
-            document.getElementById("txtContent").value = "正在加载……"; //提示正在加载 
-            createXmlHttp(); //创建XMLHttpRequest对象 
-            xmlHttp.onreadystatechange = writeSource; //设置回调函数 
-            xmlHttp.open("GET", url, true);
-            xmlHttp.send(null);
-        }
+        if (isEnd) return;
 
-        //将远程网页源代码写入页面文字区域 
-        function writeSource() {
-            if (xmlHttp.readyState == 4) {
-
-                var contentName = $("#txtContentName").val();
-
-                var html = xmlHttp.responseText;
-
-                var obj = $(html);//包装数据  
-                //(需要获取的对应块（如class='aa')  
-                var $html = $(contentName, obj);
-                //console.log($html.html());
-                //获取对应块中的内容  
-                var value = $html.html();
-
-                document.getElementById("txtContent").value = value;
-            }
-        }
+        var chapterUrl = $("#txtChapterUrl").val();
+        //chapterUrl = encodeURIComponent(chapterUrl);
+        var contentName = $("#txtContentName").val();
+        var headerName = $("#txtHeaderName").val();
+        var nextName = $("#txtNextName").val();
 
         $.ajax({
-            url: url,
+            url: chapterUrl,
             type: "GET",
             dataType: "html",
             success: function (result) {
-                console.log(result);
-                var Obj = $("<code></code>").append($(result));//包装数据  
-                //(需要获取的对应块（如class='aa')  
-                var $html = $(".aa", Obj);
-                console.log($html.html());
-                //获取对应块中的内容  
-                var value = $html.html();
-                //获得内容可以用append插入对应的div中，也可以用html（value）直接添加  
+
+                //正则表达式获取body块  
+                var reg = /<body>[\s\S]*<\/body>/g;
+                var html = reg.exec(result)[0];
+
+                var $html = $(contentName, $(html));
+                console.log($html);
+
+                var contents = $("#txtContent").val();
+
+                var $header = $(headerName, $(html));
+                console.log($header);
+
+                var txtTitle = $($header).text().trim();
+
+                // 章节标题修正
+                //var arrTitle = txtTitle.split(" ");
+                //var chapterReg = /[第]{0,1}[\s\S]*[章]{0,1}/g;
+                //var chapterNum = chapterReg.exec(arrTitle[0])[0];
+
+                //if (arrTitle[0] != "楔子"){
+                //    var chapterTitle = arrTitle.length == 1 ? "" : arrTitle[1];
+                //    txtTitle = "第" + chapterNum + "章 " + chapterTitle;
+                //}
+
+                //debugger;
+
+                var chapterReg = /([第]{0,1})([○零一二三四五六七八九十百千]{1,})([章]{0,1}[ ]{0,1}[：:]{0,1})([\s\S]*?)/;
+                txtTitle = txtTitle.replace(chapterReg, "第$2章 $4");
+
+                //var testreg = txtTitle.replace(chapterReg, "$1-$2-$3-$4");
+
+                $("#txtTitle").val(txtTitle);
+
+                contents += txtTitle + "\n";
+
+                $.each($html, function () {
+                    contents += $(this).text().trim() + "\n";
+                });
+                $("#txtContent").val(contents);
+
+                $nextUrl = $(nextName, $(html));
+                console.log($nextUrl);
+
+                var nextUrl = $nextUrl[0].href;
+                var nextUrlTitle = $nextUrl[0].innerText;
+                $("#txtNextUrl").val(nextUrl);
+                $("#txtChapterUrl").val(nextUrl);
+
+
+                // 添加小说内容
+
+                var $novelBody = $(".container .novel");
+                $("<h1>" + txtTitle + "</h1>").appendTo($novelBody);
+                $.each($html, function () {
+                    $(this).appendTo($novelBody);
+                });
+
+                if (nextUrlTitle.indexOf("下一章") == -1) {
+                    isEnd = true;
+                }
+
+                RecursiveCrawl(); // 递归查询
             }
         });
+    }
 
-        //2，通过正则表达式来实现
-        //[plain] view plain copy
-        $.ajax({  
-            url:url,  
-            type:"GET",  
-            dataType:"html",  
-            success:function(result){  
-                console.log(result);  
-                //正则表达式获取body块  
-                var reg = /[\s\S]*<\/body>/g;  
-                var html = reg.exec(result)[0];  
-                //然后用filter来筛选对应块对象，如：class='aa'  
-                var aa = $(html).filter(".aa");  
-                var aahtml = aa.html();  
-                console.log(aahtml);  
-                //获取内容后可以插入当前html中。。。  
-            }  
-        });  
-        //以上两种方式亲测过可用
-        //3，可以通过jquery load()方法中添加标签来获取其中部分加载
-        //[plain] view plain copy
-        //a1为当前页加载的DIV块，.b为加载html中class=b的块  
-        $(".a1").load("userInfo.html .b");  
 
-    </script>
-    
-    
+
+    //用于创建XMLHttpRequest对象 
+    function createXmlHttp() {
+        //根据window.XMLHttpRequest对象是否存在使用不同的创建方式 
+        if (window.XMLHttpRequest) {
+            xmlHttp = new XMLHttpRequest(); //FireFox、Opera等浏览器支持的创建方式 
+        } else {
+            xmlHttp = new ActiveXObject("Microsoft.XMLHTTP"); //IE浏览器支持的创建方式 
+        }
+    }
+
+    //直接通过XMLHttpRequest对象获取远程网页源代码 
+    function getSource() {
+        var url = document.getElementById("txtChapterUrl").value; //获取目标地址信息 
+        //地址为空时提示用户输入 
+        if (url == "") {
+            alert("请输入网页地址。");
+            return;
+        }
+        document.getElementById("txtContent").value = "正在加载……"; //提示正在加载 
+        createXmlHttp(); //创建XMLHttpRequest对象 
+        xmlHttp.onreadystatechange = writeSource; //设置回调函数 
+        xmlHttp.open("GET", url, true);
+        xmlHttp.send(null);
+    }
+
+    //将远程网页源代码写入页面文字区域 
+    function writeSource() {
+        if (xmlHttp.readyState == 4) {
+
+            var contentName = $("#txtContentName").val();
+
+            var html = xmlHttp.responseText;
+
+            var obj = $(html); //包装数据  
+            //(需要获取的对应块（如class='aa')  
+            var $html = $(contentName, obj);
+            //console.log($html.html());
+            //获取对应块中的内容  
+            var value = $html.html();
+
+            document.getElementById("txtContent").value = value;
+        }
+    }
+
+    //$.ajax({
+    //    url: url,
+    //    type: "GET",
+    //    dataType: "html",
+    //    success: function (result) {
+    //        console.log(result);
+    //        var Obj = $("<code></code>").append($(result));//包装数据  
+    //        //(需要获取的对应块（如class='aa')  
+    //        var $html = $(".aa", Obj);
+    //        console.log($html.html());
+    //        //获取对应块中的内容  
+    //        var value = $html.html();
+    //        //获得内容可以用append插入对应的div中，也可以用html（value）直接添加  
+    //    }
+    //});
+
+    //2，通过正则表达式来实现
+    //[plain] view plain copy
+    //$.ajax({  
+    //    url:url,  
+    //    type:"GET",  
+    //    dataType:"html",  
+    //    success:function(result){  
+    //        console.log(result);  
+    //        //正则表达式获取body块  
+    //        var reg = /[\s\S]*<\/body>/g;  
+    //        var html = reg.exec(result)[0];  
+    //        //然后用filter来筛选对应块对象，如：class='aa'  
+    //        var aa = $(html).filter(".aa");  
+    //        var aahtml = aa.html();  
+    //        console.log(aahtml);  
+    //        //获取内容后可以插入当前html中。。。  
+    //    }  
+    //});  
+
+    //以上两种方式亲测过可用
+    //3，可以通过jquery load()方法中添加标签来获取其中部分加载
+    //[plain] view plain copy
+    //a1为当前页加载的DIV块，.b为加载html中class=b的块  
+    //$(".a1").load("userInfo.html .b");  
+
+</script>
+
 
 </body>
 </html>

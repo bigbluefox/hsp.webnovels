@@ -195,7 +195,7 @@ Date.prototype.toDateTimeString = function (type) {
 
 /* 让firefox支持 event全局对象，srcElement对象  */
 function __firefox() {
-    if (!HSP.Browser.IS_IE) {
+    if (!Hsp.Browser.IS_IE) {
         HTMLElement.prototype.__defineGetter__("runtimeStyle", __element_style);
         window.constructor.prototype.__defineGetter__("event", __window_event);
         Event.prototype.__defineGetter__("srcElement", __event_srcElement);
