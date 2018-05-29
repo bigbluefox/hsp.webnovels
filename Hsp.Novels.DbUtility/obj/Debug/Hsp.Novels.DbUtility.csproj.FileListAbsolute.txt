@@ -1,0 +1,10 @@
+E:\My Documents\GitHub\hsp.webnovels\Hsp.Novels.DbUtility\bin\Debug\Hsp.Novels.DbUtility.dll
+E:\My Documents\GitHub\hsp.webnovels\Hsp.Novels.DbUtility\bin\Debug\Hsp.Novels.DbUtility.pdb
+E:\My Documents\GitHub\hsp.webnovels\Hsp.Novels.DbUtility\bin\Debug\log4net.dll
+E:\My Documents\GitHub\hsp.webnovels\Hsp.Novels.DbUtility\bin\Debug\Microsoft.Practices.EnterpriseLibrary.Common.dll
+E:\My Documents\GitHub\hsp.webnovels\Hsp.Novels.DbUtility\bin\Debug\Microsoft.Practices.EnterpriseLibrary.Data.dll
+E:\My Documents\GitHub\hsp.webnovels\Hsp.Novels.DbUtility\bin\Debug\System.Data.SQLite.dll
+E:\My Documents\GitHub\hsp.webnovels\Hsp.Novels.DbUtility\bin\Debug\Microsoft.Practices.ObjectBuilder.dll
+E:\My Documents\GitHub\hsp.webnovels\Hsp.Novels.DbUtility\obj\Debug\Hsp.Novels.DbUtility.csprojResolveAssemblyReference.cache
+E:\My Documents\GitHub\hsp.webnovels\Hsp.Novels.DbUtility\obj\Debug\Hsp.Novels.DbUtility.dll
+E:\My Documents\GitHub\hsp.webnovels\Hsp.Novels.DbUtility\obj\Debug\Hsp.Novels.DbUtility.pdb
