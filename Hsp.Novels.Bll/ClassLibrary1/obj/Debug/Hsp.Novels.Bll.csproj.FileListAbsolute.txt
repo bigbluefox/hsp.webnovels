@@ -1,0 +1,12 @@
+E:\My Documents\GitHub\hsp.webnovels\Hsp.Novels.Bll\ClassLibrary1\obj\Debug\Hsp.Novels.Bll.csprojResolveAssemblyReference.cache
+E:\My Documents\GitHub\hsp.webnovels\Hsp.Novels.Bll\ClassLibrary1\bin\Debug\Hsp.Novels.Bll.dll
+E:\My Documents\GitHub\hsp.webnovels\Hsp.Novels.Bll\ClassLibrary1\bin\Debug\Hsp.Novels.Bll.pdb
+E:\My Documents\GitHub\hsp.webnovels\Hsp.Novels.Bll\ClassLibrary1\obj\Debug\Hsp.Novels.Bll.dll
+E:\My Documents\GitHub\hsp.webnovels\Hsp.Novels.Bll\ClassLibrary1\obj\Debug\Hsp.Novels.Bll.pdb
+E:\My Documents\GitHub\hsp.webnovels\Hsp.Novels.Bll\ClassLibrary1\bin\Debug\Hsp.Novels.Common.dll
+E:\My Documents\GitHub\hsp.webnovels\Hsp.Novels.Bll\ClassLibrary1\bin\Debug\Hsp.Novels.Dal.dll
+E:\My Documents\GitHub\hsp.webnovels\Hsp.Novels.Bll\ClassLibrary1\bin\Debug\Hsp.Novels.Model.dll
+E:\My Documents\GitHub\hsp.webnovels\Hsp.Novels.Bll\ClassLibrary1\bin\Debug\Hsp.Novels.Common.pdb
+E:\My Documents\GitHub\hsp.webnovels\Hsp.Novels.Bll\ClassLibrary1\bin\Debug\Hsp.Novels.Dal.pdb
+E:\My Documents\GitHub\hsp.webnovels\Hsp.Novels.Bll\ClassLibrary1\bin\Debug\Hsp.Novels.Model.pdb
+E:\My Documents\GitHub\hsp.webnovels\Hsp.Novels.Bll\ClassLibrary1\bin\Debug\Log4net.dll
