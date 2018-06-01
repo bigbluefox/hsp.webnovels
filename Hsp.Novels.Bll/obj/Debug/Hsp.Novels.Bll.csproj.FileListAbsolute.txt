@@ -10,3 +10,9 @@ E:\My Documents\GitHub\hsp.webnovels\Hsp.Novels.Bll\bin\Debug\Hsp.Novels.Model.p
 E:\My Documents\GitHub\hsp.webnovels\Hsp.Novels.Bll\obj\Debug\Hsp.Novels.Bll.csprojResolveAssemblyReference.cache
 E:\My Documents\GitHub\hsp.webnovels\Hsp.Novels.Bll\obj\Debug\Hsp.Novels.Bll.dll
 E:\My Documents\GitHub\hsp.webnovels\Hsp.Novels.Bll\obj\Debug\Hsp.Novels.Bll.pdb
+E:\My Documents\GitHub\hsp.webnovels\Hsp.Novels.Bll\bin\Debug\Hsp.Novels.DbUtility.dll
+E:\My Documents\GitHub\hsp.webnovels\Hsp.Novels.Bll\bin\Debug\Microsoft.Practices.EnterpriseLibrary.Data.dll
+E:\My Documents\GitHub\hsp.webnovels\Hsp.Novels.Bll\bin\Debug\System.Data.SQLite.dll
+E:\My Documents\GitHub\hsp.webnovels\Hsp.Novels.Bll\bin\Debug\Microsoft.Practices.EnterpriseLibrary.Common.dll
+E:\My Documents\GitHub\hsp.webnovels\Hsp.Novels.Bll\bin\Debug\Microsoft.Practices.ObjectBuilder.dll
+E:\My Documents\GitHub\hsp.webnovels\Hsp.Novels.Bll\bin\Debug\Hsp.Novels.DbUtility.pdb

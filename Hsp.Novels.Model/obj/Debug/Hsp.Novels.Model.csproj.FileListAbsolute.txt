@@ -2,3 +2,4 @@ E:\My Documents\GitHub\hsp.webnovels\Hsp.Novels.Model\bin\Debug\Hsp.Novels.Model
 E:\My Documents\GitHub\hsp.webnovels\Hsp.Novels.Model\bin\Debug\Hsp.Novels.Model.pdb
 E:\My Documents\GitHub\hsp.webnovels\Hsp.Novels.Model\obj\Debug\Hsp.Novels.Model.dll
 E:\My Documents\GitHub\hsp.webnovels\Hsp.Novels.Model\obj\Debug\Hsp.Novels.Model.pdb
+E:\My Documents\GitHub\hsp.webnovels\Hsp.Novels.Model\obj\Debug\Hsp.Novels.Model.csprojResolveAssemblyReference.cache

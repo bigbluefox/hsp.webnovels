@@ -102,9 +102,13 @@
                 </div>
                 <label for="txtNextName" class="col-xs-6 col-sm-2 control-label"></label>
                 <div class="col-xs-6 col-sm-4">
-                    <button type="button" class="btn btn-default">
-                        <span class="glyphicon glyphicon-picture" aria-hidden="true"></span> Crawl
+                    <button type="button" id="btnCrawl" class="btn btn-default">
+                        <span class="glyphicon glyphicon-picture" aria-hidden="true"></span> 开始抓取
                     </button>
+                    <button type="button" id="btnTest" class="btn btn-default">
+                        <span class="glyphicon glyphicon-picture" aria-hidden="true"></span> 测试抓取
+                    </button>
+
                 </div>
             </div>
 
@@ -117,7 +121,7 @@
                 <div class="col-xs-6 col-sm-4">
                     <input type="text" class="form-control" id="txtNextUrl" placeholder="NextUrl" value="">
                 </div>
-            </div>            
+            </div>
 
             <div class="form-group">
                 <label for="txtContent" class="col-xs-6 col-sm-2 control-label">Content</label>
@@ -125,17 +129,14 @@
                     <textarea class="form-control" id="txtContent" placeholder="Content" rows="10"></textarea>
                 </div>
             </div>
-            
+
         </form>
 
     </div>
-    
-    <div class="row novel">
-            
-    </div>
+
+    <div class="row novel"></div>
 
 </div><!-- /.container -->
-
 
 <!-- Bootstrap core JavaScript
 ================================================== -->
@@ -152,41 +153,123 @@
     var isEnd = false;
 
     $(function() {
-        $("form button").unbind('click').bind('click', function() {
 
-            RecursiveCrawl();
+        // 测试抓取
+        $("#btnCrawl").unbind('click').bind('click', function() {
+            var chapterUrl = $("#txtChapterUrl").val();
+            //chapterUrl = encodeURIComponent(chapterUrl);
+            var contentName = $("#txtContentName").val();
+            var headerName = $("#txtHeaderName").val();
+            var nextName = $("#txtNextName").val();
 
-            //$.ajax({
-            //    url: '/Handler/Handler.ashx?rnd=' + (Math.random() * 16),
-            //    type: 'GET',
-            //    data: { chapterUrl: chapterUrl, contentName: contentName, headerName: headerName, nextName: nextName },
-            //    success: function (rst) {
-            //        alert(rst);
-            //        //if (rst.IsSuccess) {
-            //        //    //$('.Detail-heading').html(rst.Data.ArticleDesc);
-            //        //    //$('.detail-article').html(rst.Data.Contents);
-            //        //} else {
-            //        //    //$.messager.alert({ title: "操作提示", msg: rst.Message, showType: "error" });
-            //        //}
-            //    }
-            //    , complete: function (xhr, errorText, errorType) {
-            //        //debugger;
-            //        //var p = "";
-            //        alert("请求完成后");
-            //    }
-            //    , error: function(xhr, errorText, errorType) {
-            //        alert("请求错误后");
-            //    }
-            //    , beforSend: function() {
-            //        alert("请求之前");
-            //    }
-            //});
+            $.ajax({
+                url: chapterUrl,
+                type: "GET",
+                dataType: "html",
+                success: function(result) {
 
+                    //正则表达式获取body块  
+                    var reg = /<body>[\s\S]*<\/body>/g;
+                    var html = reg.exec(result)[0];
+
+                    var $html = $(contentName, $(html));
+                    console.log($html);
+
+                    var contents = $("#txtContent").val();
+
+                    var $header = $(headerName, $(html));
+                    console.log($header);
+
+                    var txtTitle = $($header).text().trim();
+
+                    // 章节标题修正
+                    var chapterReg = /([第]{0,1})([○零一二三四五六七八九十百千\d]{1,})([节章]{0,1}[ ]{0,1}[：:]{0,1})([\s\S]*?)/;
+                    txtTitle = txtTitle.replace(chapterReg, "第$2章 $4");
+
+                    $("#txtTitle").val(txtTitle);
+
+                    contents += txtTitle + "\n";
+
+                    $.each($html, function() {
+                        contents += $(this).text().trim() + "\n";
+                    });
+                    $("#txtContent").val(contents);
+
+                    $nextUrl = $(nextName, $(html));
+                    console.log($nextUrl);
+
+                    var nextUrl = $nextUrl[0].href;
+                    var nextUrlTitle = $nextUrl[0].innerText;
+                    $("#txtNextUrl").val(nextUrl);
+                    $("#txtChapterUrl").val(nextUrl);
+
+                    // 添加小说内容
+
+                    var $novelBody = $(".container .novel");
+                    $("<h1>" + txtTitle + "</h1>").appendTo($novelBody);
+                    $.each($html, function() {
+                        $(this).appendTo($novelBody);
+                    });
+
+                    //if (nextUrlTitle.indexOf("下一章") == -1) {
+                    //    isEnd = true;
+                    //}
+
+                    //RecursiveCrawl(); // 递归查询
+                }
+            });
 
         });
+
+        // 开始抓取
+        $("#btnCrawl").unbind('click').bind('click', function() {
+
+            recursiveCrawl();
+
+        });
+
+        getNovelInfo();
+
     });
 
-    function RecursiveCrawl() {
+    // 获取小说信息
+    function getNovelInfo() {
+
+        var novelId = "35986997-DC9D-485B-90CE-DFC754C8669C";
+
+        $.ajax({
+            url: '/Handler/NovelHandler.ashx?rnd=' + (Math.random() * 16),
+            type: 'GET',
+            data: { OP: "NOVELLIST", title: "", webId: "", novelId: novelId },
+            success: function(rst) {
+                alert(rst);
+                if (rst && rst.total > 0) {
+
+                    var novel = rst.rows[0];
+
+                    //$('.Detail-heading').html(rst.Data.ArticleDesc);
+                    //$('.detail-article').html(rst.Data.Contents);
+                } else {
+                    //$.messager.alert({ title: "操作提示", msg: rst.Message, showType: "error" });
+                }
+            },
+            complete: function(xhr, errorText, errorType) {
+                //debugger;
+                //var p = "";
+                //alert("请求完成后");
+            },
+            error: function (xhr, errorText, errorType) {
+                alert("请求错误后");
+            },
+            beforSend: function() {
+                alert("请求之前");
+            }
+        });
+    };
+
+
+    // 递归抓取内容
+    function recursiveCrawl() {
 
         if (isEnd) return;
 
@@ -200,7 +283,7 @@
             url: chapterUrl,
             type: "GET",
             dataType: "html",
-            success: function (result) {
+            success: function(result) {
 
                 //正则表达式获取body块  
                 var reg = /<body>[\s\S]*<\/body>/g;
@@ -228,7 +311,7 @@
 
                 //debugger;
 
-                var chapterReg = /([第]{0,1})([○零一二三四五六七八九十百千]{1,})([章]{0,1}[ ]{0,1}[：:]{0,1})([\s\S]*?)/;
+                var chapterReg = /([第]{0,1})([○零一二三四五六七八九十百千\d]{1,})([节章]{0,1}[ ]{0,1}[：:]{0,1})([\s\S]*?)/;
                 txtTitle = txtTitle.replace(chapterReg, "第$2章 $4");
 
                 //var testreg = txtTitle.replace(chapterReg, "$1-$2-$3-$4");
@@ -237,7 +320,7 @@
 
                 contents += txtTitle + "\n";
 
-                $.each($html, function () {
+                $.each($html, function() {
                     contents += $(this).text().trim() + "\n";
                 });
                 $("#txtContent").val(contents);
@@ -255,7 +338,7 @@
 
                 var $novelBody = $(".container .novel");
                 $("<h1>" + txtTitle + "</h1>").appendTo($novelBody);
-                $.each($html, function () {
+                $.each($html, function() {
                     $(this).appendTo($novelBody);
                 });
 
@@ -263,11 +346,10 @@
                     isEnd = true;
                 }
 
-                RecursiveCrawl(); // 递归查询
+                recursiveCrawl(); // 递归查询
             }
         });
     }
-
 
 
     //用于创建XMLHttpRequest对象 
