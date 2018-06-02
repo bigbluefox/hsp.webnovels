@@ -5,6 +5,16 @@
 
 /// <reference path="Hsp.Base.js" />
 
+if (!Hsp.Common) Hsp.Common = {};
+
+
+/// <summary>
+/// 页面内容窗体有效宽度，Tli，2016-09-21
+/// </summary>
+Hsp.Common.AvailWidth = function () {
+    return window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+};
+
 /// <summary>
 /// 生成Guid
 /// </summary>

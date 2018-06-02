@@ -10,7 +10,7 @@ namespace Hsp.Novels.Model
     /// <summary>
     /// 章节实体
     /// </summary>
-    public class Chapters
+    public class Chapters : BaseModel
     {
         /// <summary>
         /// 章节编号

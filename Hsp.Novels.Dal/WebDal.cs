@@ -11,18 +11,18 @@ using Hsp.Novels.Model;
 namespace Hsp.Novels.Dal
 {
     /// <summary>
-    /// 小说抓取数据服务层
+    /// 站点数据服务层
     /// </summary>
-    public class NovelDal
+    public class WebDal
     {
-        #region 获取小说定义分页数据
+        #region 获取小说站点分页数据
 
         /// <summary>
-        /// 获取小说定义分页数据
+        /// 获取小说站点分页数据
         /// </summary>
         /// <param name="paramList">查询及分页参数</param>
         /// <returns></returns>
-        public static DataSet PageNovelData(Dictionary<string, string> paramList)
+        public static DataSet PageWebData(Dictionary<string, string> paramList)
         {
             string strQry = "";
 
@@ -41,7 +41,7 @@ namespace Hsp.Novels.Dal
             if (!string.IsNullOrEmpty(strTitle))
             {
                 strTitle = Utility.MASK(strTitle);
-                strQry += string.Format(@" AND (s.Name LIKE '%{0}%' OR n.Title LIKE '%{0}%')", strTitle);
+                strQry += string.Format(@" AND (Name LIKE '%{0}%'", strTitle);
             }
 
             #endregion
@@ -52,24 +52,15 @@ namespace Hsp.Novels.Dal
             if (!string.IsNullOrEmpty(strWebSiteId))
             {
                 strWebSiteId = Utility.MASK(strWebSiteId);
-                strQry += string.Format(@" AND (n.WebId = '{0}')", strWebSiteId);
-            }
-
-            var strNovelId = paramList.ContainsKey("NovelId") ? (paramList["NovelId"] ?? "") : "";
-            if (!string.IsNullOrEmpty(strNovelId))
-            {
-                strNovelId = Utility.MASK(strNovelId);
-                strQry += string.Format(@" AND (n.Id = '{0}')", strNovelId);
+                strQry += string.Format(@" AND (Id = '{0}')", strWebSiteId);
             }
 
             #endregion
 
             string strSql = string.Format(@"
             ;WITH PageTb AS (
-                SELECT ROW_NUMBER() OVER (ORDER BY n.Title) RowNumber, n.*, s.Name AS WebName 
-                , s.ContentName, s.HeaderName, s.NextName, s.NextTitle
-                FROM dbo.WebSites s
-                INNER JOIN dbo.Novels n ON n.WebId = s.Id
+                SELECT ROW_NUMBER() OVER (ORDER BY Title) RowNumber, *
+                FROM dbo.WebSites
                 WHERE (1 = 1){2}
             )
             SELECT * 
@@ -82,76 +73,72 @@ namespace Hsp.Novels.Dal
 
         #endregion
 
-        #region 添加小说数据
+        #region 添加站点数据
 
         /// <summary>
-        /// 添加小说数据
+        /// 添加站点数据
         /// </summary>
         /// <remarks>创建人：李海玉   创建时间：2018-06-02</remarks>
-        /// <param name="model">小说实体</param>
+        /// <param name="model">站点实体</param>
         /// <returns></returns>
-        public static int Add(Model.Novels model)
+        public static int Add(WebSites model)
         {
             string strSql = string.Format
-                (@"INSERT INTO Novels
-                    (WebId, Title, Url, StartUrl, LatestChapter, Author, UrlCombine, TypeId, Status) 
-                    VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}');"
-                 , model.WebId, model.Title, model.Url, model.StartUrl, model.LatestChapter, model.Author, model.UrlCombine, model.TypeId, model.Status);
+                (@"INSERT INTO WebSites
+                    (Name, Url, ContentName, HeaderName, NextName, NextTitle) 
+                    VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}');"
+                 , model.Name, model.Url, model.ContentName, model.HeaderName, model.NextName, model.NextTitle);
             return DbHelperSql.ExecuteSql(strSql);
         }
 
         #endregion
 
-//SELECT     TOP (200) Id, WebId, Title, Url, StartUrl, LatestChapter, Author, UrlCombine, TypeId, Status
-//FROM         Novels
-
-        #region 编辑小说数据
+        #region 编辑站点数据
 
         /// <summary>
-        /// 编辑小说数据
+        /// 编辑站点数据
         /// </summary>
-        /// <param name="model">小说实体</param>
+        /// <param name="model">站点实体</param>
         /// <returns></returns>
-        public static int Edit(Model.Novels model)
+        public static int Edit(WebSites model)
         {
             string strSql = string.Format
-                (@"UPDATE Novels SET WebId='{1}', Title='{2}', Url='{3}', StartUrl='{4}', LatestChapter='{5}', Author='{6}', UrlCombine='{7}', TypeId='{8}', Status='{9}'
+                (@"UPDATE WebSites SET Name='{1}', Url='{2}', ContentName='{3}', HeaderName='{4}', NextName='{5}', NextTitle='{6}', Valid='{7}'
                      WHERE (Id = '{0}');"
-                    , model.Id, model.WebId, model.Title, model.Url, model.StartUrl, model.LatestChapter, model.Author, model.UrlCombine, model.TypeId, model.Status);
+                    , model.Id, model.Name, model.Url, model.ContentName, model.HeaderName, model.NextName, model.NextTitle, model.Valid);
             return DbHelperSql.ExecuteSql(strSql);
         }
 
         #endregion
 
-        #region 删除小说数据
+        #region 删除站点数据
 
         /// <summary>
-        /// 删除小说数据
+        /// 删除站点数据
         /// </summary>
-        /// <param name="id">小说编号</param>
+        /// <param name="id">站点编号</param>
         /// <returns></returns>
         public static int Delete(int id)
         {
-            string strSql = string.Format(@"DELETE FROM dbo.Novels WHERE (Id = {0});", id);
+            string strSql = string.Format(@"DELETE FROM dbo.WebSites WHERE (Id = {0});", id);
             return DbHelperSql.ExecuteSql(strSql);
         }
 
         #endregion
 
-        #region 批量删除小说
+        #region 批量删除站点
 
         /// <summary>
-        /// 批量删除小说
+        /// 批量删除站点
         /// </summary>
-        /// <param name="ids">小说编号集合</param>
+        /// <param name="ids">站点编号集合</param>
         /// <returns></returns>
         public static int BatchDelete(string ids)
         {
-            string strSql = string.Format(@"DELETE FROM dbo.Novels WHERE (Id IN ({0}));", ids);
+            string strSql = string.Format(@"DELETE FROM dbo.WebSites WHERE (Id IN ({0}));", ids);
             return DbHelperSql.ExecuteSql(strSql);
         }
 
         #endregion
-
     }
 }

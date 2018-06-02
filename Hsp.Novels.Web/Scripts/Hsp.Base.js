@@ -30,7 +30,13 @@ Hsp = {
         IS_LOCAL: 0 > document.location.href.indexOf("http://") && 0 > document.location.href.indexOf("https://")
     },
     Common: {}, // 通用对象定义
-    Mobile: {} // 移动对象定义
+    Formatter: {}, // 数据格式化处理
+    Mobile: {
+        DefaultWidth: 768,
+        HalfWidth: 384,
+        QuartWidth: 576
+    }, // 移动对象定义
+    Modal: {} // 模态窗体对象定义
 };
 
 String.prototype.replaceAll = function (s1, s2) {

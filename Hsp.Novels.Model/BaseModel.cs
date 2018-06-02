@@ -27,6 +27,12 @@ namespace Hsp.Novels.Model
         public int RecordCount { get; set; }
 
         #endregion
+
+        /// <summary>
+        /// 子项数量
+        /// </summary>
+        [DataMember]
+        public int ChildNodeCount { get; set; }
     }
 
     /// <summary>

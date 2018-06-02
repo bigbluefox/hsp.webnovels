@@ -39,8 +39,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ChapterDal.cs" />
     <Compile Include="NovelDal.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="WebDal.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Hsp.Novels.Common\Hsp.Novels.Common.csproj">

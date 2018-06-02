@@ -73,17 +73,12 @@
 <div class="container">
 
     <div class="row">
-        <%--        <h1>Bootstrap starter template</h1>
-        <p class="lead">Use this document as a way to quickly start any new project.<br> All you get is this text and a mostly barebones HTML document.
-        </p>--%>
-
         <form class="form-horizontal">
             <div class="form-group">
                 <label for="txtChapterUrl" class="col-xs-6 col-sm-2 control-label">Url</label>
                 <div class="col-xs-6 col-sm-10">
                     <input type="text" class="form-control" id="txtChapterUrl" placeholder="Url" value="https://www.dashubao.net/book/85/85429/27100366.html">
                 </div>
-
             </div>
             <div class="form-group">
                 <label for="txtContentName"class="col-xs-6 col-sm-2 control-label">ContentName</label>
@@ -108,30 +103,27 @@
                     <button type="button" id="btnTest" class="btn btn-default">
                         <span class="glyphicon glyphicon-picture" aria-hidden="true"></span> 测试抓取
                     </button>
-
+                    <input id="txtNextTitle" type="hidden" />
+                    <input id="txtUrlCombine" type="hidden" />
                 </div>
             </div>
-
             <div class="form-group">
-                <label for="txtTitle" class="col-xs-6 col-sm-2 control-label">Title</label>
+                <label for="txtTitle"class="col-xs-6 col-sm-2 control-label">Title</label>
                 <div class="col-xs-6 col-sm-4">
                     <input type="text" class="form-control" id="txtTitle" placeholder="Title" value="">
-                </div>
-                <label for="txtNextUrl"class="col-xs-6 col-sm-2 control-label">NextUrl</label>
+                </div>                
+                <label for="txtChapter" class="col-xs-6 col-sm-2 control-label">Chapter</label>
                 <div class="col-xs-6 col-sm-4">
-                    <input type="text" class="form-control" id="txtNextUrl" placeholder="NextUrl" value="">
+                    <input type="text" class="form-control" id="txtChapter" placeholder="Title" value="">
                 </div>
             </div>
-
             <div class="form-group">
                 <label for="txtContent" class="col-xs-6 col-sm-2 control-label">Content</label>
                 <div class="col-xs-6 col-sm-10">
                     <textarea class="form-control" id="txtContent" placeholder="Content" rows="10"></textarea>
                 </div>
             </div>
-
         </form>
-
     </div>
 
     <div class="row novel"></div>
@@ -155,12 +147,12 @@
     $(function() {
 
         // 测试抓取
-        $("#btnCrawl").unbind('click').bind('click', function() {
+        $("#btnTest").unbind('click').bind('click', function () {
             var chapterUrl = $("#txtChapterUrl").val();
-            //chapterUrl = encodeURIComponent(chapterUrl);
             var contentName = $("#txtContentName").val();
             var headerName = $("#txtHeaderName").val();
             var nextName = $("#txtNextName").val();
+            //var nextTitle = $("#txtNextTitle").val();
 
             $.ajax({
                 url: chapterUrl,
@@ -180,15 +172,15 @@
                     var $header = $(headerName, $(html));
                     console.log($header);
 
-                    var txtTitle = $($header).text().trim();
+                    var txtChapter = $($header).text().trim();
 
                     // 章节标题修正
                     var chapterReg = /([第]{0,1})([○零一二三四五六七八九十百千\d]{1,})([节章]{0,1}[ ]{0,1}[：:]{0,1})([\s\S]*?)/;
-                    txtTitle = txtTitle.replace(chapterReg, "第$2章 $4");
+                    txtChapter = txtChapter.replace(chapterReg, "第$2章 $4");
 
-                    $("#txtTitle").val(txtTitle);
+                    $("#txtChapter").val(txtChapter);
 
-                    contents += txtTitle + "\n";
+                    contents += txtChapter + "\n";
 
                     $.each($html, function() {
                         contents += $(this).text().trim() + "\n";
@@ -199,14 +191,14 @@
                     console.log($nextUrl);
 
                     var nextUrl = $nextUrl[0].href;
-                    var nextUrlTitle = $nextUrl[0].innerText;
-                    $("#txtNextUrl").val(nextUrl);
+                    //var nextUrlTitle = $nextUrl[0].innerText;
+                    //$("#txtNextUrl").val(nextUrl);
                     $("#txtChapterUrl").val(nextUrl);
 
                     // 添加小说内容
 
                     var $novelBody = $(".container .novel");
-                    $("<h1>" + txtTitle + "</h1>").appendTo($novelBody);
+                    $("<h1>" + txtChapter + "</h1>").appendTo($novelBody);
                     $.each($html, function() {
                         $(this).appendTo($novelBody);
                     });
@@ -242,15 +234,17 @@
             type: 'GET',
             data: { OP: "NOVELLIST", title: "", webId: "", novelId: novelId },
             success: function(rst) {
-                alert(rst);
                 if (rst && rst.total > 0) {
-
                     var novel = rst.rows[0];
+                    $("#txtChapterUrl").val(novel.StartUrl);
+                    $("#txtContentName").val(novel.ContentName);
+                    $("#txtHeaderName").val(novel.HeaderName);
+                    $("#txtNextName").val(novel.NextName);
+                    $("#txtNextTitle").val(novel.NextTitle);
 
-                    //$('.Detail-heading').html(rst.Data.ArticleDesc);
-                    //$('.detail-article').html(rst.Data.Contents);
-                } else {
-                    //$.messager.alert({ title: "操作提示", msg: rst.Message, showType: "error" });
+                    $("#txtTitle").val(novel.Title);
+
+                    //alert(novel.NextTitle); // txtTitle
                 }
             },
             complete: function(xhr, errorText, errorType) {
@@ -297,28 +291,28 @@
                 var $header = $(headerName, $(html));
                 console.log($header);
 
-                var txtTitle = $($header).text().trim();
+                var txtChapter = $($header).text().trim();
 
                 // 章节标题修正
-                //var arrTitle = txtTitle.split(" ");
+                //var arrTitle = txtChapter.split(" ");
                 //var chapterReg = /[第]{0,1}[\s\S]*[章]{0,1}/g;
                 //var chapterNum = chapterReg.exec(arrTitle[0])[0];
 
                 //if (arrTitle[0] != "楔子"){
                 //    var chapterTitle = arrTitle.length == 1 ? "" : arrTitle[1];
-                //    txtTitle = "第" + chapterNum + "章 " + chapterTitle;
+                //    txtChapter = "第" + chapterNum + "章 " + chapterTitle;
                 //}
 
                 //debugger;
 
                 var chapterReg = /([第]{0,1})([○零一二三四五六七八九十百千\d]{1,})([节章]{0,1}[ ]{0,1}[：:]{0,1})([\s\S]*?)/;
-                txtTitle = txtTitle.replace(chapterReg, "第$2章 $4");
+                txtChapter = txtChapter.replace(chapterReg, "第$2章 $4");
 
-                //var testreg = txtTitle.replace(chapterReg, "$1-$2-$3-$4");
+                //var testreg = txtChapter.replace(chapterReg, "$1-$2-$3-$4");
 
-                $("#txtTitle").val(txtTitle);
+                $("#txtChapter").val(txtChapter);
 
-                contents += txtTitle + "\n";
+                contents += txtChapter + "\n";
 
                 $.each($html, function() {
                     contents += $(this).text().trim() + "\n";
@@ -330,14 +324,14 @@
 
                 var nextUrl = $nextUrl[0].href;
                 var nextUrlTitle = $nextUrl[0].innerText;
-                $("#txtNextUrl").val(nextUrl);
+                //$("#txtNextUrl").val(nextUrl);
                 $("#txtChapterUrl").val(nextUrl);
 
 
                 // 添加小说内容
 
                 var $novelBody = $(".container .novel");
-                $("<h1>" + txtTitle + "</h1>").appendTo($novelBody);
+                $("<h1>" + txtChapter + "</h1>").appendTo($novelBody);
                 $.each($html, function() {
                     $(this).appendTo($novelBody);
                 });

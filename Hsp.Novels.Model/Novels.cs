@@ -55,10 +55,54 @@ namespace Hsp.Novels.Model
         public int TypeId { get; set; }
 
         /// <summary>
-        /// 状态
+        /// 状态：1-连载，2-完本
         /// </summary>
         [DataMember]
         public int Status { get; set; }
+
+
+        /// <summary>
+        /// 地址是否需要组合？章节地址需要跟小说地址组合
+        /// </summary>
+        [DataMember]
+        public int UrlCombine { get; set; }
+
+
+        /// <summary>
+        /// 最新章节，如“第一千四百零三章 汇合”
+        /// </summary>
+        [DataMember]
+        public string LatestChapter { get; set; }
+
+        /// <summary>
+        /// 最新最新，如“一天前”
+        /// </summary>
+        [DataMember]
+        public string RecentUpdate { get; set; }
+
+        /// <summary>
+        /// 章节数量
+        /// </summary>
+        [DataMember]
+        public int ChapterCount { get; set; }
+
+
+        /// <summary>
+        /// 根据主键查询实体数据
+        /// </summary>
+        /// <PARAM NAME="id">主键编号</PARAM>
+        /// <RETURNS></RETURNS>
+        //public static Novels Find(string id)
+        //{
+        //    return (Novels)ActiveRecordBase.FindByPrimaryKey(typeof(Novels), id);
+        //}
+
+
+        /// <summary>
+        /// 站点名称
+        /// </summary>
+        [DataMember]
+        public string WebName { get; set; }
 
         /// <summary>
         /// 内容对象名称，如“.yd_text2 p”
@@ -83,29 +127,5 @@ namespace Hsp.Novels.Model
         /// </summary>
         [DataMember]
         public string NextTitle { get; set; }
-
-        /// <summary>
-        /// 地址是否需要组合？章节地址需要跟小说地址组合
-        /// </summary>
-        [DataMember]
-        public int UrlCombine { get; set; }
-
-        /// <summary>
-        /// 根据主键查询实体数据
-        /// </summary>
-        /// <PARAM NAME="id">主键编号</PARAM>
-        /// <RETURNS></RETURNS>
-        //public static Novels Find(string id)
-        //{
-        //    return (Novels)ActiveRecordBase.FindByPrimaryKey(typeof(Novels), id);
-        //}
-
-
-        /// <summary>
-        /// 站点名称
-        /// </summary>
-        [DataMember]
-        public string WebName { get; set; }
-
     }
 }
