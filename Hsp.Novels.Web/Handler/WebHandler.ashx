@@ -4,9 +4,13 @@ using System;
 using System.Collections.Generic;
 using System.Web;
 using System.Web.Script.Serialization;
+using System.Web.SessionState;
 using Hsp.Novels.Bll;
 
-public class WebHandler : IHttpHandler
+/// <summary>
+/// 站点数据一般处理程序
+/// </summary>
+public class WebHandler : IHttpHandler, IRequiresSessionState
 {
     /// <summary>
     ///     小说站点业务逻辑处理
@@ -44,6 +48,13 @@ public class WebHandler : IHttpHandler
             case "BATCHDELETE":
                 BatchDelete(context);
                 break;
+
+            //获取站点抓取参数
+            case "CRAWL":
+                GetWebCrawl(context);
+                break;               
+                
+                
 
             default:
                 break;
@@ -93,7 +104,7 @@ public class WebHandler : IHttpHandler
         var js = new JavaScriptSerializer().Serialize(list);
 
         //需要返回的数据有总记录数和行数据  
-        var json = "{\"total\":" + list[0].RecordCount + ",\"rows\":" + js + "}";
+        var json = "{\"total\":" + (list.Count > 0 ? list[0].RecordCount : 0) + ",\"rows\":" + js + "}";
 
         context.Response.Write(json);
     }
@@ -109,7 +120,7 @@ public class WebHandler : IHttpHandler
     private void Delete(HttpContext context)
     {
         var rst = "";
-        var strId = context.Request.Params["ID"] ?? "0"; // 站点编号
+        var strId = context.Request.Params["ID"] ?? ""; // 站点编号
         if (string.IsNullOrEmpty(strId)) return;
 
         var i = WebBll.Delete(int.Parse(strId));
@@ -153,4 +164,25 @@ public class WebHandler : IHttpHandler
     }
 
     #endregion
+
+    #region 获取站点抓取参数
+
+    /// <summary>
+    ///     获取站点抓取参数
+    /// </summary>
+    /// <param name="context"></param>
+    private void GetWebCrawl(HttpContext context)
+    {
+        var strWebId = context.Request.Params["webId"] ?? "";
+        var strNovelId = context.Request.Params["novelId"] ?? "";
+        if (strWebId.Length > 0) strWebId = strWebId.Trim();
+        if (strNovelId.Length > 0) strNovelId = strNovelId.Trim();
+
+        var model = WebBll.WebCrawlModel(strWebId, strNovelId);
+        var json = new JavaScriptSerializer().Serialize(model);
+        context.Response.Write(json);
+    }
+
+    #endregion
+
 }

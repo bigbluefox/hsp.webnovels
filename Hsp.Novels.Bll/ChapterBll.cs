@@ -41,9 +41,9 @@ namespace Hsp.Novels.Bll
         /// 添加章节信息
         /// </summary>
         /// <param name="model">章节实体</param>
-        public void Add(Chapters model)
+        public int Add(Chapters model)
         {
-            ChapterDal.Add(model);
+            return ChapterDal.Add(model);
         }
 
         #endregion

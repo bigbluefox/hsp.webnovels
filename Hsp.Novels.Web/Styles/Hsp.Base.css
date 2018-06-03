@@ -2,3 +2,28 @@
  * 基础样式表
  */
 
+.required { color: red; }
+
+.breadcrumb { margin-bottom: 0; }
+
+.checkbox { border: 0; }
+
+.messager-body { padding: 8px; }
+
+.messager-window .messager-info { margin: 8px; }
+
+.messager-window .messager-info > div { margin-top: 15px; }
+
+.form-group > label { padding-top: 7px; }
+
+.table { table-layout: fixed; }
+
+tr td, .treeview li, .nav-sidebar li, .navbar-brand {
+    -moz-text-overflow: ellipsis; /* for Firefox, mozilla */
+    -ms-text-overflow: ellipsis;
+    -o-text-overflow: ellipsis;
+    overflow: hidden;
+    text-align: left;
+    text-overflow: ellipsis; /* for IE */
+    white-space: nowrap;
+}

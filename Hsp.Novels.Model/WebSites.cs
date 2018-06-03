@@ -61,5 +61,25 @@ namespace Hsp.Novels.Model
         [DataMember]
         public string NextTitle { get; set; }
 
+        /// <summary>
+        /// 添加时间
+        /// </summary>
+        [DataMember]
+        public DateTime CreateTime { get; set; }
+
+        /** 下述对象不在表中 **/
+
+        /// <summary>
+        /// 下一页地址或起始地址
+        /// </summary>
+        [DataMember]
+        public string NextUrl { get; set; }
+
+        /// <summary>
+        /// 当前章节
+        /// </summary>
+        [DataMember]
+        public string CurrentChapter { get; set; }
+
     }
 }

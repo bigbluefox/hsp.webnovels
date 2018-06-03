@@ -4,12 +4,14 @@ using System;
 using System.Collections.Generic;
 using System.Web;
 using System.Web.Script.Serialization;
+using System.Web.SessionState;
 using Hsp.Novels.Bll;
 
 /// <summary>
 /// 小说抓取一般处理程序
 /// </summary>
-public class NovelHandler : IHttpHandler {
+public class NovelHandler : IHttpHandler, IRequiresSessionState
+{
 
     /// <summary>
     ///     小说业务逻辑处理
@@ -34,19 +36,19 @@ public class NovelHandler : IHttpHandler {
         switch (strOperation.ToUpper().Trim())
         {
             //获取小说信息列表信息
-            case "NOVELLIST":
+            case "LIST":
                 GetNovelPageList(context);
                 break;
 
-            //// 删除小说信息
-            //case "DELETE":
-            //    Delete(context);
-            //    break;
+            // 删除小说信息
+            case "DELETE":
+                Delete(context);
+                break;
 
-            //// 批量删除
-            //case "BATCHDELETE":
-            //    BatchDelete(context);
-            //    break;
+            // 批量删除
+            case "BATCHDELETE":
+                BatchDelete(context);
+                break;
 
             default:
                 break;
@@ -69,7 +71,7 @@ public class NovelHandler : IHttpHandler {
     /// <param name="context"></param>
     private void GetNovelPageList(HttpContext context)
     {
-        var strTitle = context.Request.Params["title"] ?? "";
+        var strTitle = context.Request.Params["qname"] ?? "";
         var strWebId = context.Request.Params["webId"] ?? "";
         var strNovelId = context.Request.Params["novelId"] ?? "";
         if (strTitle.Length > 0) strTitle = strTitle.Trim();
@@ -98,6 +100,61 @@ public class NovelHandler : IHttpHandler {
         var json = "{\"total\":" + list[0].RecordCount + ",\"rows\":" + js + "}";
 
         context.Response.Write(json);
+    }
+
+    #endregion
+
+
+    #region 删除小说
+
+    /// <summary>
+    ///     删除小说
+    /// </summary>
+    /// <param name="context"></param>
+    private void Delete(HttpContext context)
+    {
+        var rst = "";
+        var strId = context.Request.Params["ID"] ?? ""; // 小说编号
+        if (string.IsNullOrEmpty(strId)) return;
+
+        var i = NovelBll.Delete(int.Parse(strId));
+        if (i > 0)
+        {
+            rst = "{\"success\":true,\"Message\": \"小说『" + strId + "』删除成功！\"}";
+        }
+        else
+        {
+            rst = "{\"success\":false,\"Message\": \"小说删除失败！\"}";
+        }
+
+        context.Response.Write(rst);
+    }
+
+    #endregion
+
+    #region 批量删除小说
+
+    /// <summary>
+    ///     批量删除小说
+    /// </summary>
+    /// <param name="context"></param>
+    private void BatchDelete(HttpContext context)
+    {
+        var rst = "";
+        var strIds = context.Request.Params["IDs"] ?? "";// 小说编号
+        if (string.IsNullOrEmpty(strIds)) return;
+
+        var i = NovelBll.BatchDelete(strIds);
+        if (i > 0)
+        {
+            rst = "{\"success\":true,\"Message\": \"小说『" + strIds + "』批量删除成功！\"}";
+        }
+        else
+        {
+            rst = "{\"success\":false,\"Message\": \"小说批量删除失败！\"}";
+        }
+
+        context.Response.Write(rst);
     }
 
     #endregion

@@ -86,17 +86,13 @@ namespace Hsp.Novels.Model
         [DataMember]
         public int ChapterCount { get; set; }
 
-
         /// <summary>
-        /// 根据主键查询实体数据
+        /// 添加时间
         /// </summary>
-        /// <PARAM NAME="id">主键编号</PARAM>
-        /// <RETURNS></RETURNS>
-        //public static Novels Find(string id)
-        //{
-        //    return (Novels)ActiveRecordBase.FindByPrimaryKey(typeof(Novels), id);
-        //}
+        [DataMember]
+        public DateTime CreateTime { get; set; }
 
+        /** 下述对象不在表中 **/
 
         /// <summary>
         /// 站点名称

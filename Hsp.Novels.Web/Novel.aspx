@@ -1,7 +1,7 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/PageMaster/BootStrap.master" AutoEventWireup="true" CodeFile="Default.aspx.cs" Inherits="_Default" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/PageMaster/BootStrap.master" AutoEventWireup="true" CodeFile="Novel.aspx.cs" Inherits="Novel" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="TitleContent" Runat="Server">
-    站点列表
+    小说管理
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ScriptContent" Runat="Server">
 
@@ -14,15 +14,15 @@
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="ContainerContent" Runat="Server">
 
-    <h3 class="page-header">站点管理</h3>
-    
+    <h3 class="page-header">小说管理</h3>
+
     <div class="result-message"></div>
 
     <ol class="breadcrumb">
         <li>
-            <a href="/Default.aspx">首页</a>
+            <a href="/Default.aspx">站点管理</a>
         </li>
-        <li class="active">站点管理</li>
+        <li class="active"><% = WebName %></li>
     </ol>
 
     <div id="toolbar">
@@ -56,23 +56,23 @@
                 <i class="glyphicon glyphicon-remove"></i> 批量删除
             </button>
             <button id="btnAdd" class="btn btn-primary">
-                <i class="glyphicon glyphicon-plus"></i> 添加站点
+                <i class="glyphicon glyphicon-plus"></i> 添加小说
             </button>
         </div>
     </div>
 
-    <table id="web-table" data-mobile-responsive="true" data-toggle="table"></table>
+    <table id="novel-table" data-mobile-responsive="true" data-toggle="table"></table>
 
 </asp:Content>
 <asp:Content ID="Content4" ContentPlaceHolderID="ModalContent" Runat="Server">
-    
+
     <div class="modal fade" id="editModel" tabindex="-1" role="dialog" aria-labelledby="editModelLabel">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="editModelLabel">站点信息修改</h4>
+                    <h4 class="modal-title" id="editModelLabel">小说信息修改</h4>
                 </div>
                 <div class="modal-body">
 
@@ -82,10 +82,10 @@
                             <input type="text" class="form-control" id="txtUserCode" placeholder="登录账号" required="required">
                         </div>
                         <div class="form-group">
-                            <label for="txtUserName">站点姓名<span class="required">*</span></label>
-                            <input type="text" class="form-control" id="txtUserName" placeholder="站点姓名" required="required">
+                            <label for="txtUserName">小说姓名<span class="required">*</span></label>
+                            <input type="text" class="form-control" id="txtUserName" placeholder="小说姓名" required="required">
                         </div>
-                                                <div class="form-group">
+                        <div class="form-group">
                             <label for="txtMobile">移动电话</label>
                             <input type="number" class="form-control" id="txtMobile" placeholder="移动电话">
                         </div>
@@ -94,24 +94,28 @@
                             <input type="email" class="form-control" id="txtEmail" placeholder="邮箱地址">
                         </div>
 
+
+                        <%--//SELECT     TOP (200) Id, WebId, Title, Url, StartUrl, LatestChapter, Author, UrlCombine, TypeId, Status
+//FROM         Novels--%>
+
                         <div class="form-group">
-                            <label>站点权限</label>
+                            <label>小说权限</label>
                             <div id="usertype">
                                 <label class="checkbox-inline">
                                     <input type="checkbox" id="chbAuthority1" name="chbAuthority" value="0">
-                                    普通站点(0)
+                                    普通小说(0)
                                 </label>
                                 <label class="checkbox-inline">
                                     <input type="checkbox" id="chbAuthority2" name="chbAuthority" value="1">
-                                    数据应用站点(1)
+                                    数据应用小说(1)
                                 </label>
                                 <label class="checkbox-inline">
                                     <input type="checkbox" id="chbAuthority3" name="chbAuthority" value="2">
-                                    人力资源站点(2)
+                                    人力资源小说(2)
                                 </label>
                                 <label class="checkbox-inline">
                                     <input type="checkbox" id="chbAuthority4" name="chbAuthority" value="4">
-                                    管理站点(4)
+                                    管理小说(4)
                                 </label>
                             </div>
                         </div>
@@ -145,7 +149,7 @@
                 </div>
             </div>
         </div>
-    </div>    
+    </div>
 
 </asp:Content>
 <asp:Content ID="Content5" ContentPlaceHolderID="SubScriptContent" Runat="Server">
@@ -161,19 +165,19 @@
 
 <script type="text/javascript">
 
-    var $table = $('#web-table'),
+    var $table = $('#novel-table'),
         $remove = $('#remove'),
         selections = [],
         key = 'Id';
 
-    var pageNumber = 1, width = 0;
-    var pageListUrl = "/Handler/WebHandler.ashx?OP=LIST";
+    var pageNumber = 1, width = 0, webId = "<% = WebId %>";
+    var pageListUrl = "/Handler/NovelHandler.ashx?OP=LIST";
 
     $(function() {
 
         width = Hsp.Common.AvailWidth();
 
-        $table = $('#web-table'),
+        $table = $('#novel-table'),
             $remove = $('#remove');
 
         initTable();
@@ -202,8 +206,8 @@
             $table.bootstrapTable('refresh');
         });
 
-        $("#btnAdd").click(function () {
-            $("#editModelLabel").html("站点信息添加");
+        $("#btnAdd").click(function() {
+            $("#editModelLabel").html("小说信息添加");
             $('#editModel').modal('toggle'); // 弹出添加窗体            
         });
     });
@@ -240,6 +244,7 @@
                 var param = {
                     pageNumber: params.pageNumber,
                     pageSize: params.pageSize,
+                    webId: webId,
                     qname: $("input[name='search']").val(),
                     sdate: $("#startDate").val(),
                     edate: $("#endDate").val()
@@ -262,10 +267,9 @@
                         align: 'center'
                     },
 
-//SELECT     TOP (200) Id, Name, Url, Valid
-//, ContentName, HeaderName, NextName, NextTitle, CreateTime，ChildNodeCount
-//FROM         WebSites
-
+                    //SELECT     TOP (200) Id, WebId, Title, Url, StartUrl
+                    //, LatestChapter, Author, UrlCombine, TypeId, Status
+                    //FROM         Novels
                     {
                         title: '编号',
                         field: 'Id',
@@ -273,8 +277,8 @@
                         visible: false,
                         width: 60
                     }, {
-                        field: 'Name',
-                        title: '站点名称',
+                        field: 'Title',
+                        title: '小说标题',
                         halign: 'center',
                         align: 'left',
                         formatter: titleFormatter
@@ -285,13 +289,13 @@
                         align: 'left',
                         formatter: titleFormatter
                     }, {
-                        field: 'ContentName',
-                        title: '内容类名',
-                        width: 105,
+                        field: 'LatestChapter',
+                        title: '最新章节',
+                        width: 150,
                         align: 'center'
                     }, {
                         field: 'ChildNodeCount',
-                        title: '小说',
+                        title: '章节',
                         width: 60,
                         halign: 'center',
                         align: 'right',
@@ -306,7 +310,7 @@
                         formatter: dateFormatter
                     }, {
                         title: '操作',
-                        width: 75,
+                        width: 90,
                         align: 'center',
                         events: operateEvents,
                         formatter: operateFormatter
@@ -385,13 +389,13 @@
     // 操作内容格式化
     function operateFormatter(value, row, index) {
         return [
-            '<a class="detail" href="javascript:void(0)" title="小说管理">',
+            '<a class="detail" href="javascript:void(0)" title="章节管理">',
             '<i class="glyphicon glyphicon-th-list"></i>',
             '</a>  ',
-            '<a class="edit" href="javascript:void(0)" title="修改站点">',
+            '<a class="edit" href="javascript:void(0)" title="修改小说">',
             '<i class="glyphicon glyphicon-edit"></i>',
             '</a>  ',
-            '<a class="remove" href="javascript:void(0)" title="删除站点">',
+            '<a class="remove" href="javascript:void(0)" title="删除小说">',
             '<i class="glyphicon glyphicon-remove"></i>',
             '</a>'
         ].join('');
@@ -399,10 +403,12 @@
 
     // 操作事件响应
     window.operateEvents = {
-        'click .detail': function (e, value, row, index) {
+        'click .detail': function(e, value, row, index) {
             //alert('You click edit action, row: ' + JSON.stringify(row));
 
-            Page("Novel.aspx?webId=" + row.Id + "&webName=" + encodeURIComponent(row.Name));
+            var urlParams = "?webId=<% = WebId %>&webName=<% = HttpUtility.UrlEncode(WebName) %>";
+            urlParams += "&novelId=" + row.Id + "&novelName=" + encodeURIComponent(row.Title);
+            Page("Chapter.aspx" + urlParams);
 
         },
         'click .edit': function(e, value, row, index) {
@@ -415,7 +421,7 @@
             //$("#txtFullName").val(row.FullName);
             //$("#txtDirectoryName").val(row.DirectoryName);
 
-            $("#editModelLabel").html("站点信息修改");
+            $("#editModelLabel").html("小说信息修改");
             $('#editModel').modal('toggle'); // 弹出名称修改
 
         },
@@ -435,12 +441,12 @@
     }
 
     /// <summary>
-    /// 删除站点
+    /// 删除小说
     /// </summary>
 
     function DelWebById(id) {
-        if (confirm("您确定要删除该站点吗？")) {
-            var url = "/Handler/WebHandler.ashx?OP=DELETE&ID=" + id;
+        if (confirm("您确定要删除该小说吗？")) {
+            var url = "/Handler/NovelHandler.ashx?OP=DELETE&ID=" + id;
             $.get(url + "&rnd=" + (Math.random() * 10), function(data) {
                 if (data && data.success) {
                     modals.correct(data.Message);
@@ -452,12 +458,12 @@
     }
 
     /// <summary>
-    /// 批量删除站点
+    /// 批量删除小说
     /// </summary>
 
     function DelWebByIds(ids) {
-        if (confirm("您确定要批量删除这些站点吗？")) {
-            var url = "/Handler/WebHandler.ashx?OP=BATCHDELETE&IDs=" + ids;
+        if (confirm("您确定要批量删除这些小说吗？")) {
+            var url = "/Handler/NovelHandler.ashx?OP=BATCHDELETE&IDs=" + ids;
             $.get(url + "&rnd=" + (Math.random() * 10), function(data) {
                 if (data && data.success) {
                     modals.correct(data.Message);
@@ -469,9 +475,9 @@
     }
 
 
-    $(function () {
+    $(function() {
         // 模态窗体关闭事件 
-        $('#editModel').on('hidden.bs.modal', function () { // 关闭模态窗体事件
+        $('#editModel').on('hidden.bs.modal', function() { // 关闭模态窗体事件
             //$("#txtUserId").val("");
             //$("#txtUserCode").val("");
             //$("#txtUserName").val("");
@@ -486,12 +492,12 @@
         });
 
         // 数据保存按钮点击事件 
-        $("#btnSave").unbind("click").bind("click", function () {
+        $("#btnSave").unbind("click").bind("click", function() {
 
             // RowNumber, UserID, UserCode, UserName, Authority, Available
 
             var userTypeSum = 0;
-            $('input[name="chbAuthority"]:checked').each(function () {
+            $('input[name="chbAuthority"]:checked').each(function() {
                 userTypeSum += parseInt($(this).val());
             });
 
@@ -507,9 +513,9 @@
 
             $.ajax({
                 type: "POST",
-                url: "/Handler/WebHandler.ashx?OP=SAVE&rnd=" + (Math.random() * 10),
+                url: "/Handler/NovelHandler.ashx?OP=SAVE&rnd=" + (Math.random() * 10),
                 data: params,
-                success: function (rst) {
+                success: function(rst) {
                     if (rst && rst.success) {
 
                         Hsp.Message($(".result-message"), rst.Message, "success", "fade");

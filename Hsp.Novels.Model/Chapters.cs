@@ -64,7 +64,7 @@ namespace Hsp.Novels.Model
         /// 章节内容
         /// </summary>
         [DataMember]
-        public string ChapterContent { get; set; }
+        public string Content { get; set; }
 
         /// <summary>
         /// 章节字数
@@ -79,13 +79,13 @@ namespace Hsp.Novels.Model
         public DateTime UpdateTime { get; set; }
 
         /// <summary>
-        /// 根据主键查询实体数据
+        /// 添加时间
         /// </summary>
-        /// <PARAM NAME="id">主键编号</PARAM>
-        /// <RETURNS></RETURNS>
-        //public static Chapters Find(string id)
-        //{
-        //    return (Chapters)ActiveRecordBase.FindByPrimaryKey(typeof(Chapters), id);
-        //}
+        [DataMember]
+        public DateTime CreateTime { get; set; }
+
+        /** 下述对象不在表中 **/
+
+
     }
 }

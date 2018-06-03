@@ -72,7 +72,7 @@ namespace Hsp.Novels.Dal
                 INNER JOIN dbo.Novels n ON n.WebId = s.Id
                 WHERE (1 = 1){2}
             )
-            SELECT * 
+            SELECT *, (SELECT COUNT(*) FROM dbo.Chapters WHERE NovelId = a.Id) AS ChildNodeCount  
             FROM PageTb a
             CROSS JOIN (SELECT MAX(RowNumber) AS RecordCount FROM PageTb) AS b 
             WHERE (a.RowNumber BETWEEN {0} AND {1});

@@ -303,3 +303,15 @@ String.prototype.toThousands = function (num) {
     }
     return result;
 };
+
+/// <summary>
+///     页面跳转
+/// </summary>
+function Redirect(url) {
+    $.messager.progress({ title: "", msg: "正在加载页面...", text: "" });
+    window.location.href = url;
+}
+
+function Page(url) {
+    window.location.href = url;
+}

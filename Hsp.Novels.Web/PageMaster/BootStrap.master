@@ -121,6 +121,7 @@
 <script src="/Scripts/bootstrap/js/bootstrap.min.js"></script>
 <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
 <script src="/Scripts/bootstrap/js/ie10-viewport-bug-workaround.js"></script>
+
 <script src="/Scripts/Hsp.Base.js"></script>
 <script src="/Scripts/Hsp.Common.js"></script>
 <script src="/Scripts/Hsp.Modal.js"></script>
