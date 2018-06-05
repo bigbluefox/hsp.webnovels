@@ -46,7 +46,7 @@ namespace Hsp.Novels.Model
         /// 章节索引号
         /// </summary>
         [DataMember]
-        public int ChapterIndex { get; set; }
+        public int ChapterIdx { get; set; }
 
         /// <summary>
         /// 章节序号（中文）
@@ -83,6 +83,8 @@ namespace Hsp.Novels.Model
         /// </summary>
         [DataMember]
         public DateTime CreateTime { get; set; }
+        
+
 
         /** 下述对象不在表中 **/
 

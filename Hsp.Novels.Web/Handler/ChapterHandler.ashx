@@ -182,6 +182,7 @@ public class ChapterHandler : IHttpHandler, IRequiresSessionState
         var strChapter = context.Request.Params["Chapter"] ?? ""; // 章节
         var strContent = context.Request.Params["Content"] ?? ""; // 章节内容
         var iWordCount = int.Parse(context.Request.Params["WordCount"] ?? "0"); // 章节字数
+        var iChapterIdx = int.Parse(context.Request.Params["ChapterIdx"] ?? "0"); // 章节字数
 
         //NovelId, Url, NextUrl, Chapter, Content, WordCount
 
@@ -200,6 +201,7 @@ public class ChapterHandler : IHttpHandler, IRequiresSessionState
             model.Chapter = strChapter;
             model.Content = strContent;
             model.WordCount = iWordCount;
+            model.ChapterIdx = iChapterIdx;
 
             var i = 0;
             if (string.IsNullOrEmpty(strChapterId))

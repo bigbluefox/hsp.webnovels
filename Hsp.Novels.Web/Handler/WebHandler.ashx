@@ -49,10 +49,7 @@ public class WebHandler : IHttpHandler, IRequiresSessionState
                 BatchDelete(context);
                 break;
 
-            //获取站点抓取参数
-            case "CRAWL":
-                GetWebCrawl(context);
-                break;               
+            
                 
                 
 
@@ -165,24 +162,6 @@ public class WebHandler : IHttpHandler, IRequiresSessionState
 
     #endregion
 
-    #region 获取站点抓取参数
 
-    /// <summary>
-    ///     获取站点抓取参数
-    /// </summary>
-    /// <param name="context"></param>
-    private void GetWebCrawl(HttpContext context)
-    {
-        var strWebId = context.Request.Params["webId"] ?? "";
-        var strNovelId = context.Request.Params["novelId"] ?? "";
-        if (strWebId.Length > 0) strWebId = strWebId.Trim();
-        if (strNovelId.Length > 0) strNovelId = strNovelId.Trim();
-
-        var model = WebBll.WebCrawlModel(strWebId, strNovelId);
-        var json = new JavaScriptSerializer().Serialize(model);
-        context.Response.Write(json);
-    }
-
-    #endregion
 
 }

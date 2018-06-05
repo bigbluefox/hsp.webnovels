@@ -82,6 +82,30 @@ namespace Hsp.Novels.Dal
 
         #endregion
 
+        #region 获取小说抓取参数数据
+
+        /// <summary>
+        /// 获取小说抓取参数数据
+        /// </summary>
+        /// <param name="webId">站点编号</param>
+        /// <param name="novelId">小说编号</param>
+        /// <returns></returns>
+        public static DataSet CrawlData(string webId, string novelId)
+        {
+            string strSql = string.Format(@"
+            SELECT w.Name + '.' + n.Title AS Title, w.ContentName, w.HeaderName, w.NextName, w.NextTitle, NextTb.Chapter AS CurrentChapter
+            , CASE WHEN LEN(NextTb.NextUrl) > 0 THEN NextTb.NextUrl ELSE n.StartUrl END AS NextUrl
+            , CASE WHEN ISNULL(NextTb.ChapterIdx, 0) > 0 THEN NextTb.ChapterIdx ELSE n.StartChapterIdx END AS StartChapterIdx
+            , ISNULL(n.ChapterChar, '第$2章') AS ChapterChar, ISNULL(n.ChapterType, 0) AS ChapterType
+            FROM dbo.WebSites w
+            INNER JOIN dbo.Novels n ON n.WebId = w.Id
+            LEFT OUTER JOIN (SELECT TOP (1) NovelId, ISNULL(NextUrl, '') AS NextUrl, Chapter, ChapterIdx FROM Chapters WHERE NovelId = '{1}' ORDER BY CreateTime DESC) AS NextTb ON NextTb.NovelId = n.Id
+            WHERE (w.Id = '{0}') AND (n.Id = '{1}')", webId, novelId);
+            return DbHelperSql.Query(strSql);
+        }
+
+        #endregion
+
         #region 添加小说数据
 
         /// <summary>

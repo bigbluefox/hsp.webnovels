@@ -92,6 +92,29 @@ namespace Hsp.Novels.Model
         [DataMember]
         public DateTime CreateTime { get; set; }
 
+        /// <summary>
+        /// 章节模板，默认“第$2章”
+        /// </summary>
+        [DataMember]
+        public string ChapterChar { get; set; }
+
+        /// <summary>
+        /// 起始章节数字，默认1
+        /// </summary>
+        [DataMember]
+        public int StartChapterIdx { get; set; }
+
+        /// <summary>
+        /// 章节处理类型，默认0
+        /// </summary>
+        [DataMember]
+        public int ChapterType { get; set; }
+
+        //ChapterChar	nvarchar(20)	Checked
+        //StartChapterIdx	int	Checked
+        //ChapterType	int	Checked
+
+
         /** 下述对象不在表中 **/
 
         /// <summary>
@@ -123,5 +146,17 @@ namespace Hsp.Novels.Model
         /// </summary>
         [DataMember]
         public string NextTitle { get; set; }
+
+        /// <summary>
+        /// 当前章节
+        /// </summary>
+        [DataMember]
+        public string CurrentChapter { get; set; }
+
+        /// <summary>
+        /// 下一页地址或起始地址
+        /// </summary>
+        [DataMember]
+        public string NextUrl { get; set; }
     }
 }

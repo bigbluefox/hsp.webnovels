@@ -77,22 +77,22 @@ namespace Hsp.Novels.Dal
 
 //            string strSql = string.Format
 //                (@"INSERT INTO Chapters
-//                    (NovelId, Url, NextUrl, Chapter, ChapterIndex, ChapterName, HeadWord, Content, WordCount) 
+//                    (NovelId, Url, NextUrl, Chapter, ChapterIdx, ChapterName, HeadWord, Content, WordCount) 
 //                    VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}');"
-//                 , model.NovelId, model.Url, model.NextUrl, model.Chapter, model.ChapterIndex, model.ChapterName, model.HeadWord, model.Content, model.WordCount);
+//                 , model.NovelId, model.Url, model.NextUrl, model.Chapter, model.ChapterIdx, model.ChapterName, model.HeadWord, model.Content, model.WordCount);
 
             string strSql = string.Format
                 (@"INSERT INTO Chapters
-                    (NovelId, Url, NextUrl, Chapter, Content, WordCount) 
-                    VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}');"
-                 , model.NovelId, model.Url, model.NextUrl, model.Chapter, model.Content, model.WordCount);
+                    (NovelId, Url, NextUrl, Chapter, Content, WordCount, ChapterIdx) 
+                    VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}');"
+                 , model.NovelId, model.Url, model.NextUrl, model.Chapter, model.Content, model.WordCount, model.ChapterIdx);
 
             return DbHelperSql.ExecuteSql(strSql);
         }
 
         #endregion
 
-//SELECT     TOP (200) Id, NovelId, Url, NextUrl, Chapter, ChapterIndex, ChapterName, HeadWord, Content, WordCount, UpdateTime
+//SELECT     TOP (200) Id, NovelId, Url, NextUrl, Chapter, ChapterIdx, ChapterName, HeadWord, Content, WordCount, UpdateTime
 //FROM         Chapters
 
         #region 编辑章节数据
@@ -105,9 +105,9 @@ namespace Hsp.Novels.Dal
         public static int Edit(Chapters model)
         {
             string strSql = string.Format
-                (@"UPDATE Chapters SET NovelId='{1}', Url='{2}', NextUrl='{3}', Chapter='{4}', ChapterIndex='{5}', ChapterName='{6}', HeadWord='{7}', Content='{8}', WordCount='{9}'
+                (@"UPDATE Chapters SET NovelId='{1}', Url='{2}', NextUrl='{3}', Chapter='{4}', ChapterIdx='{5}', ChapterName='{6}', HeadWord='{7}', Content='{8}', WordCount='{9}'
                      WHERE (Id = '{0}');"
-                    , model.Id, model.NovelId, model.Url, model.NextUrl, model.Chapter, model.ChapterIndex, model.ChapterName, model.HeadWord, model.Content, model.WordCount);
+                    , model.Id, model.NovelId, model.Url, model.NextUrl, model.Chapter, model.ChapterIdx, model.ChapterName, model.HeadWord, model.Content, model.WordCount);
             return DbHelperSql.ExecuteSql(strSql);
         }
 

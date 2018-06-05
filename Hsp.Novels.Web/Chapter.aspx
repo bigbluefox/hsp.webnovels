@@ -60,7 +60,7 @@
 <asp:Content ID="Content4" ContentPlaceHolderID="ModalContent" Runat="Server">
     
     <div class="modal fade" id="crawlModel" tabindex="-1" role="dialog" aria-labelledby="crawlModelLabel">
-        <div class="modal-dialog" role="document">
+        <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -72,29 +72,43 @@
                     <form class="form-horizontal">
                         <div class="form-group">
                             <label for="txtChapterUrl" class="col-xs-6 col-sm-2 control-label">起始地址</label>
-                            <div class="col-xs-6 col-sm-10">
+                            <div class="col-xs-6 col-sm-6">
                                 <input type="text" class="form-control" id="txtChapterUrl" placeholder="起始地址" value="https://www.dashubao.net/book/85/85429/27100366.html">
+                            </div>
+                            <label for="txtChapterChar" class="col-xs-6 col-sm-2 control-label">章节模板</label>
+                            <div class="col-xs-6 col-sm-2">
+                                <input type="text" class="form-control" id="txtChapterChar" placeholder="章节模板" value="第$2章">
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="txtContentName" class="col-xs-6 col-sm-2 control-label">内容对象</label>
-                            <div class="col-xs-6 col-sm-4">
+                            <div class="col-xs-6 col-sm-2">
                                 <input type="text" class="form-control" id="txtContentName" placeholder="内容对象" value=".yd_text2 p">
                             </div>
                             <label for="txtHeaderName" class="col-xs-6 col-sm-2 control-label">标题对象</label>
-                            <div class="col-xs-6 col-sm-4">
+                            <div class="col-xs-6 col-sm-2">
                                 <input type="text" class="form-control" id="txtHeaderName" placeholder="标题对象" value=".oneline">
                             </div>
+                            <label for="txtStartChapterIdx" class="col-xs-6 col-sm-2 control-label">起始数字</label>
+                            <div class="col-xs-6 col-sm-2">
+                                <input type="text" class="form-control" id="txtStartChapterIdx" placeholder="起始数字" value="">
+                            </div>
                         </div>
+                     
+
                         <div class="form-group">
                             <label for="txtNextName" class="col-xs-6 col-sm-2 control-label">地址对象</label>
-                            <div class="col-xs-6 col-sm-4">
+                            <div class="col-xs-6 col-sm-2">
                                 <input type="text" class="form-control" id="txtNextName" placeholder="下一章地址对象" value=".pereview a:last-child">
                             </div>
                             <label for="txtNextTitle" class="col-xs-6 col-sm-2 control-label">结束标识</label>
-                            <div class="col-xs-6 col-sm-4">
+                            <div class="col-xs-6 col-sm-2">
                                 <input type="text" class="form-control" id="txtNextTitle" placeholder="结束标识不含" value="">
                             </div> 
+                            <label for="txtChapterType" class="col-xs-6 col-sm-2 control-label">标题处理</label>
+                            <div class="col-xs-6 col-sm-2">
+                                <input type="text" class="form-control" id="txtChapterType" placeholder="标题处理" value="">
+                            </div>
                         </div>
                         <div class="form-group">
                             <label for="txtContent" class="col-xs-6 col-sm-2 control-label">小说内容</label>
@@ -157,7 +171,7 @@
                             <input type="email" class="form-control" id="txtEmail" placeholder="邮箱地址">
                         </div>
                         
-<%--//SELECT     TOP (200) Id, NovelId, Url, NextUrl, Chapter, ChapterIndex, ChapterName, HeadWord, Content, WordCount, UpdateTime
+<%--//SELECT     TOP (200) Id, NovelId, Url, NextUrl, Chapter, ChapterIdx, ChapterName, HeadWord, Content, WordCount, UpdateTime
 //FROM         Chapters--%>
                         
 
@@ -261,7 +275,7 @@
             $('#crawlModel').modal('toggle'); // 弹出添加窗体            
         });
 
-        GetNovelInfo();
+        GetNovelInfo(); // 章节处理参数
 
         // 测试抓取
         $("#btnTest").unbind('click').bind('click', function () {
@@ -287,6 +301,42 @@
         });
     });
 
+    // 章节标题
+    function ChapterTitle(chapter, type) {
+
+        //debugger;
+
+        // 章节标题修正
+        var chapterChar = $("#txtChapterChar").val();
+        var chapterReg = /([第]{0,1})([○零一二三四五六七八九十百千\d]{1,})([节章]{0,1}[ ]{0,1}[：:]{0,1})([\s\S]*?)/;
+        //var txtChapter = chapter.replace(chapterReg, "第$2章 $4");
+        var txtChapter = chapter.replace(chapterReg, chapterChar + " $4");
+
+        if (type == 1) { // 标题出现重复
+            var chapters = chapter.replace(chapterReg, "$1,$2,$3,$4");
+            var arr = chapters.split(',');
+            var chapterIdx = arr[1];
+            //var chapterName = "第" + chapterIdx + "章";
+            var chapterName = chapterChar.replace("$2", chapterIdx);// "第" + chapterIdx + "章";
+            var headWord = arr[3].replace(chapterName, "");
+            //headWord = headWord.replace(".", "").replace(" ", "");
+
+            headWord = headWord.trim('[.]').trim(' ');
+
+
+            //alert(chapterName + " * " + headWord);
+
+            chapterIdx = chapterIdx.lTrim('0').lTrim('0');
+            //txtChapter = "第" + chapterIdx + "章 " + headWord;
+
+            txtChapter = chapterChar.replace("$2", chapterIdx) + " " + headWord;
+        }
+
+        // 处理标题括号
+
+        return txtChapter;
+    }
+
     // 测试抓取
     function TestCrawl() {
         
@@ -294,6 +344,9 @@
             var contentName = $("#txtContentName").val();
             var headerName = $("#txtHeaderName").val();
             var nextName = $("#txtNextName").val();
+            var chapterChar = $("#txtChapterChar").val();
+            var startChapterIdx = $("#txtStartChapterIdx").val();
+            var chapterType = $("#txtChapterType").val();
 
             $.ajax({
                 url: chapterUrl,
@@ -306,18 +359,15 @@
                     var html = reg.exec(result)[0];
 
                     var $html = $(contentName, $(html));
-                    console.log($html);
+                    //console.log($html);
 
                     var contents = $("#txtContent").val();
 
                     var $header = $(headerName, $(html));
-                    console.log($header);
+                    //console.log($header);
 
                     var txtChapter = $($header).text().trim();
-
-                    // 章节标题修正
-                    var chapterReg = /([第]{0,1})([○零一二三四五六七八九十百千\d]{1,})([节章]{0,1}[ ]{0,1}[：:]{0,1})([\s\S]*?)/;
-                    txtChapter = txtChapter.replace(chapterReg, "第$2章 $4");
+                    txtChapter = ChapterTitle(txtChapter, chapterType);
 
                     //$("#txtChapter").val(txtChapter);
 
@@ -329,12 +379,16 @@
                     $("#txtContent").val(contents);
 
                     $nextUrl = $(nextName, $(html));
-                    console.log($nextUrl);
+                    //console.log($nextUrl);
 
                     var nextUrl = $nextUrl[0].href;
                     //var nextUrlTitle = $nextUrl[0].innerText;
                     //$("#txtNextUrl").val(nextUrl);
+
                     $("#txtChapterUrl").val(nextUrl);
+                    $("#txtChapterTitle").html(txtChapter);
+                    $("#txtStartChapterIdx").val(parseInt(startChapterIdx) + 1); // 起始/当前章节数字
+
 
                     // 添加小说内容
 
@@ -364,6 +418,9 @@
         var contentName = $("#txtContentName").val();
         var headerName = $("#txtHeaderName").val();
         var nextName = $("#txtNextName").val();
+        var chapterChar = $("#txtChapterChar").val();
+        var startChapterIdx = $("#txtStartChapterIdx").val();
+        var chapterType = $("#txtChapterType").val();
 
         $.ajax({
             url: chapterUrl,
@@ -398,11 +455,12 @@
                 //debugger;
 
                 var chapterReg = /([第]{0,1})([○零一二三四五六七八九十百千\d]{1,})([节章]{0,1}[ ]{0,1}[：:]{0,1})([\s\S]*?)/;
-                txtChapter = txtChapter.replace(chapterReg, "第$2章 $4");
+                txtChapter = txtChapter.replace(chapterReg, chapterChar + " $4");
+                txtChapter = ChapterTitle(txtChapter, chapterType);
 
                 //var testreg = txtChapter.replace(chapterReg, "$1-$2-$3-$4");
-
                 //$("#txtChapter").val(txtChapter);
+
                 $("#txtChapterTitle").html(txtChapter);
 
                 contents += txtChapter + "\n";
@@ -418,8 +476,9 @@
 
                 var nextUrl = $nextUrl[0].href;
                 var nextUrlTitle = $nextUrl[0].innerText;
+                $("#txtStartChapterIdx").val(parseInt(startChapterIdx) + 1); // 起始/当前章节数字
 
-                $("#txtChapterTitle").val(txtChapter);
+                //$("#txtChapterTitle").val(txtChapter);
 
                 // 添加小说内容
                 //var $novelBody = $(".container .novel");
@@ -439,13 +498,13 @@
                     NextUrl: encodeURIComponent(nextUrl),
                     Chapter: encodeURIComponent(txtChapter),
                     Content: encodeURIComponent(content),
-                    WordCount: contents.length
-                    //,ChapterIndex: 0,
-                    //ChapterName: "",
+                    WordCount: contents.length,
+                    ChapterIdx: $("#txtStartChapterIdx").val()
+                    //,ChapterName: "",
                     //HeadWord: ""
                 };
 
-                //SELECT     TOP (200) Id, NovelId, Url, NextUrl, Chapter, ChapterIndex, ChapterName
+                //SELECT     TOP (200) Id, NovelId, Url, NextUrl, Chapter, ChapterIdx, ChapterName
                 //, HeadWord, Content, WordCount, UpdateTime, CreateTime
                 //FROM         Chapters
 
@@ -496,14 +555,12 @@
 
     // 获取小说信息
     function GetNovelInfo() {
-
-        //var novelId = "35986997-DC9D-485B-90CE-DFC754C8669C";
-
         $.ajax({
-            url: '/Handler/WebHandler.ashx?rnd=' + (Math.random() * 16),
+            url: '/Handler/NovelHandler.ashx?rnd=' + (Math.random() * 16),
             type: 'GET',
             data: { OP: "CRAWL", webId: webId, novelId: novelId },
             success: function (rst) {
+                console.log(rst);
                 if (rst) {
                     $("#txtChapterUrl").val(rst.NextUrl);
                     $("#txtContentName").val(rst.ContentName);
@@ -511,6 +568,10 @@
                     $("#txtNextName").val(rst.NextName);
                     $("#txtNextTitle").val(rst.NextTitle);
                     $("#txtChapterTitle").html(rst.CurrentChapter);
+
+                    $("#txtChapterChar").val(rst.ChapterChar);
+                    $("#txtStartChapterIdx").val(rst.StartChapterIdx);
+                    $("#txtChapterType").val(rst.ChapterType);
                 }
             },
             complete: function (xhr, errorText, errorType) {
@@ -582,7 +643,7 @@
                         align: 'center'
                     },
 
-//SELECT     TOP (200) Id, NovelId, Url, NextUrl, Chapter, ChapterIndex, ChapterName
+//SELECT     TOP (200) Id, NovelId, Url, NextUrl, Chapter, ChapterIdx, ChapterName
 //, HeadWord, Content, WordCount, UpdateTime
 //FROM         Chapters
 

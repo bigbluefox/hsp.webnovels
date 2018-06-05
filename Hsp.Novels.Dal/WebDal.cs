@@ -73,23 +73,8 @@ namespace Hsp.Novels.Dal
 
         #endregion
 
-        /// <summary>
-        /// 获取站点抓取参数
-        /// </summary>
-        /// <param name="webId">站点编号</param>
-        /// <param name="novelId">小说编号</param>
-        /// <returns></returns>
-        public static DataSet WebCrawlData(string webId, string novelId)
-        {
-            string strSql = string.Format(@"
-            SELECT w.Name + '.' + n.Title AS Name, w.ContentName, w.HeaderName, w.NextName, w.NextTitle, NextTb.Chapter AS CurrentChapter
-            , CASE WHEN LEN(NextTb.NextUrl) > 0 THEN NextTb.NextUrl ELSE n.StartUrl END AS NextUrl
-            FROM dbo.WebSites w
-            INNER JOIN dbo.Novels n ON n.WebId = w.Id
-            LEFT OUTER JOIN (SELECT TOP (1) NovelId, ISNULL(NextUrl, '') AS NextUrl, Chapter FROM Chapters WHERE NovelId = '{1}' ORDER BY CreateTime DESC) AS NextTb ON NextTb.NovelId = n.Id
-            WHERE (w.Id = '{0}') AND (n.Id = '{1}')", webId, novelId);
-            return DbHelperSql.Query(strSql);
-        }
+
+
 
         #region 添加站点数据
 

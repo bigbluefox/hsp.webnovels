@@ -35,26 +35,7 @@ namespace Hsp.Novels.Bll
 
         #endregion
 
-        #region 获取站点抓取参数实体
 
-        /// <summary>
-        /// 获取站点抓取参数实体
-        /// </summary>
-        /// <param name="webId">站点编号</param>
-        /// <param name="novelId">小说编号</param>
-        /// <returns></returns>
-        public WebSites WebCrawlModel(string webId, string novelId)
-        {
-            WebSites web = null;
-            DataSet ds = WebDal.WebCrawlData(webId, novelId);
-            if (ds != null && ds.Tables[0].Rows.Count > 0)
-            {
-                web = new DataTableToList<WebSites>(ds.Tables[0]).ToList().FirstOrDefault();
-            }
-            return web;
-        }
-
-        #endregion
 
 
         #region 添加站点信息
