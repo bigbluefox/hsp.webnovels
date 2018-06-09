@@ -2515,15 +2515,15 @@ var wysihtml5 = {
                 var comparison, workingComparisonType = isStart ? "StartToStart" : "StartToEnd";
                 var previousNode, nextNode, boundaryPosition, boundaryNode;
                 var start = (startInfo && startInfo.containerElement == containerElement) ? startInfo.nodeIndex : 0;
-                var childNodeCount = containerElement.childNodes.length;
-                var end = childNodeCount;
+                var ChildCount = containerElement.childNodes.length;
+                var end = ChildCount;
 
                 // Check end first. Code within the loop assumes that the endth child node of the container is definitely
                 // after the range boundary.
                 var nodeIndex = end;
 
                 while (true) {
-                    if (nodeIndex == childNodeCount) {
+                    if (nodeIndex == ChildCount) {
                         containerElement.appendChild(workingNode);
                     } else {
                         containerElement.insertBefore(workingNode, containerElement.childNodes[nodeIndex]);

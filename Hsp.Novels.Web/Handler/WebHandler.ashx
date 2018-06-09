@@ -6,6 +6,7 @@ using System.Web;
 using System.Web.Script.Serialization;
 using System.Web.SessionState;
 using Hsp.Novels.Bll;
+using Hsp.Novels.Model;
 
 /// <summary>
 /// 站点数据一般处理程序
@@ -39,6 +40,11 @@ public class WebHandler : IHttpHandler, IRequiresSessionState
                 GetPageList(context);
                 break;
 
+            // 站点保存
+            case "SAVE":
+                WebSave(context);
+                break;  
+                
             // 删除站点
             case "DELETE":
                 Delete(context);
@@ -48,8 +54,7 @@ public class WebHandler : IHttpHandler, IRequiresSessionState
             case "BATCHDELETE":
                 BatchDelete(context);
                 break;
-
-            
+          
                 
                 
 
@@ -120,7 +125,7 @@ public class WebHandler : IHttpHandler, IRequiresSessionState
         var strId = context.Request.Params["ID"] ?? ""; // 站点编号
         if (string.IsNullOrEmpty(strId)) return;
 
-        var i = WebBll.Delete(int.Parse(strId));
+        var i = WebBll.Delete(strId);
         if (i > 0)
         {
             rst = "{\"success\":true,\"Message\": \"站点『" + strId + "』删除成功！\"}";
@@ -163,5 +168,74 @@ public class WebHandler : IHttpHandler, IRequiresSessionState
     #endregion
 
 
+    #region 站点数据保存
+
+    /// <summary>
+    /// 站点数据保存
+    /// </summary>
+    /// <param name="context"></param>
+    private void WebSave(HttpContext context)
+    {
+        var rst = "";
+        var strWebId = context.Request.Params["ID"] ?? ""; // 站点编号
+        var strName = context.Request.Params["Name"] ?? ""; // 站点名称
+        var strWebUrl = context.Request.Params["WebUrl"] ?? ""; // 站点地址        
+        var strContentName = context.Request.Params["ContentName"] ?? ""; // 内容对象
+        var strHeaderName = context.Request.Params["HeaderName"] ?? ""; // 标题对象
+        var strNextName = context.Request.Params["NextName"] ?? ""; // 地址对象
+        var strNextTitle = context.Request.Params["NextTitle"] ?? ""; // 下一章地址对象结束标识
+        var isValid = int.Parse(context.Request.Params["Valid"] ?? "0"); // 是否有效
+        var urlCombine = int.Parse(context.Request.Params["UrlCombine"] ?? "0"); // 是否有效
+        
+        // SELECT     TOP (200) Id, Name, WebUrl, Valid, ContentName, HeaderName, NextName, NextTitle, CreateTime
+        //FROM         WebSites
+        
+        try
+        {
+            string rstType;
+            WebSites model = new WebSites();
+            model.Name = strName;
+            model.WebUrl = strWebUrl;
+            model.ContentName = strContentName;
+            model.HeaderName = strHeaderName;
+            model.NextName = strNextName;
+            model.NextTitle = strNextTitle;
+            model.Valid = isValid;
+            model.UrlCombine = urlCombine;
+
+            var i = 0; // 数据添加/编辑影响行数
+            if (string.IsNullOrEmpty(strWebId))
+            {
+                // 添加站点数据
+                rstType = "添加";
+                model.Id = Guid.NewGuid().ToString().ToUpper();
+                i = WebBll.Add(model);
+            }
+            else
+            {
+                // 修改站点数据
+                rstType = "修改";
+                model.Id = strWebId;
+                i = WebBll.Edit(model);
+            }
+
+            if (i > 0)
+            {
+                rst = "{\"success\":true,\"Message\": \"站点『" + model.Name + "』" + rstType + "成功！\"}";
+            }
+            else
+            {
+                rst = "{\"success\":false,\"Message\": \"站点『" + model.Name + "』" + rstType + "失败！\"}";
+            }
+        }
+        catch (Exception ex)
+        {
+            rst = "{\"success\":false,\"Message\": \"" + ex.Message.Replace('"', '\"') + "！\"}";
+        }
+
+        context.Response.Write(rst);
+    }
+
+    #endregion
 
 }

@@ -78,57 +78,39 @@
 
                     <form>
                         <div class="form-group">
-                            <label for="txtUserCode">登录账号<span class="required">*</span></label>
-                            <input type="text" class="form-control" id="txtUserCode" placeholder="登录账号" required="required">
+                            <label for="txtTitle">小说名称<span class="required">*</span></label>
+                            <input type="text" class="form-control" id="txtTitle" placeholder="小说名称" required="required">
                         </div>
                         <div class="form-group">
-                            <label for="txtUserName">小说姓名<span class="required">*</span></label>
-                            <input type="text" class="form-control" id="txtUserName" placeholder="小说姓名" required="required">
+                            <label for="txtNovelUrl">小说地址<span class="required">*</span></label>
+                            <input type="text" class="form-control" id="txtNovelUrl" placeholder="小说地址" required="required">
                         </div>
                         <div class="form-group">
-                            <label for="txtMobile">移动电话</label>
-                            <input type="number" class="form-control" id="txtMobile" placeholder="移动电话">
+                            <label for="txtStartUrl">起始地址</label>
+                            <input type="text" class="form-control" id="txtStartUrl" placeholder="起始地址">
                         </div>
                         <div class="form-group">
-                            <label for="txtEmail">邮箱地址</label>
-                            <input type="email" class="form-control" id="txtEmail" placeholder="邮箱地址">
+                            <label for="txtAuthor">小说作者</label>
+                            <input type="text" class="form-control" id="txtAuthor" placeholder="小说作者">
                         </div>
 
-
-                        <%--//SELECT     TOP (200) Id, WebId, Title, Url, StartUrl, LatestChapter, Author, UrlCombine, TypeId, Status
-//FROM         Novels--%>
-
+                        <%--SELECT TOP (200) Id, WebId, Title, NovelUrl, StartUrl, LatestChapter, Author, TypeId
+                        , Status, RecentUpdate, ChapterCount, CreateTime, ChapterChar, StartChapterIdx, ChapterType
+                        FROM Novels--%>
+                        
                         <div class="form-group">
-                            <label>小说权限</label>
-                            <div id="usertype">
-                                <label class="checkbox-inline">
-                                    <input type="checkbox" id="chbAuthority1" name="chbAuthority" value="0">
-                                    普通小说(0)
-                                </label>
-                                <label class="checkbox-inline">
-                                    <input type="checkbox" id="chbAuthority2" name="chbAuthority" value="1">
-                                    数据应用小说(1)
-                                </label>
-                                <label class="checkbox-inline">
-                                    <input type="checkbox" id="chbAuthority3" name="chbAuthority" value="2">
-                                    人力资源小说(2)
-                                </label>
-                                <label class="checkbox-inline">
-                                    <input type="checkbox" id="chbAuthority4" name="chbAuthority" value="4">
-                                    管理小说(4)
-                                </label>
-                            </div>
+                            <label for="txtChapterChar">章节模板</label>
+                            <input type="text" class="form-control" id="txtChapterChar" placeholder="章节模板，默认“第$2章”">
                         </div>
-
                         <div class="form-group">
-                            <label>是否有效</label>
-                            <div class="checkbox">
-                                <label>
-                                    <input type="checkbox" id="chbAvailable">
-                                    是否有效
-                                </label>
-                            </div>
+                            <label for="txtStartChapterIdx">起始序号</label>
+                            <input type="text" class="form-control" id="txtStartChapterIdx" placeholder="起始章节序号，默认1">
                         </div>
+                        <div class="form-group">
+                            <label for="txtChapterType">章节处理</label>
+                            <input type="text" class="form-control" id="txtChapterType" placeholder="章节处理类型，默认0">
+                        </div>                        
+                        
                         <div class="form-group">
                             <div>
                                 <div class="error-message"></div>
@@ -138,7 +120,7 @@
 
                 </div>
                 <div class="modal-footer">
-                    <input type="hidden" id="txtUserId">
+                    <input type="hidden" id="txtId"><input type="hidden" id="txtWebId">
                     <button type="button" class="btn btn-default" data-dismiss="modal">
                         <span class="glyphicon glyphicon-floppy-remove" aria-hidden="true"></span> 关闭
                     </button>
@@ -206,7 +188,10 @@
             $table.bootstrapTable('refresh');
         });
 
-        $("#btnAdd").click(function() {
+        $("#btnAdd").click(function () {
+
+            $("#txtWebId").val(webId);
+
             $("#editModelLabel").html("小说信息添加");
             $('#editModel').modal('toggle'); // 弹出添加窗体            
         });
@@ -248,12 +233,10 @@
                     qname: $("input[name='search']").val(),
                     sdate: $("#startDate").val(),
                     edate: $("#endDate").val()
-
                 };
                 return param;
             },
             smartDisplay: true,
-
             columns: [
                 [
                     {
@@ -267,9 +250,10 @@
                         align: 'center'
                     },
 
-                    //SELECT     TOP (200) Id, WebId, Title, Url, StartUrl
-                    //, LatestChapter, Author, UrlCombine, TypeId, Status
-                    //FROM         Novels
+                    //SELECT TOP (200) Id, WebId, Title, NovelUrl, StartUrl, LatestChapter, Author, TypeId
+                    //, Status, RecentUpdate, ChapterCount, CreateTime, ChapterChar, StartChapterIdx, ChapterType
+                    //FROM Novels
+
                     {
                         title: '编号',
                         field: 'Id',
@@ -283,19 +267,24 @@
                         align: 'left',
                         formatter: titleFormatter
                     }, {
-                        field: 'Url',
-                        title: '地址',
+                        field: 'NovelUrl',
+                        title: '小说地址',
                         halign: 'center',
                         align: 'left',
                         formatter: titleFormatter
+                    }, {
+                        field: 'Author',
+                        title: '小说作者',
+                        width: 90,
+                        align: 'center'
                     }, {
                         field: 'LatestChapter',
                         title: '最新章节',
                         width: 150,
                         align: 'center'
                     }, {
-                        field: 'ChildNodeCount',
-                        title: '章节',
+                        field: 'ChildCount',
+                        title: '章节数',
                         width: 60,
                         halign: 'center',
                         align: 'right',
@@ -362,7 +351,7 @@
             });
             $remove.prop('disabled', true);
 
-            DelWebByIds(ids); // 批量删除
+            DelNovelByIds(ids); // 批量删除
         });
 
         $(window).resize(function() {
@@ -414,12 +403,20 @@
         'click .edit': function(e, value, row, index) {
             //alert('You click edit action, row: ' + JSON.stringify(row));
 
-            //$("#txtId").val(row.Id);
-            //$("#txtTitle").val(row.Title);
-            //$("#txtOldName").val(row.Title);
-            //$("#txtExtension").val(row.Extension);
-            //$("#txtFullName").val(row.FullName);
-            //$("#txtDirectoryName").val(row.DirectoryName);
+            $("#txtId").val(row.Id);
+            $("#txtWebId").val(row.WebId);
+            $("#txtTitle").val(row.Title);
+            $("#txtNovelUrl").val(row.NovelUrl);
+            $("#txtStartUrl").val(row.StartUrl);
+
+            $("#txtAuthor").val(row.Author);
+            $("#txtChapterChar").val(row.ChapterChar);
+            $("#txtStartChapterIdx").val(row.StartChapterIdx);
+            $("#txtChapterType").val(row.ChapterType);
+
+            //SELECT     TOP (200) Id, WebId, Title, NovelUrl, StartUrl, LatestChapter, Author, TypeId
+            //, Status, RecentUpdate, ChapterCount, CreateTime, ChapterChar, StartChapterIdx, ChapterType
+            //FROM         Novels
 
             $("#editModelLabel").html("小说信息修改");
             $('#editModel').modal('toggle'); // 弹出名称修改
@@ -431,7 +428,7 @@
                 values: [row.Id]
             });
 
-            DelWebById(row.Id); // 删除行数据，考虑要将上述表格响应纳入到删除操作中
+            DelNovelById(row.Id); // 删除行数据，考虑要将上述表格响应纳入到删除操作中
         }
     };
 
@@ -444,7 +441,7 @@
     /// 删除小说
     /// </summary>
 
-    function DelWebById(id) {
+    function DelNovelById(id) {
         if (confirm("您确定要删除该小说吗？")) {
             var url = "/Handler/NovelHandler.ashx?OP=DELETE&ID=" + id;
             $.get(url + "&rnd=" + (Math.random() * 10), function(data) {
@@ -461,7 +458,7 @@
     /// 批量删除小说
     /// </summary>
 
-    function DelWebByIds(ids) {
+    function DelNovelByIds(ids) {
         if (confirm("您确定要批量删除这些小说吗？")) {
             var url = "/Handler/NovelHandler.ashx?OP=BATCHDELETE&IDs=" + ids;
             $.get(url + "&rnd=" + (Math.random() * 10), function(data) {
@@ -478,38 +475,41 @@
     $(function() {
         // 模态窗体关闭事件 
         $('#editModel').on('hidden.bs.modal', function() { // 关闭模态窗体事件
-            //$("#txtUserId").val("");
-            //$("#txtUserCode").val("");
-            //$("#txtUserName").val("");
-            ////$("#txtMobile").val("");
-            ////$("#txtEmail").val("");
-            //$("#chbAvailable").removeAttr("checked");
+            $("#txtId").val("");
+            $("#txtWebId").val("");
+            $("#txtTitle").val("");
+            $("#txtNovelUrl").val("");
+            $("#txtStartUrl").val("");
 
-            //var boxes = document.getElementsByName("chbAuthority");
-            //for (i = 0; i < boxes.length; i++) {
-            //    boxes[i].checked = false;
-            //}
+            $("#txtAuthor").val("");
+            $("#txtChapterChar").val("");
+            $("#txtStartChapterIdx").val("");
+            $("#txtChapterType").val("");
+
+            //SELECT     TOP (200) Id, WebId, Title, NovelUrl, StartUrl, LatestChapter, Author, TypeId
+            //, Status, RecentUpdate, ChapterCount, CreateTime, ChapterChar, StartChapterIdx, ChapterType
+            //FROM         Novels
         });
 
         // 数据保存按钮点击事件 
         $("#btnSave").unbind("click").bind("click", function() {
 
-            // RowNumber, UserID, UserCode, UserName, Authority, Available
-
-            var userTypeSum = 0;
-            $('input[name="chbAuthority"]:checked').each(function() {
-                userTypeSum += parseInt($(this).val());
-            });
-
             var params = {
-                id: $("#txtUserId").val(),
-                code: $('#txtUserCode').val(),
-                name: $("#txtUserName").val(),
-                //mobile: $("#txtMobile").val(),
-                //email: $('#txtEmail').val(), result-message
-                auth: userTypeSum, // 权限
-                available: document.getElementById("chbAvailable").checked ? "1" : "0"
+                Id: $("#txtId").val(),
+                WebId: $('#txtWebId').val(),
+                Title: $("#txtTitle").val(),
+                Author: $('#txtAuthor').val(),
+                NovelUrl: $("#txtNovelUrl").val(),
+                StartUrl: $('#txtStartUrl').val(),
+                ChapterChar: $("#txtChapterChar").val(),
+                StartChapterIdx: $("#txtStartChapterIdx").val(),
+                ChapterType: $('#txtChapterType').val(),
             };
+
+
+            //SELECT TOP (200) Id, WebId, Title, NovelUrl, StartUrl, LatestChapter, Author, TypeId
+            //, Status, RecentUpdate, ChapterCount, CreateTime, ChapterChar, StartChapterIdx, ChapterType
+            //FROM Novels
 
             $.ajax({
                 type: "POST",
@@ -518,13 +518,27 @@
                 success: function(rst) {
                     if (rst && rst.success) {
 
-                        Hsp.Message($(".result-message"), rst.Message, "success", "fade");
+                        Hsp.Common.Message($(".result-message"), rst.Message, "success", "fade");
                         $('#editModel').modal('hide');
 
                         refreshTable();
                     } else {
-                        Hsp.Message($(".error-message"), rst.Message, "error", "fade");
+                        Hsp.Common.Message($(".error-message"), rst.Message, "error", "fade");
                     }
+                }
+                ,
+                complete: function (xhr, errorText, errorType) {
+                    //debugger;
+                    //var p = "";
+                    //alert("请求完成后");
+                },
+                error: function (xhr, errorText, errorType) {
+
+                    debugger;
+                    alert("请求错误后");
+                },
+                beforSend: function () {
+                    alert("请求之前");
                 }
             });
         });

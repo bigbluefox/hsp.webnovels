@@ -30,7 +30,6 @@
             <div class="form-group">
                 <input name="search" class="form-control" type="text" placeholder="搜索内容">
             </div>
-
             <div class="form-group">
                 <label class="sr-only" for="startDate">开始时间</label>
                 <div class="input-group date form_date" data-date="" data-date-format="yyyy-mm-dd" data-link-field="startDate" data-link-format="yyyy-mm-dd">
@@ -75,53 +74,58 @@
                     <h4 class="modal-title" id="editModelLabel">站点信息修改</h4>
                 </div>
                 <div class="modal-body">
-
                     <form>
                         <div class="form-group">
-                            <label for="txtUserCode">登录账号<span class="required">*</span></label>
-                            <input type="text" class="form-control" id="txtUserCode" placeholder="登录账号" required="required">
+                            <label for="txtName">站点名称<span class="required">*</span></label>
+                            <input type="text" class="form-control" id="txtName" placeholder="站点名称..." required="required">
                         </div>
                         <div class="form-group">
-                            <label for="txtUserName">站点姓名<span class="required">*</span></label>
-                            <input type="text" class="form-control" id="txtUserName" placeholder="站点姓名" required="required">
-                        </div>
-                                                <div class="form-group">
-                            <label for="txtMobile">移动电话</label>
-                            <input type="number" class="form-control" id="txtMobile" placeholder="移动电话">
+                            <label for="txtUrl">站点地址<span class="required">*</span></label>
+                            <input type="text" class="form-control" id="txtUrl" placeholder="站点地址..." required="required">
                         </div>
                         <div class="form-group">
-                            <label for="txtEmail">邮箱地址</label>
-                            <input type="email" class="form-control" id="txtEmail" placeholder="邮箱地址">
+                            <label for="txtContentName">内容对象</label>
+                            <input type="text" class="form-control" id="txtContentName" placeholder="内容对象...">
                         </div>
+                        <div class="form-group">
+                            <label for="txtHeaderName">标题对象</label>
+                            <input type="text" class="form-control" id="txtHeaderName" placeholder="标题对象...">
+                        </div>
+                        
+                        <%--SELECT     TOP (200) Id, Name, WebUrl, Valid, ContentName, HeaderName, NextName, NextTitle, CreateTime
+                        FROM         WebSites  --%>                      
 
                         <div class="form-group">
-                            <label>站点权限</label>
-                            <div id="usertype">
-                                <label class="checkbox-inline">
-                                    <input type="checkbox" id="chbAuthority1" name="chbAuthority" value="0">
-                                    普通站点(0)
-                                </label>
-                                <label class="checkbox-inline">
-                                    <input type="checkbox" id="chbAuthority2" name="chbAuthority" value="1">
-                                    数据应用站点(1)
-                                </label>
-                                <label class="checkbox-inline">
-                                    <input type="checkbox" id="chbAuthority3" name="chbAuthority" value="2">
-                                    人力资源站点(2)
-                                </label>
-                                <label class="checkbox-inline">
-                                    <input type="checkbox" id="chbAuthority4" name="chbAuthority" value="4">
-                                    管理站点(4)
-                                </label>
-                            </div>
+                            <label for="txtNextName">地址对象</label>
+                            <input type="text" class="form-control" id="txtNextName" placeholder="地址对象...">
                         </div>
-
+                        <div class="form-group">
+                            <label for="txtNextTitle">结束标识</label>
+                            <input type="text" class="form-control" id="txtNextTitle" placeholder="下一章地址对象结束标识...">
+                        </div>
+                        <div class="form-group">
+                            <label for="txtNextTitle">地址组合</label>
+                            <select class="form-control" id="selUrlCombine">
+                              <option value="0">无</option>
+                              <option value="1">网站 + 章节地址</option>
+                              <option value="2">小说 + 章节地址</option>
+                            </select>
+                        </div>
                         <div class="form-group">
                             <label>是否有效</label>
                             <div class="checkbox">
                                 <label>
-                                    <input type="checkbox" id="chbAvailable">
-                                    是否有效
+                                    <input type="checkbox" id="chbValid">
+                                    站点是否有效
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group" style="display: none;">
+                            <label>地址组合</label>
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" id="chbUrlCombine">
+                                    地址是否需要组合，即章节地址需要跟小说地址组合后才能访问章节？
                                 </label>
                             </div>
                         </div>
@@ -131,17 +135,15 @@
                             </div>
                         </div>
                     </form>
-
                 </div>
                 <div class="modal-footer">
-                    <input type="hidden" id="txtUserId">
+                    <input type="hidden" id="txtId">
                     <button type="button" class="btn btn-default" data-dismiss="modal">
                         <span class="glyphicon glyphicon-floppy-remove" aria-hidden="true"></span> 关闭
                     </button>
                     <button type="button" class="btn btn-primary" id="btnSave">
                         <span class="glyphicon glyphicon-floppy-saved" aria-hidden="true"></span> 保存
                     </button>
-
                 </div>
             </div>
         </div>
@@ -248,7 +250,6 @@
                 return param;
             },
             smartDisplay: true,
-
             columns: [
                 [
                     {
@@ -262,8 +263,8 @@
                         align: 'center'
                     },
 
-//SELECT     TOP (200) Id, Name, Url, Valid
-//, ContentName, HeaderName, NextName, NextTitle, CreateTime，ChildNodeCount
+//SELECT     TOP (200) Id, Name, WebUrl, Valid
+//, ContentName, HeaderName, NextName, NextTitle, CreateTime，ChildCount
 //FROM         WebSites
 
                     {
@@ -279,7 +280,7 @@
                         align: 'left',
                         formatter: titleFormatter
                     }, {
-                        field: 'Url',
+                        field: 'WebUrl',
                         title: '地址',
                         halign: 'center',
                         align: 'left',
@@ -288,10 +289,28 @@
                         field: 'ContentName',
                         title: '内容类名',
                         width: 105,
+                        halign: 'center',
+                        align: 'left',
+                    }, {
+                        field: 'HeaderName',
+                        title: '标题类名',
+                        width: 105,
+                        halign: 'center',
+                        align: 'left',
+                    }, {
+                        field: 'NextName',
+                        title: '下一章类名',
+                        width: 105,
+                        halign: 'center',
+                        align: 'left',
+                    }, {
+                        field: 'NextTitle',
+                        title: '结束标识',
+                        width: 105,
                         align: 'center'
                     }, {
-                        field: 'ChildNodeCount',
-                        title: '小说',
+                        field: 'ChildCount',
+                        title: '小说数',
                         width: 60,
                         halign: 'center',
                         align: 'right',
@@ -408,12 +427,25 @@
         'click .edit': function(e, value, row, index) {
             //alert('You click edit action, row: ' + JSON.stringify(row));
 
-            //$("#txtId").val(row.Id);
-            //$("#txtTitle").val(row.Title);
-            //$("#txtOldName").val(row.Title);
-            //$("#txtExtension").val(row.Extension);
-            //$("#txtFullName").val(row.FullName);
-            //$("#txtDirectoryName").val(row.DirectoryName);
+            //SELECT     TOP (200) Id, Name, WebUrl, Valid, ContentName, HeaderName, NextName, NextTitle, CreateTime
+            //FROM         WebSites chbUrlCombine
+
+            $("#txtId").val(row.Id);
+            $("#txtName").val(row.Name);
+            $("#txtUrl").val(row.WebUrl);
+            $("#txtContentName").val(row.ContentName);
+            $("#txtHeaderName").val(row.HeaderName);
+            $("#txtNextName").val(row.NextName);
+            $("#txtNextTitle").val(row.NextTitle);
+
+            if (row.Valid == 1) {
+                document.getElementById("chbValid").checked = true; // 设置是否有效复选框为选中状态
+            }
+            //if (row.UrlCombine == 1) {
+            //    document.getElementById("chbUrlCombine").checked = true; // 设置地址组合复选框为选中状态
+            //}
+
+            $("#selUrlCombine").val(row.UrlCombine);
 
             $("#editModelLabel").html("站点信息修改");
             $('#editModel').modal('toggle'); // 弹出名称修改
@@ -472,37 +504,36 @@
     $(function () {
         // 模态窗体关闭事件 
         $('#editModel').on('hidden.bs.modal', function () { // 关闭模态窗体事件
-            //$("#txtUserId").val("");
-            //$("#txtUserCode").val("");
-            //$("#txtUserName").val("");
-            ////$("#txtMobile").val("");
-            ////$("#txtEmail").val("");
-            //$("#chbAvailable").removeAttr("checked");
 
-            //var boxes = document.getElementsByName("chbAuthority");
-            //for (i = 0; i < boxes.length; i++) {
-            //    boxes[i].checked = false;
-            //}
+            $("#txtId").val("");
+            $("#txtName").val("");
+            $("#txtUrl").val("");
+            $("#txtContentName").val("");
+            $("#txtHeaderName").val("");
+            $("#txtNextName").val("");
+            $("#txtNextTitle").val("");
+
+            $("#chbValid").removeAttr("checked");
+            //$("#chbUrlCombine").removeAttr("checked");
+            $("#selUrlCombine").val("0");
         });
+
+        //SELECT TOP (200) Id, Name, WebUrl, Valid, ContentName, HeaderName, NextName, NextTitle, CreateTime
+        //FROM WebSites chbValid
 
         // 数据保存按钮点击事件 
         $("#btnSave").unbind("click").bind("click", function () {
 
-            // RowNumber, UserID, UserCode, UserName, Authority, Available
-
-            var userTypeSum = 0;
-            $('input[name="chbAuthority"]:checked').each(function () {
-                userTypeSum += parseInt($(this).val());
-            });
-
             var params = {
-                id: $("#txtUserId").val(),
-                code: $('#txtUserCode').val(),
-                name: $("#txtUserName").val(),
-                //mobile: $("#txtMobile").val(),
-                //email: $('#txtEmail').val(), result-message
-                auth: userTypeSum, // 权限
-                available: document.getElementById("chbAvailable").checked ? "1" : "0"
+                id: $("#txtId").val(),
+                name: $("#txtName").val(),
+                webUrl: $('#txtUrl').val(),
+                contentName: $("#txtContentName").val(),
+                headerName: $('#txtHeaderName').val(),
+                nextName: $('#txtNextName').val(),
+                nextTitle: $('#txtNextTitle').val(),
+                valid: document.getElementById("chbValid").checked ? "1" : "0",
+                urlCombine: $("#selUrlCombine").val()
             };
 
             $.ajax({
@@ -512,12 +543,12 @@
                 success: function (rst) {
                     if (rst && rst.success) {
 
-                        Hsp.Message($(".result-message"), rst.Message, "success", "fade");
+                        Hsp.Common.Message($(".result-message"), rst.Message, "success", "fade");
                         $('#editModel').modal('hide');
 
                         refreshTable();
                     } else {
-                        Hsp.Message($(".error-message"), rst.Message, "error", "fade");
+                        Hsp.Common.Message($(".error-message"), rst.Message, "error", "fade");
                     }
                 }
             });

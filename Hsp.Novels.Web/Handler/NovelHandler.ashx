@@ -1,10 +1,12 @@
 ﻿<%@ WebHandler Language="C#" Class="NovelHandler" %>
 
+using System;
 using System.Collections.Generic;
 using System.Web;
 using System.Web.Script.Serialization;
 using System.Web.SessionState;
 using Hsp.Novels.Bll;
+using Hsp.Novels.Model;
 
 /// <summary>
 ///   小说抓取一般处理程序
@@ -50,7 +52,7 @@ public class NovelHandler : IHttpHandler, IRequiresSessionState
         var js = new JavaScriptSerializer().Serialize(list);
 
         //需要返回的数据有总记录数和行数据  
-        var json = "{\"total\":" + list[0].RecordCount + ",\"rows\":" + js + "}";
+        var json = "{\"total\":" + (list.Count > 1? list[0].RecordCount : 0) + ",\"rows\":" + js + "}";
 
         context.Response.Write(json);
     }
@@ -69,7 +71,7 @@ public class NovelHandler : IHttpHandler, IRequiresSessionState
         var strId = context.Request.Params["ID"] ?? ""; // 小说编号
         if (string.IsNullOrEmpty(strId)) return;
 
-        var i = NovelBll.Delete(int.Parse(strId));
+        var i = NovelBll.Delete(strId);
         if (i > 0)
         {
             rst = "{\"success\":true,\"Message\": \"小说『" + strId + "』删除成功！\"}";
@@ -111,10 +113,10 @@ public class NovelHandler : IHttpHandler, IRequiresSessionState
 
     #endregion
 
-    #region 获取站点抓取参数
+    #region 获取小说抓取参数
 
     /// <summary>
-    ///   获取站点抓取参数
+    ///   获取小说抓取参数
     /// </summary>
     /// <param name="context"></param>
     private void GetNovelCrawl(HttpContext context)
@@ -148,10 +150,15 @@ public class NovelHandler : IHttpHandler, IRequiresSessionState
 
         switch (strOperation.ToUpper().Trim())
         {
-            //获取小说信息列表信息
+            //小说信息列表
             case "LIST":
                 GetNovelPageList(context);
                 break;
+
+            // 小说数据保存
+            case "SAVE":
+                NovelSave(context);
+                break;    
 
             // 删除小说信息
             case "DELETE":
@@ -179,4 +186,76 @@ public class NovelHandler : IHttpHandler, IRequiresSessionState
     }
 
     #endregion
+
+    #region 小说数据保存
+
+    /// <summary>
+    /// 小说数据保存
+    /// </summary>
+    /// <param name="context"></param>
+    private void NovelSave(HttpContext context)
+    {
+        var rst = "";
+        var strNovelId = context.Request.Params["ID"] ?? ""; // 小说编号
+        var strWebId = context.Request.Params["WebId"] ?? ""; // 站点编号
+        var strTitle = context.Request.Params["Title"] ?? ""; // 小说名称
+        var strNovelUrl = context.Request.Params["NovelUrl"] ?? ""; // 小说地址  
+        var strStartUrl = context.Request.Params["StartUrl"] ?? ""; // 起始章节地址       
+        var strAuthor = context.Request.Params["Author"] ?? ""; // 作者
+        var strChapterChar = context.Request.Params["ChapterChar"] ?? "第$2章"; // 章节模板，默认“第$2章”
+        var strStartChapterIdx = context.Request.Params["StartChapterIdx"] ?? "1"; // 起始章节数字，默认1
+        var strChapterType = context.Request.Params["ChapterType"] ?? "0"; // 章节处理类型，默认0
+
+        //SELECT     TOP (200) Id, WebId, Title, NovelUrl, StartUrl, LatestChapter, Author, TypeId
+        //, Status, RecentUpdate, ChapterCount, CreateTime, ChapterChar, StartChapterIdx, ChapterType
+        //FROM         Novels
+
+        try
+        {
+            string rstType;
+            Novels model = new Novels();
+            model.WebId = strWebId;
+            model.Title = strTitle;
+            model.NovelUrl = strNovelUrl;
+            model.StartUrl = strStartUrl;
+            model.Author = strAuthor;
+            model.ChapterChar = strChapterChar;
+            model.StartChapterIdx = string.IsNullOrEmpty(strStartChapterIdx) ? 1 : Int32.Parse(strStartChapterIdx);
+            model.ChapterType = string.IsNullOrEmpty(strChapterType) ? 0 : Int32.Parse(strChapterType); ;
+
+            var i = 0; // 数据添加/编辑影响行数
+            if (string.IsNullOrEmpty(strNovelId))
+            {
+                // 添加小说数据
+                rstType = "添加";
+                model.Id = Guid.NewGuid().ToString().ToUpper();
+                i = NovelBll.Add(model);
+            }
+            else
+            {
+                // 修改小说数据
+                rstType = "修改";
+                model.Id = strNovelId;
+                i = NovelBll.Edit(model);
+            }
+
+            if (i > 0)
+            {
+                rst = "{\"success\":true,\"Message\": \"小说『" + model.Title + "』" + rstType + "成功！\"}";
+            }
+            else
+            {
+                rst = "{\"success\":false,\"Message\": \"小说『" + model.Title + "』" + rstType + "失败！\"}";
+            }
+        }
+        catch (Exception ex)
+        {
+            rst = "{\"success\":false,\"Message\": \"" + ex.Message.Replace('"', '\"') + "！\"}";
+        }
+
+        context.Response.Write(rst);
+    }
+
+    #endregion
+
 }

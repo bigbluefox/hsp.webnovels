@@ -62,9 +62,9 @@ namespace Hsp.Novels.Bll
         /// 添加小说信息
         /// </summary>
         /// <param name="model">小说实体</param>
-        public void Add(Model.Novels model)
+        public int Add(Model.Novels model)
         {
-            NovelDal.Add(model);
+            return NovelDal.Add(model);
         }
 
         #endregion
@@ -89,7 +89,7 @@ namespace Hsp.Novels.Bll
         /// 删除小说
         /// </summary>
         /// <param name="id">小说编号</param>
-        public int Delete(int id)
+        public int Delete(string id)
         {
             return NovelDal.Delete(id);
         }

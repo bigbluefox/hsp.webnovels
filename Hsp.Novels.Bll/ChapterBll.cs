@@ -68,7 +68,7 @@ namespace Hsp.Novels.Bll
         /// 删除章节
         /// </summary>
         /// <param name="id">章节编号</param>
-        public int Delete(int id)
+        public int Delete(string id)
         {
             return ChapterDal.Delete(id);
         }

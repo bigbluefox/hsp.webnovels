@@ -9,15 +9,20 @@
     <link href="/Scripts/bootstrap/css/bootstrap-validator.css" rel="stylesheet"/>
 
     <style type="text/css">
-        #txtChapterTitle {
-            -moz-text-overflow: ellipsis; /* for Firefox, mozilla */
-            -ms-text-overflow: ellipsis;
-            -o-text-overflow: ellipsis;
-            overflow: hidden;
-            text-align: left;
-            text-overflow: ellipsis; /* for IE */
-            white-space: nowrap;
-        }
+
+         #txtChapterTitle {
+             -moz-text-overflow: ellipsis; /* for Firefox, mozilla */
+             -ms-text-overflow: ellipsis;
+             -o-text-overflow: ellipsis;
+             overflow: hidden;
+             text-align: left;
+             text-overflow: ellipsis; /* for IE */
+             white-space: nowrap;
+         }
+
+         .error-message{ padding: 0 15px;}
+         .alert{ margin-bottom: 0;}
+         .modal-body{ padding-bottom: 0;}
     </style>
 
 </asp:Content>
@@ -94,8 +99,6 @@
                                 <input type="text" class="form-control" id="txtStartChapterIdx" placeholder="起始数字" value="">
                             </div>
                         </div>
-                     
-
                         <div class="form-group">
                             <label for="txtNextName" class="col-xs-6 col-sm-2 control-label">地址对象</label>
                             <div class="col-xs-6 col-sm-2">
@@ -116,7 +119,7 @@
                                 <textarea class="form-control" id="txtContent" placeholder="抓取小说内容" rows="10"></textarea>
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group" style="padding-bottom: -15px;">
                             <div>
                                 <div class="error-message"></div>
                             </div>
@@ -124,7 +127,12 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <input id="txtNextUrl" type="hidden" /><input id="Hidden1" type="hidden" />
+                    <input id="txtNextUrl" type="hidden" />
+                    <input id="txtHeadWord" type="hidden" />
+                    <input id="txtUrlCombine" type="hidden" />
+                    <input id="txtNovelUrl" type="hidden" />
+                    <input id="txtWebUrl" type="hidden" />
+                    <input id="txtNovelTitle" type="hidden" />
                     <div style="float: left;" id="txtChapterTitle"></div>
                     <button type="button" class="btn btn-default" data-dismiss="modal">
                         <span class="glyphicon glyphicon-floppy-remove" aria-hidden="true"></span> 关闭
@@ -155,57 +163,18 @@
 
                     <form>
                         <div class="form-group">
-                            <label for="txtUserCode">登录账号<span class="required">*</span></label>
-                            <input type="text" class="form-control" id="txtUserCode" placeholder="登录账号" required="required">
+                            <label for="txtChapterName">章节标题<span class="required">*</span></label>
+                            <input type="text" class="form-control" id="txtChapterName" placeholder="章节标题" required="required">
                         </div>
                         <div class="form-group">
-                            <label for="txtUserName">章节姓名<span class="required">*</span></label>
-                            <input type="text" class="form-control" id="txtUserName" placeholder="章节姓名" required="required">
-                        </div>
-                                                <div class="form-group">
-                            <label for="txtMobile">移动电话</label>
-                            <input type="number" class="form-control" id="txtMobile" placeholder="移动电话">
-                        </div>
-                        <div class="form-group">
-                            <label for="txtEmail">邮箱地址</label>
-                            <input type="email" class="form-control" id="txtEmail" placeholder="邮箱地址">
+                            <label for="txtContent">章节内容</label>
+                            <textarea class="form-control" id="txtChapterContent" rows="10"></textarea>
                         </div>
                         
-<%--//SELECT     TOP (200) Id, NovelId, Url, NextUrl, Chapter, ChapterIdx, ChapterName, HeadWord, Content, WordCount, UpdateTime
-//FROM         Chapters--%>
-                        
+                    <%--SELECT     TOP (200) Id, NovelId, ChapterUrl, NextUrl, Chapter
+                    , ChapterIdx, ChapterName, HeadWord, [Content], WordCount, UpdateTime, CreateTime
+                    FROM         Chapters--%>
 
-                        <div class="form-group">
-                            <label>章节权限</label>
-                            <div id="usertype">
-                                <label class="checkbox-inline">
-                                    <input type="checkbox" id="chbAuthority1" name="chbAuthority" value="0">
-                                    普通章节(0)
-                                </label>
-                                <label class="checkbox-inline">
-                                    <input type="checkbox" id="chbAuthority2" name="chbAuthority" value="1">
-                                    数据应用章节(1)
-                                </label>
-                                <label class="checkbox-inline">
-                                    <input type="checkbox" id="chbAuthority3" name="chbAuthority" value="2">
-                                    人力资源章节(2)
-                                </label>
-                                <label class="checkbox-inline">
-                                    <input type="checkbox" id="chbAuthority4" name="chbAuthority" value="4">
-                                    管理章节(4)
-                                </label>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label>是否有效</label>
-                            <div class="checkbox">
-                                <label>
-                                    <input type="checkbox" id="chbAvailable">
-                                    是否有效
-                                </label>
-                            </div>
-                        </div>
                         <div class="form-group">
                             <div>
                                 <div class="error-message"></div>
@@ -215,7 +184,7 @@
 
                 </div>
                 <div class="modal-footer">
-                    <input type="hidden" id="txtUserId">
+                    <input type="hidden" id="txtChapterId">
                     <button type="button" class="btn btn-default" data-dismiss="modal">
                         <span class="glyphicon glyphicon-floppy-remove" aria-hidden="true"></span> 关闭
                     </button>
@@ -312,17 +281,24 @@
         //var txtChapter = chapter.replace(chapterReg, "第$2章 $4");
         var txtChapter = chapter.replace(chapterReg, chapterChar + " $4");
 
+        var chapters = chapter.replace(chapterReg, "$1,$2,$3,$4");
+        var arr = chapters.split(',');
+
+        if (arr.length == 4 && arr[2].length == 0) {
+            if (txtChapter.indexOf("楔子") == -1) {
+                return "";
+            }
+        } // 空章节序号，
+
         if (type == 1) { // 标题出现重复
-            var chapters = chapter.replace(chapterReg, "$1,$2,$3,$4");
-            var arr = chapters.split(',');
+
             var chapterIdx = arr[1];
             //var chapterName = "第" + chapterIdx + "章";
-            var chapterName = chapterChar.replace("$2", chapterIdx);// "第" + chapterIdx + "章";
+            var chapterName = chapterChar.replace("$2", chapterIdx); // "第" + chapterIdx + "章";
             var headWord = arr[3].replace(chapterName, "");
             //headWord = headWord.replace(".", "").replace(" ", "");
 
             headWord = headWord.trim('[.]').trim(' ');
-
 
             //alert(chapterName + " * " + headWord);
 
@@ -334,77 +310,126 @@
 
         // 处理标题括号
 
+        //debugger;
+
+        //https://www.dashubao.net/book/91/91196/31005369.html
+        //    第10章 超级步枪（4）（求推荐） 第6章 女上尉（求收藏）
+
+        var bracketsReg = /([\s\S]*?)([(（][^\)）]*([\s\S]*?)[)）])/g;
+        var matchResult = txtChapter.match(bracketsReg);
+        txtChapter = matchResult == null ? txtChapter : matchResult[0];
+
+        var title = txtChapter.replace(bracketsReg, "$1,$2");
+        var titleArr = title.split(',');
+
+        if (titleArr.length > 1 && titleArr[1].length > 3) {
+            txtChapter = titleArr[0];
+        }
+
+        // 处理标题包含小说名称问题
+        var novelTitle = $("#txtNovelTitle").val();
+        txtChapter = txtChapter.replace(novelTitle, "");
+        txtChapter = txtChapter.trim();
+
         return txtChapter;
     }
 
     // 测试抓取
     function TestCrawl() {
-        
-            var chapterUrl = $("#txtChapterUrl").val();
-            var contentName = $("#txtContentName").val();
-            var headerName = $("#txtHeaderName").val();
-            var nextName = $("#txtNextName").val();
-            var chapterChar = $("#txtChapterChar").val();
-            var startChapterIdx = $("#txtStartChapterIdx").val();
-            var chapterType = $("#txtChapterType").val();
 
-            $.ajax({
-                url: chapterUrl,
-                type: "GET",
-                dataType: "html",
-                success: function (result) {
+        var chapterUrl = $("#txtChapterUrl").val();
+        var contentName = $("#txtContentName").val();
+        var headerName = $("#txtHeaderName").val();
+        var nextName = $("#txtNextName").val();
+        var startChapterIdx = $("#txtStartChapterIdx").val();
+        var chapterType = $("#txtChapterType").val();
 
-                    //正则表达式获取body块  
-                    var reg = /<body>[\s\S]*<\/body>/g;
-                    var html = reg.exec(result)[0];
+        var urlCombine = $("#txtUrlCombine").val();
+        var webUrl = $("#txtWebUrl").val();
+        var novelUrl = $("#txtNovelUrl").val();
 
-                    var $html = $(contentName, $(html));
-                    //console.log($html);
+        if (urlCombine == "1") { // 地址是否需要组合？1-网站+章节地址
+            if (chapterUrl.startWith('/')) chapterUrl = chapterUrl.lTrim('/');
+            if (!webUrl.endWith('/')) webUrl = webUrl + '/';
+            chapterUrl = webUrl + chapterUrl;
+        }
+        if (urlCombine == "2") { // 地址是否需要组合？2-小说+章节地址
+            if (chapterUrl.startWith('/')) chapterUrl = chapterUrl.lTrim('/');
+            if (!webUrl.endWith('/')) webUrl = webUrl + '/';
+            chapterUrl = novelUrl + chapterUrl;
+        }
 
-                    var contents = $("#txtContent").val();
+        $.ajax({
+            url: chapterUrl,
+            type: "GET",
+            dataType: "html",
+            success: function (result) {
 
-                    var $header = $(headerName, $(html));
-                    //console.log($header);
+                debugger;
 
-                    var txtChapter = $($header).text().trim();
-                    txtChapter = ChapterTitle(txtChapter, chapterType);
+                //正则表达式获取body块  
+                var reg = /<body[\s\S]*<\/body>/g;
+                var htm = reg.exec(result);
+                var html = htm.length > 0 ? htm[0] : "";// reg.exec(result)[0];
 
-                    //$("#txtChapter").val(txtChapter);
+                var $html = $(contentName, $(html));
+                //console.log($html);
 
+                var contents = $("#txtContent").val();
+
+                var $header = $(headerName, $(html));
+                //console.log($header);
+
+                var txtChapter = $($header).text().trim();
+                txtChapter = ChapterTitle(txtChapter, chapterType);
+
+                //$("#txtChapter").val(txtChapter);
+
+                if (txtChapter.length > 0) {
+                    $("#txtChapterTitle").html(txtChapter);
                     contents += txtChapter + "\n";
-
+                    //$html[0].innerHTML = $html[0].innerHTML.replace("<br>", "\n");
                     $.each($html, function () {
                         contents += $(this).text().trim() + "\n";
                     });
+
                     $("#txtContent").val(contents);
-
-                    $nextUrl = $(nextName, $(html));
-                    //console.log($nextUrl);
-
-                    var nextUrl = $nextUrl[0].href;
-                    //var nextUrlTitle = $nextUrl[0].innerText;
-                    //$("#txtNextUrl").val(nextUrl);
-
-                    $("#txtChapterUrl").val(nextUrl);
-                    $("#txtChapterTitle").html(txtChapter);
-                    $("#txtStartChapterIdx").val(parseInt(startChapterIdx) + 1); // 起始/当前章节数字
-
-
-                    // 添加小说内容
-
-                    //var $novelBody = $(".container .novel");
-                    //$("<h1>" + txtChapter + "</h1>").appendTo($novelBody);
-                    //$.each($html, function () {
-                    //    $(this).appendTo($novelBody);
-                    //});
-
-                    //if (nextUrlTitle.indexOf("下一章") == -1) {
-                    //    isEnd = true;
-                    //}
-
-                    //RecursiveCrawl(); // 递归查询
+                } else {
+                    Hsp.Common.Message($(".error-message"), "章节标题为空！", "warning", "fade");
                 }
-            });
+
+                $nextUrl = $(nextName, $(html));
+                //console.log($nextChapterUrl);
+
+                var nextUrl = $nextUrl[0].href;
+
+                if (urlCombine != "0") {
+                    var local = window.location.protocol + "//" + window.location.host;
+                    nextUrl = nextUrl.replace(local, "");
+                }
+
+                //var nextChapterUrlTitle = $nextNovelWebChapterUrl[0].innerText;
+                //$("#txtNextChapterUrl").val(nextNovelWebChapterUrl);
+
+                $("#txtChapterUrl").val(nextUrl);
+                $("#txtStartChapterIdx").val(parseInt(startChapterIdx) + 1); // 起始/当前章节数字
+
+
+                // 添加小说内容
+
+                //var $novelBody = $(".container .novel");
+                //$("<h1>" + txtChapter + "</h1>").appendTo($novelBody);
+                //$.each($html, function () {
+                //    $(this).appendTo($novelBody);
+                //});
+
+                //if (nextChapterUrlTitle.indexOf("下一章") == -1) {
+                //    isEnd = true;
+                //}
+
+                //RecursiveCrawl(); // 递归查询
+            }
+        });
     };
 
 
@@ -414,13 +439,23 @@
         if (isEnd) return;
 
         var chapterUrl = $("#txtChapterUrl").val();
-        //chapterUrl = encodeURIComponent(chapterUrl);
         var contentName = $("#txtContentName").val();
         var headerName = $("#txtHeaderName").val();
         var nextName = $("#txtNextName").val();
         var chapterChar = $("#txtChapterChar").val();
         var startChapterIdx = $("#txtStartChapterIdx").val();
         var chapterType = $("#txtChapterType").val();
+
+        var urlCombine = $("#txtUrlCombine").val();
+        var webUrl = $("#txtWebUrl").val();
+        var novelUrl = $("#txtNovelUrl").val();
+
+        if (urlCombine == "1") { // 地址是否需要组合？1-网站+章节地址
+            chapterUrl = webUrl + chapterUrl;
+        }
+        if (urlCombine == "2") { // 地址是否需要组合？2-小说+章节地址
+            chapterUrl = novelUrl + chapterUrl;
+        }
 
         $.ajax({
             url: chapterUrl,
@@ -429,7 +464,7 @@
             success: function (result) {
 
                 //正则表达式获取body块  
-                var reg = /<body>[\s\S]*<\/body>/g;
+                var reg = /<body[\s\S]*<\/body>/g;
                 var html = reg.exec(result)[0];
 
                 var $html = $(contentName, $(html));
@@ -461,20 +496,26 @@
                 //var testreg = txtChapter.replace(chapterReg, "$1-$2-$3-$4");
                 //$("#txtChapter").val(txtChapter);
 
-                $("#txtChapterTitle").html(txtChapter);
-
-                contents += txtChapter + "\n";
-
-                $.each($html, function () {
-                    content += $(this).text().trim() + "\n";
-                    contents += $(this).text().trim() + "\n";
-                });
-                $("#txtContent").val(contents);
+                if (txtChapter.length > 0) {
+                    $("#txtChapterTitle").html(txtChapter);
+                    contents += txtChapter + "\n";
+                    $.each($html, function() {
+                        content += $(this).text().trim() + "\n";
+                        contents += $(this).text().trim() + "\n";
+                    });
+                    $("#txtContent").val(contents);
+                } else {
+                    Hsp.Common.Message($(".error-message"), "章节标题为空！", "error", "fade");
+                }
 
                 $nextUrl = $(nextName, $(html));
-                //console.log($nextUrl);
+                //console.log($nextChapterUrl);
 
                 var nextUrl = $nextUrl[0].href;
+                if (urlCombine != "0") {
+                    var local = window.location.protocol + "//" + window.location.host;
+                    nextUrl = nextUrl.replace(local, "");
+                }
                 var nextUrlTitle = $nextUrl[0].innerText;
                 $("#txtStartChapterIdx").val(parseInt(startChapterIdx) + 1); // 起始/当前章节数字
 
@@ -491,6 +532,13 @@
                     isEnd = true;
                 }
 
+                // 标题为空，则不记录
+                if (txtChapter.length == 0) {
+                    $("#txtChapterUrl").val(nextUrl);
+                    RecursiveCrawl(); // 递归抓取内容
+                    return;
+                }
+
                 // 内容保存
                 var params = {
                     NovelId: novelId,
@@ -500,54 +548,57 @@
                     Content: encodeURIComponent(content),
                     WordCount: contents.length,
                     ChapterIdx: $("#txtStartChapterIdx").val()
-                    //,ChapterName: "",
-                    //HeadWord: ""
+                    //,ChapterName: "", //HeadWord: ""
                 };
 
-                //SELECT     TOP (200) Id, NovelId, Url, NextUrl, Chapter, ChapterIdx, ChapterName
+                //SELECT     TOP (200) Id, NovelId, ChapterUrl, NextNovelWebChapterUrl, Chapter, ChapterIdx, ChapterName
                 //, HeadWord, Content, WordCount, UpdateTime, CreateTime
                 //FROM         Chapters
 
-                //$.ajax({
-                //    type: "POST",
-                //    url: "/Handler/ChapterHandler.ashx?OP=SAVE&rnd=" + (Math.random() * 10),
-                //    data: params,
-                //    success: function (rst) {
-                //        if (rst && rst.success) {
-                //            $("#txtChapterUrl").val(nextUrl);
-                //            RecursiveCrawl(); // 递归抓取内容
-                //        } else {
-                //            Hsp.Message($(".error-message"), rst.Message, "error", "fade");
-                //        }
-                //    }
-                //});
-
                 $.ajax({
+                    type: "POST",
                     url: "/Handler/ChapterHandler.ashx?OP=SAVE&rnd=" + (Math.random() * 10),
-                    type: 'POST',
                     data: params,
                     success: function (rst) {
                         if (rst && rst.success) {
                             $("#txtChapterUrl").val(nextUrl);
                             RecursiveCrawl(); // 递归抓取内容
                         } else {
-                            //debugger;
-                            Hsp.Message($(".error-message"), rst.Message, "error", "fade");
+                            if (rst.Message) {
+                                Hsp.Common.Message($(".error-message"), rst.Message, "error");
+                            } else {
+                                Hsp.Common.Message($(".error-message"), "章节数据保存失败！", "error");
+                            }
                         }
-                    },
-                    complete: function (xhr, errorText, errorType) {
-                        //debugger;
-                        //var p = "";
-                        //alert("请求完成后");
-                    },
-                    error: function (xhr, errorText, errorType) {
-                        debugger;
-                        alert("请求错误后");
-                    },
-                    beforSend: function () {
-                        alert("请求之前");
                     }
                 });
+
+                //$.ajax({
+                //    url: "/Handler/ChapterHandler.ashx?OP=SAVE&rnd=" + (Math.random() * 10),
+                //    type: 'POST',
+                //    data: params,
+                //    success: function (rst) {
+                //        if (rst && rst.success) {
+                //            $("#txtChapterChapterUrl").val(nextNovelWebChapterUrl);
+                //            RecursiveCrawl(); // 递归抓取内容
+                //        } else {
+                //            //debugger;
+                //            Hsp.Message($(".error-message"), rst.Message, "error", "fade");
+                //        }
+                //    },
+                //    complete: function (xhr, errorText, errorType) {
+                //        //debugger;
+                //        //var p = "";
+                //        //alert("请求完成后");
+                //    },
+                //    error: function (xhr, errorText, errorType) {
+                //        debugger;
+                //        alert("请求错误后");
+                //    },
+                //    beforSend: function () {
+                //        alert("请求之前");
+                //    }
+                //});
 
             }
         });
@@ -572,6 +623,11 @@
                     $("#txtChapterChar").val(rst.ChapterChar);
                     $("#txtStartChapterIdx").val(rst.StartChapterIdx);
                     $("#txtChapterType").val(rst.ChapterType);
+                    $("#txtUrlCombine").val(rst.UrlCombine);
+
+                    $("#txtWebUrl").val(rst.WebUrl);
+                    $("#txtNovelUrl").val(rst.NovelUrl);
+                    $("#txtNovelTitle").val(rst.Title);
                 }
             },
             complete: function (xhr, errorText, errorType) {
@@ -643,7 +699,7 @@
                         align: 'center'
                     },
 
-//SELECT     TOP (200) Id, NovelId, Url, NextUrl, Chapter, ChapterIdx, ChapterName
+//SELECT     TOP (200) Id, NovelId, ChapterUrl, NextNovelWebChapterUrl, Chapter, ChapterIdx, ChapterName
 //, HeadWord, Content, WordCount, UpdateTime
 //FROM         Chapters
 
@@ -660,7 +716,7 @@
                         align: 'left',
                         formatter: titleFormatter
                     }, {
-                        field: 'Url',
+                        field: 'ChapterUrl',
                         title: '地址',
                         halign: 'center',
                         align: 'left',
@@ -738,7 +794,7 @@
             });
             $remove.prop('disabled', true);
 
-            DelWebByIds(ids); // 批量删除
+            DelChapterByIds(ids); // 批量删除
         });
 
         $(window).resize(function () {
@@ -779,12 +835,9 @@
         'click .edit': function (e, value, row, index) {
             //alert('You click edit action, row: ' + JSON.stringify(row));
 
-            //$("#txtId").val(row.Id);
-            //$("#txtTitle").val(row.Title);
-            //$("#txtOldName").val(row.Title);
-            //$("#txtExtension").val(row.Extension);
-            //$("#txtFullName").val(row.FullName);
-            //$("#txtDirectoryName").val(row.DirectoryName);
+            $("#txtChapterId").val(row.Id);
+            $("#txtChapterName").val(row.Chapter);
+            $("#txtChapterContent").val(row.Content);
 
             $("#editModelLabel").html("章节信息修改");
             $('#editModel').modal('toggle'); // 弹出名称修改
@@ -796,7 +849,7 @@
                 values: [row.Id]
             });
 
-            DelWebById(row.Id); // 删除行数据，考虑要将上述表格响应纳入到删除操作中
+            DelChapterById(row.Id); // 删除行数据，考虑要将上述表格响应纳入到删除操作中
         }
     };
 
@@ -809,14 +862,14 @@
     /// 删除章节
     /// </summary>
 
-    function DelWebById(id) {
+    function DelChapterById(id) {
         if (confirm("您确定要删除该章节吗？")) {
             var url = "/Handler/ChapterHandler.ashx?OP=DELETE&ID=" + id;
             $.get(url + "&rnd=" + (Math.random() * 10), function (data) {
                 if (data && data.success) {
                     modals.correct(data.Message);
                 } else {
-                    modals.error(data.Message);
+                    modals.error(data.Message ? data.Message : "删除章节错误");
                 }
             });
         }
@@ -826,7 +879,7 @@
     /// 批量删除章节
     /// </summary>
 
-    function DelWebByIds(ids) {
+    function DelChapterByIds(ids) {
         if (confirm("您确定要批量删除这些章节吗？")) {
             var url = "/Handler/ChapterHandler.ashx?OP=BATCHDELETE&IDs=" + ids;
             $.get(url + "&rnd=" + (Math.random() * 10), function (data) {
@@ -843,37 +896,18 @@
     $(function () {
         // 模态窗体关闭事件 
         $('#editModel').on('hidden.bs.modal', function () { // 关闭模态窗体事件
-            //$("#txtUserId").val("");
-            //$("#txtUserCode").val("");
-            //$("#txtUserName").val("");
-            ////$("#txtMobile").val("");
-            ////$("#txtEmail").val("");
-            //$("#chbAvailable").removeAttr("checked");
-
-            //var boxes = document.getElementsByName("chbAuthority");
-            //for (i = 0; i < boxes.length; i++) {
-            //    boxes[i].checked = false;
-            //}
+            $("#txtChapterId").val("");
+            $("#txtChapterName").val("");
+            $("#txtChapterContent").val("");
         });
 
         // 数据保存按钮点击事件 
         $("#btnSave").unbind("click").bind("click", function () {
 
-            // RowNumber, UserID, UserCode, UserName, Authority, Available
-
-            var userTypeSum = 0;
-            $('input[name="chbAuthority"]:checked').each(function () {
-                userTypeSum += parseInt($(this).val());
-            });
-
             var params = {
-                id: $("#txtUserId").val(),
-                code: $('#txtUserCode').val(),
-                name: $("#txtUserName").val(),
-                //mobile: $("#txtMobile").val(),
-                //email: $('#txtEmail').val(), result-message
-                auth: userTypeSum, // 权限
-                available: document.getElementById("chbAvailable").checked ? "1" : "0"
+                id: $("#txtChapterId").val(),
+                chapter: $('#txtChapterName').val(),
+                content: $("#txtChapterContent").val()
             };
 
             $.ajax({
@@ -883,12 +917,12 @@
                 success: function (rst) {
                     if (rst && rst.success) {
 
-                        Hsp.Message($(".result-message"), rst.Message, "success", "fade");
+                        Hsp.Common.Message($(".result-message"), rst.Message, "success", "fade");
                         $('#editModel').modal('hide');
 
                         refreshTable();
                     } else {
-                        Hsp.Message($(".error-message"), rst.Message, "error", "fade");
+                        Hsp.Common.Message($(".error-message"), rst.Message, "error", "fade");
                     }
                 }
             });

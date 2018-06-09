@@ -124,7 +124,7 @@ public class ChapterHandler : IHttpHandler, IRequiresSessionState
         var strId = context.Request.Params["ID"] ?? ""; // 章节编号
         if (string.IsNullOrEmpty(strId)) return;
 
-        var i = ChapterBll.Delete(int.Parse(strId));
+        var i = ChapterBll.Delete(strId);
         if (i > 0)
         {
             rst = "{\"success\":true,\"Message\": \"章节『" + strId + "』删除成功！\"}";
@@ -177,14 +177,12 @@ public class ChapterHandler : IHttpHandler, IRequiresSessionState
         var rst = "";
         var strChapterId = context.Request.Params["ID"] ?? ""; // 章节编号
         var strNovelId = context.Request.Params["NovelId"] ?? ""; // 小说编号
-        var strChapterUrl = context.Request.Params["ChapterUrl"] ?? ""; // 章节地址
-        var strNextUrl = context.Request.Params["NextUrl"] ?? ""; // 下一章地址
+        var strChapterUrl = context.Request.Params["ChapterChapterUrl"] ?? ""; // 章节地址
+        var strNextUrl = context.Request.Params["NextChapterUrl"] ?? ""; // 下一章地址
         var strChapter = context.Request.Params["Chapter"] ?? ""; // 章节
         var strContent = context.Request.Params["Content"] ?? ""; // 章节内容
         var iWordCount = int.Parse(context.Request.Params["WordCount"] ?? "0"); // 章节字数
         var iChapterIdx = int.Parse(context.Request.Params["ChapterIdx"] ?? "0"); // 章节字数
-
-        //NovelId, Url, NextUrl, Chapter, Content, WordCount
 
         if (!string.IsNullOrEmpty(strChapterUrl)) strChapterUrl = HttpUtility.UrlDecode(strChapterUrl);
         if (!string.IsNullOrEmpty(strNextUrl)) strNextUrl = HttpUtility.UrlDecode(strNextUrl);
@@ -196,7 +194,7 @@ public class ChapterHandler : IHttpHandler, IRequiresSessionState
             string rstType;
             Chapters model = new Chapters();
             model.NovelId = strNovelId;
-            model.Url = strChapterUrl;
+            model.ChapterUrl = strChapterUrl;
             model.NextUrl = strNextUrl;
             model.Chapter = strChapter;
             model.Content = strContent;
@@ -206,15 +204,13 @@ public class ChapterHandler : IHttpHandler, IRequiresSessionState
             var i = 0;
             if (string.IsNullOrEmpty(strChapterId))
             {
-                // 添加章节栏目数据
+                // 添加章节数据
                 rstType = "添加";
-                //model.ChapterID = Guid.NewGuid().ToString().ToUpper();
-                //model.Password = model.DefalutPwd;
                 i = ChapterBll.Add(model);
             }
             else
             {
-                // 修改章节栏目数据
+                // 修改章节数据
                 rstType = "修改";
                 model.Id = strChapterId;
                 i = ChapterBll.Edit(model);
@@ -222,11 +218,11 @@ public class ChapterHandler : IHttpHandler, IRequiresSessionState
 
             if (i > 0)
             {
-                rst = "{\"success\":true,\"Message\": \"章节『" + model.ChapterName + "』" + rstType + "成功！\"}";
+                rst = "{\"success\":true,\"Message\": \"章节『" + model.Chapter + "』" + rstType + "成功！\"}";
             }
             else
             {
-                rst = "{\"success\":false,\"Message\": \"章节『" + model.ChapterName + "』" + rstType + "失败！\"}";
+                rst = "{\"success\":false,\"Message\": \"章节『" + model.Chapter + "』" + rstType + "失败！\"}";
             }
         }
         catch (Exception ex)

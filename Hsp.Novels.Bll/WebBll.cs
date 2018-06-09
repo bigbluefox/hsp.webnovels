@@ -35,18 +35,15 @@ namespace Hsp.Novels.Bll
 
         #endregion
 
-
-
-
         #region 添加站点信息
 
         /// <summary>
         /// 添加站点信息
         /// </summary>
         /// <param name="model">站点实体</param>
-        public void Add(WebSites model)
+        public int Add(WebSites model)
         {
-            WebDal.Add(model);
+            return WebDal.Add(model);
         }
 
         #endregion
@@ -71,7 +68,7 @@ namespace Hsp.Novels.Bll
         /// 删除站点
         /// </summary>
         /// <param name="id">站点编号</param>
-        public int Delete(int id)
+        public int Delete(string id)
         {
             return WebDal.Delete(id);
         }

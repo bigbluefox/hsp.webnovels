@@ -28,7 +28,7 @@ namespace Hsp.Novels.Model
         /// 小说地址
         /// </summary>
         [DataMember]
-        public string Url { get; set; }
+        public string ChapterUrl { get; set; }
 
         /// <summary>
         /// 下一章地址

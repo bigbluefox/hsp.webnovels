@@ -12,7 +12,7 @@ public class Handler : IHttpHandler {
         context.Response.ContentType = "text/plain";
         //context.Response.Write("Hello World");
 
-        var chapterUrl = context.Request.Params["chapterUrl"] ?? "";
+        var chapterUrl = context.Request.Params["chapterNovelUrl"] ?? "";
         var contentName = context.Request.Params["contentName"] ?? "";
         var headerName = context.Request.Params["headerName"] ?? "";
         var nextName = context.Request.Params["nextName"] ?? "";

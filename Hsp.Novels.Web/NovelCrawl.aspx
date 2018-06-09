@@ -191,8 +191,8 @@
                     console.log($nextUrl);
 
                     var nextUrl = $nextUrl[0].href;
-                    //var nextUrlTitle = $nextUrl[0].innerText;
-                    //$("#txtNextUrl").val(nextUrl);
+                    //var nextUrlTitle = $nextNovelWebChapterUrl[0].innerText;
+                    //$("#txtNextUrl").val(nextNovelWebChapterUrl);
                     $("#txtChapterUrl").val(nextUrl);
 
                     // 添加小说内容
@@ -268,7 +268,7 @@
         if (isEnd) return;
 
         var chapterUrl = $("#txtChapterUrl").val();
-        //chapterUrl = encodeURIComponent(chapterUrl);
+        //chapterUrl = encodeURIComponent(chapterNovelWebChapterUrl);
         var contentName = $("#txtContentName").val();
         var headerName = $("#txtHeaderName").val();
         var nextName = $("#txtNextName").val();
@@ -324,7 +324,7 @@
 
                 var nextUrl = $nextUrl[0].href;
                 var nextUrlTitle = $nextUrl[0].innerText;
-                //$("#txtNextUrl").val(nextUrl);
+                //$("#txtNextUrl").val(nextNovelWebChapterUrl);
                 $("#txtChapterUrl").val(nextUrl);
 
 

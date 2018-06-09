@@ -63,7 +63,7 @@ namespace Hsp.Novels.Dal
                 FROM dbo.WebSites
                 WHERE (1 = 1){2}
             )
-            SELECT *, (SELECT COUNT(*) FROM dbo.Novels WHERE WebId = a.Id) AS ChildNodeCount 
+            SELECT *, (SELECT COUNT(*) FROM dbo.Novels WHERE WebId = a.Id) AS ChildCount 
             FROM PageTb a
             CROSS JOIN (SELECT MAX(RowNumber) AS RecordCount FROM PageTb) AS b 
             WHERE (a.RowNumber BETWEEN {0} AND {1});
@@ -72,9 +72,6 @@ namespace Hsp.Novels.Dal
         }
 
         #endregion
-
-
-
 
         #region 添加站点数据
 
@@ -88,9 +85,9 @@ namespace Hsp.Novels.Dal
         {
             string strSql = string.Format
                 (@"INSERT INTO WebSites
-                    (Name, Url, ContentName, HeaderName, NextName, NextTitle) 
-                    VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}');"
-                 , model.Name, model.Url, model.ContentName, model.HeaderName, model.NextName, model.NextTitle);
+                    (Name, WebUrl, ContentName, HeaderName, NextName, NextTitle, Valid, UrlCombine) 
+                    VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}');"
+                 , model.Name, model.WebUrl, model.ContentName, model.HeaderName, model.NextName, model.NextTitle, model.Valid, model.UrlCombine);
             return DbHelperSql.ExecuteSql(strSql);
         }
 
@@ -106,9 +103,9 @@ namespace Hsp.Novels.Dal
         public static int Edit(WebSites model)
         {
             string strSql = string.Format
-                (@"UPDATE WebSites SET Name='{1}', Url='{2}', ContentName='{3}', HeaderName='{4}', NextName='{5}', NextTitle='{6}', Valid='{7}'
-                     WHERE (Id = '{0}');"
-                    , model.Id, model.Name, model.Url, model.ContentName, model.HeaderName, model.NextName, model.NextTitle, model.Valid);
+                (@"UPDATE WebSites SET Name='{1}', WebUrl='{2}', ContentName='{3}', HeaderName='{4}', NextName='{5}', NextTitle='{6}'
+                , Valid='{7}', UrlCombine='{8}' WHERE (Id = '{0}');"
+                 , model.Id, model.Name, model.WebUrl, model.ContentName, model.HeaderName, model.NextName, model.NextTitle, model.Valid, model.UrlCombine);
             return DbHelperSql.ExecuteSql(strSql);
         }
 
@@ -121,9 +118,9 @@ namespace Hsp.Novels.Dal
         /// </summary>
         /// <param name="id">站点编号</param>
         /// <returns></returns>
-        public static int Delete(int id)
+        public static int Delete(string id)
         {
-            string strSql = string.Format(@"DELETE FROM dbo.WebSites WHERE (Id = {0});", id);
+            string strSql = string.Format(@"DELETE FROM dbo.WebSites WHERE (Id = '{0}');", id);
             return DbHelperSql.ExecuteSql(strSql);
         }
 
@@ -138,7 +135,8 @@ namespace Hsp.Novels.Dal
         /// <returns></returns>
         public static int BatchDelete(string ids)
         {
-            string strSql = string.Format(@"DELETE FROM dbo.WebSites WHERE (Id IN ({0}));", ids);
+            ids = ids.Trim().Replace(" ", "").Replace(",", "','");
+            string strSql = string.Format(@"DELETE FROM dbo.WebSites WHERE (Id IN (‘{0}’));", ids);
             return DbHelperSql.ExecuteSql(strSql);
         }
 

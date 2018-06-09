@@ -32,7 +32,7 @@ namespace Hsp.Novels.Model
         /// 子项数量
         /// </summary>
         [DataMember]
-        public int ChildNodeCount { get; set; }
+        public int ChildCount { get; set; }
     }
 
     /// <summary>

@@ -34,7 +34,7 @@ namespace Hsp.Novels.Model
         /// 小说地址
         /// </summary>
         [DataMember]
-        public string Url { get; set; }
+        public string NovelUrl { get; set; }
 
         /// <summary>
         /// 起始章节地址
@@ -49,7 +49,7 @@ namespace Hsp.Novels.Model
         public string Author { get; set; }
 
         /// <summary>
-        /// 类型
+        /// 小说类型：
         /// </summary>
         [DataMember]
         public int TypeId { get; set; }
@@ -59,14 +59,6 @@ namespace Hsp.Novels.Model
         /// </summary>
         [DataMember]
         public int Status { get; set; }
-
-
-        /// <summary>
-        /// 地址是否需要组合？章节地址需要跟小说地址组合
-        /// </summary>
-        [DataMember]
-        public int UrlCombine { get; set; }
-
 
         /// <summary>
         /// 最新章节，如“第一千四百零三章 汇合”
@@ -158,5 +150,18 @@ namespace Hsp.Novels.Model
         /// </summary>
         [DataMember]
         public string NextUrl { get; set; }
+
+        /// <summary>
+        /// 地址是否需要组合？章节地址需要跟小说地址组合
+        /// </summary>
+        [DataMember]
+        public int UrlCombine { get; set; }
+
+        /// <summary>
+        /// 网站地址
+        /// </summary>
+        [DataMember]
+        public string WebUrl { get; set; }
+        
     }
 }

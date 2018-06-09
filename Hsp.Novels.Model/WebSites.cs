@@ -28,7 +28,7 @@ namespace Hsp.Novels.Model
         /// 站点地址
         /// </summary>
         [DataMember]
-        public string Url { get; set; }
+        public string WebUrl { get; set; }
 
         /// <summary>
         /// 是否有效
@@ -60,6 +60,12 @@ namespace Hsp.Novels.Model
         /// </summary>
         [DataMember]
         public string NextTitle { get; set; }
+
+        /// <summary>
+        /// 地址是否需要组合？章节地址需要跟小说地址组合：0-无；1-网站+章节地址；2-小说+章节地址
+        /// </summary>
+        [DataMember]
+        public int UrlCombine { get; set; }
 
         /// <summary>
         /// 添加时间

@@ -73,26 +73,27 @@ namespace Hsp.Novels.Dal
         /// <returns></returns>
         public static int Add(Chapters model)
         {
-            //NovelId, Url, NextUrl, Chapter, Content, WordCount
-
-//            string strSql = string.Format
-//                (@"INSERT INTO Chapters
-//                    (NovelId, Url, NextUrl, Chapter, ChapterIdx, ChapterName, HeadWord, Content, WordCount) 
-//                    VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}');"
-//                 , model.NovelId, model.Url, model.NextUrl, model.Chapter, model.ChapterIdx, model.ChapterName, model.HeadWord, model.Content, model.WordCount);
+            /*
+            string strSql = string.Format
+                (@"INSERT INTO Chapters
+                    (NovelId, ChapterUrl, NextUrl, Chapter, ChapterIdx, ChapterName, HeadWord, Content, WordCount) 
+                    VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}');"
+                 , model.NovelId, model.ChapterUrl, model.NextUrl, model.Chapter, model.ChapterIdx
+                 , model.ChapterName, model.HeadWord, model.Content, model.WordCount);*/
 
             string strSql = string.Format
                 (@"INSERT INTO Chapters
-                    (NovelId, Url, NextUrl, Chapter, Content, WordCount, ChapterIdx) 
+                    (NovelId, ChapterUrl, NextUrl, Chapter, Content, WordCount, ChapterIdx) 
                     VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}');"
-                 , model.NovelId, model.Url, model.NextUrl, model.Chapter, model.Content, model.WordCount, model.ChapterIdx);
+                 , model.NovelId, model.ChapterUrl, model.NextUrl, model.Chapter, model.Content
+                 , model.WordCount, model.ChapterIdx);
 
             return DbHelperSql.ExecuteSql(strSql);
         }
 
         #endregion
 
-//SELECT     TOP (200) Id, NovelId, Url, NextUrl, Chapter, ChapterIdx, ChapterName, HeadWord, Content, WordCount, UpdateTime
+//SELECT     TOP (200) Id, NovelId, ChapterUrl, NextUrl, Chapter, ChapterIdx, ChapterName, HeadWord, Content, WordCount, UpdateTime
 //FROM         Chapters
 
         #region 编辑章节数据
@@ -105,9 +106,9 @@ namespace Hsp.Novels.Dal
         public static int Edit(Chapters model)
         {
             string strSql = string.Format
-                (@"UPDATE Chapters SET NovelId='{1}', Url='{2}', NextUrl='{3}', Chapter='{4}', ChapterIdx='{5}', ChapterName='{6}', HeadWord='{7}', Content='{8}', WordCount='{9}'
+                (@"UPDATE Chapters SET Chapter='{1}', Content='{2}', WordCount='{3}'
                      WHERE (Id = '{0}');"
-                    , model.Id, model.NovelId, model.Url, model.NextUrl, model.Chapter, model.ChapterIdx, model.ChapterName, model.HeadWord, model.Content, model.WordCount);
+                    , model.Id, model.Chapter, model.Content, model.Content.Length);
             return DbHelperSql.ExecuteSql(strSql);
         }
 
@@ -120,9 +121,9 @@ namespace Hsp.Novels.Dal
         /// </summary>
         /// <param name="id">章节编号</param>
         /// <returns></returns>
-        public static int Delete(int id)
+        public static int Delete(string id)
         {
-            string strSql = string.Format(@"DELETE FROM dbo.Chapters WHERE (Id = {0});", id);
+            string strSql = string.Format(@"DELETE FROM dbo.Chapters WHERE (Id = '{0}');", id);
             return DbHelperSql.ExecuteSql(strSql);
         }
 
@@ -137,7 +138,8 @@ namespace Hsp.Novels.Dal
         /// <returns></returns>
         public static int BatchDelete(string ids)
         {
-            string strSql = string.Format(@"DELETE FROM dbo.Chapters WHERE (Id IN ({0}));", ids);
+            ids = ids.Trim().Replace(" ", "").Replace(",", "','");
+            string strSql = string.Format(@"DELETE FROM dbo.Chapters WHERE (Id IN ('{0}'));", ids);
             return DbHelperSql.ExecuteSql(strSql);
         }
 

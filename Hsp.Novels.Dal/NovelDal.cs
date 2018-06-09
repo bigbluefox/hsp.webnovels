@@ -72,7 +72,7 @@ namespace Hsp.Novels.Dal
                 INNER JOIN dbo.Novels n ON n.WebId = s.Id
                 WHERE (1 = 1){2}
             )
-            SELECT *, (SELECT COUNT(*) FROM dbo.Chapters WHERE NovelId = a.Id) AS ChildNodeCount  
+            SELECT *, (SELECT COUNT(*) FROM dbo.Chapters WHERE NovelId = a.Id) AS ChildCount  
             FROM PageTb a
             CROSS JOIN (SELECT MAX(RowNumber) AS RecordCount FROM PageTb) AS b 
             WHERE (a.RowNumber BETWEEN {0} AND {1});
@@ -93,10 +93,11 @@ namespace Hsp.Novels.Dal
         public static DataSet CrawlData(string webId, string novelId)
         {
             string strSql = string.Format(@"
-            SELECT w.Name + '.' + n.Title AS Title, w.ContentName, w.HeaderName, w.NextName, w.NextTitle, NextTb.Chapter AS CurrentChapter
+            SELECT n.Title, w.ContentName, w.HeaderName, w.NextName, w.NextTitle, NextTb.Chapter AS CurrentChapter
             , CASE WHEN LEN(NextTb.NextUrl) > 0 THEN NextTb.NextUrl ELSE n.StartUrl END AS NextUrl
             , CASE WHEN ISNULL(NextTb.ChapterIdx, 0) > 0 THEN NextTb.ChapterIdx ELSE n.StartChapterIdx END AS StartChapterIdx
             , ISNULL(n.ChapterChar, '第$2章') AS ChapterChar, ISNULL(n.ChapterType, 0) AS ChapterType
+            , w.UrlCombine, n.NovelUrl, w.WebUrl
             FROM dbo.WebSites w
             INNER JOIN dbo.Novels n ON n.WebId = w.Id
             LEFT OUTER JOIN (SELECT TOP (1) NovelId, ISNULL(NextUrl, '') AS NextUrl, Chapter, ChapterIdx FROM Chapters WHERE NovelId = '{1}' ORDER BY CreateTime DESC) AS NextTb ON NextTb.NovelId = n.Id
@@ -118,16 +119,18 @@ namespace Hsp.Novels.Dal
         {
             string strSql = string.Format
                 (@"INSERT INTO Novels
-                    (WebId, Title, Url, StartUrl, LatestChapter, Author, UrlCombine, TypeId, Status) 
-                    VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}');"
-                 , model.WebId, model.Title, model.Url, model.StartUrl, model.LatestChapter, model.Author, model.UrlCombine, model.TypeId, model.Status);
+                    (WebId, Title, NovelUrl, StartUrl, LatestChapter, Author, TypeId, Status, StartChapterIdx, ChapterChar, ChapterType) 
+                    VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}', '{9}', '{10}');"
+                 , model.WebId, model.Title, model.NovelUrl, model.StartUrl, model.LatestChapter, model.Author, model.TypeId
+                 , model.Status, model.StartChapterIdx, model.ChapterChar, model.ChapterType);
             return DbHelperSql.ExecuteSql(strSql);
         }
 
         #endregion
 
-//SELECT     TOP (200) Id, WebId, Title, Url, StartUrl, LatestChapter, Author, UrlCombine, TypeId, Status
-//FROM         Novels
+        //SELECT     TOP (200) Id, WebId, Title, NovelUrl, StartUrl, LatestChapter, Author
+        //    , TypeId, Status, RecentUpdate, ChapterCount, CreateTime, ChapterChar, StartChapterIdx, ChapterType
+        //FROM         Novels
 
         #region 编辑小说数据
 
@@ -139,9 +142,10 @@ namespace Hsp.Novels.Dal
         public static int Edit(Model.Novels model)
         {
             string strSql = string.Format
-                (@"UPDATE Novels SET WebId='{1}', Title='{2}', Url='{3}', StartUrl='{4}', LatestChapter='{5}', Author='{6}', UrlCombine='{7}', TypeId='{8}', Status='{9}'
-                     WHERE (Id = '{0}');"
-                    , model.Id, model.WebId, model.Title, model.Url, model.StartUrl, model.LatestChapter, model.Author, model.UrlCombine, model.TypeId, model.Status);
+                (@"UPDATE Novels SET WebId='{1}', Title='{2}', NovelUrl='{3}', StartUrl='{4}', LatestChapter='{5}', Author='{6}'
+                , TypeId='{7}', Status='{8}', StartChapterIdx='{9}', ChapterChar='{10}', ChapterType='{11}' WHERE (Id = '{0}');"
+                 , model.Id, model.WebId, model.Title, model.NovelUrl, model.StartUrl, model.LatestChapter, model.Author
+                 , model.TypeId, model.Status, model.StartChapterIdx, model.ChapterChar, model.ChapterType);
             return DbHelperSql.ExecuteSql(strSql);
         }
 
@@ -154,9 +158,9 @@ namespace Hsp.Novels.Dal
         /// </summary>
         /// <param name="id">小说编号</param>
         /// <returns></returns>
-        public static int Delete(int id)
+        public static int Delete(string id)
         {
-            string strSql = string.Format(@"DELETE FROM dbo.Novels WHERE (Id = {0});", id);
+            string strSql = string.Format(@"DELETE FROM dbo.Novels WHERE (Id = '{0}');", id);
             return DbHelperSql.ExecuteSql(strSql);
         }
 
@@ -171,7 +175,8 @@ namespace Hsp.Novels.Dal
         /// <returns></returns>
         public static int BatchDelete(string ids)
         {
-            string strSql = string.Format(@"DELETE FROM dbo.Novels WHERE (Id IN ({0}));", ids);
+            ids = ids.Trim().Replace(" ", "").Replace(",", "','");
+            string strSql = string.Format(@"DELETE FROM dbo.Novels WHERE (Id IN ('{0}'));", ids);
             return DbHelperSql.ExecuteSql(strSql);
         }
 

@@ -86,7 +86,9 @@ Hsp.Common.Message = function (obj, msg, type, fade) {
             typeMessage = "警告！";
             typeIcon = "warning-sign";
             break;
+        case "error":
         case "danger":
+            type = "danger";
             typeMessage = "错误！";
             typeIcon = "remove-sign";
             break;
