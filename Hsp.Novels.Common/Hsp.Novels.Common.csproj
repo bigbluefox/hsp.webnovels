@@ -45,11 +45,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ContentType.cs" />
     <Compile Include="CookieHelper.cs" />
     <Compile Include="CrawlHelper.cs" />
     <Compile Include="DataCache.cs" />
     <Compile Include="DataTableToList.cs" />
     <Compile Include="ExtendFunction.cs" />
+    <Compile Include="FileHelper.cs" />
     <Compile Include="HashHelper.cs" />
     <Compile Include="HttpHelper.cs" />
     <Compile Include="JsonHelper.cs" />

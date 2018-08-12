@@ -68,6 +68,20 @@ namespace Hsp.Novels.Model
         public int UrlCombine { get; set; }
 
         /// <summary>
+        /// 正文类型：0-文本，1-HTML
+        /// </summary>
+        [DataMember]
+        public int AnnotationType { get; set; }
+
+        /// <summary>
+        /// 换行标识
+        /// </summary>
+        [DataMember]
+        public string LineSign { get; set; }
+
+
+
+        /// <summary>
         /// 添加时间
         /// </summary>
         [DataMember]

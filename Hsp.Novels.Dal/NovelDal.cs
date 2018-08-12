@@ -82,6 +82,21 @@ namespace Hsp.Novels.Dal
 
         #endregion
 
+        #region 根据编号获取小说数据
+
+        /// <summary>
+        /// 根据编号获取小说数据
+        /// </summary>
+        /// <param name="novelId">小说编号</param>
+        /// <returns></returns>
+        public static DataSet NovelData(string novelId)
+        {
+            string strSql = string.Format(@"SELECT * FROM dbo.Novels WHERE (Id = '{0}');", novelId);
+            return DbHelperSql.Query(strSql);
+        }
+
+        #endregion
+
         #region 获取小说抓取参数数据
 
         /// <summary>
@@ -97,7 +112,7 @@ namespace Hsp.Novels.Dal
             , CASE WHEN LEN(NextTb.NextUrl) > 0 THEN NextTb.NextUrl ELSE n.StartUrl END AS NextUrl
             , CASE WHEN ISNULL(NextTb.ChapterIdx, 0) > 0 THEN NextTb.ChapterIdx ELSE n.StartChapterIdx END AS StartChapterIdx
             , ISNULL(n.ChapterChar, '第$2章') AS ChapterChar, ISNULL(n.ChapterType, 0) AS ChapterType
-            , w.UrlCombine, n.NovelUrl, w.WebUrl
+            , w.UrlCombine, n.NovelUrl, w.WebUrl, w.AnnotationType, w.LineSign
             FROM dbo.WebSites w
             INNER JOIN dbo.Novels n ON n.WebId = w.Id
             LEFT OUTER JOIN (SELECT TOP (1) NovelId, ISNULL(NextUrl, '') AS NextUrl, Chapter, ChapterIdx FROM Chapters WHERE NovelId = '{1}' ORDER BY CreateTime DESC) AS NextTb ON NextTb.NovelId = n.Id

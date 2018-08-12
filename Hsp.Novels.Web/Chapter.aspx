@@ -76,46 +76,46 @@
 
                     <form class="form-horizontal">
                         <div class="form-group">
-                            <label for="txtChapterUrl" class="col-xs-6 col-sm-2 control-label">起始地址</label>
-                            <div class="col-xs-6 col-sm-6">
+                            <label for="txtChapterUrl" class="col-xs-3 col-sm-2 control-label">起始地址</label>
+                            <div class="col-xs-9 col-sm-6">
                                 <input type="text" class="form-control" id="txtChapterUrl" placeholder="起始地址" value="https://www.dashubao.net/book/85/85429/27100366.html">
                             </div>
-                            <label for="txtChapterChar" class="col-xs-6 col-sm-2 control-label">章节模板</label>
-                            <div class="col-xs-6 col-sm-2">
+                            <label for="txtChapterChar" class="col-xs-3 col-sm-2 control-label">章节模板</label>
+                            <div class="col-xs-9 col-sm-2">
                                 <input type="text" class="form-control" id="txtChapterChar" placeholder="章节模板" value="第$2章">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="txtContentName" class="col-xs-6 col-sm-2 control-label">内容对象</label>
-                            <div class="col-xs-6 col-sm-2">
+                            <label for="txtContentName" class="col-xs-3 col-sm-2 control-label">内容对象</label>
+                            <div class="col-xs-9 col-sm-2">
                                 <input type="text" class="form-control" id="txtContentName" placeholder="内容对象" value=".yd_text2 p">
                             </div>
-                            <label for="txtHeaderName" class="col-xs-6 col-sm-2 control-label">标题对象</label>
-                            <div class="col-xs-6 col-sm-2">
+                            <label for="txtHeaderName" class="col-xs-3 col-sm-2 control-label">标题对象</label>
+                            <div class="col-xs-9 col-sm-2">
                                 <input type="text" class="form-control" id="txtHeaderName" placeholder="标题对象" value=".oneline">
                             </div>
-                            <label for="txtStartChapterIdx" class="col-xs-6 col-sm-2 control-label">起始数字</label>
-                            <div class="col-xs-6 col-sm-2">
+                            <label for="txtStartChapterIdx" class="col-xs-3 col-sm-2 control-label">起始数字</label>
+                            <div class="col-xs-9 col-sm-2">
                                 <input type="text" class="form-control" id="txtStartChapterIdx" placeholder="起始数字" value="">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="txtNextName" class="col-xs-6 col-sm-2 control-label">地址对象</label>
-                            <div class="col-xs-6 col-sm-2">
+                            <label for="txtNextName" class="col-xs-3 col-sm-2 control-label">地址对象</label>
+                            <div class="col-xs-9 col-sm-2">
                                 <input type="text" class="form-control" id="txtNextName" placeholder="下一章地址对象" value=".pereview a:last-child">
                             </div>
-                            <label for="txtNextTitle" class="col-xs-6 col-sm-2 control-label">结束标识</label>
-                            <div class="col-xs-6 col-sm-2">
+                            <label for="txtNextTitle" class="col-xs-3 col-sm-2 control-label">结束标识</label>
+                            <div class="col-xs-9 col-sm-2">
                                 <input type="text" class="form-control" id="txtNextTitle" placeholder="结束标识不含" value="">
                             </div> 
-                            <label for="txtChapterType" class="col-xs-6 col-sm-2 control-label">标题处理</label>
-                            <div class="col-xs-6 col-sm-2">
+                            <label for="txtChapterType" class="col-xs-3 col-sm-2 control-label">标题处理</label>
+                            <div class="col-xs-9 col-sm-2">
                                 <input type="text" class="form-control" id="txtChapterType" placeholder="标题处理" value="">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="txtContent" class="col-xs-6 col-sm-2 control-label">小说内容</label>
-                            <div class="col-xs-6 col-sm-10">
+                            <label for="txtContent" class="col-xs-3 col-sm-2 control-label">小说内容</label>
+                            <div class="col-xs-9 col-sm-10">
                                 <textarea class="form-control" id="txtContent" placeholder="抓取小说内容" rows="10"></textarea>
                             </div>
                         </div>
@@ -133,6 +133,10 @@
                     <input id="txtNovelUrl" type="hidden" />
                     <input id="txtWebUrl" type="hidden" />
                     <input id="txtNovelTitle" type="hidden" />
+                    
+                    <input id="txtAnnotationType" type="hidden" />
+                    <input id="txtLineSign" type="hidden" />                    
+
                     <div style="float: left;" id="txtChapterTitle"></div>
                     <button type="button" class="btn btn-default" data-dismiss="modal">
                         <span class="glyphicon glyphicon-floppy-remove" aria-hidden="true"></span> 关闭
@@ -167,7 +171,7 @@
                             <input type="text" class="form-control" id="txtChapterName" placeholder="章节标题" required="required">
                         </div>
                         <div class="form-group">
-                            <label for="txtContent">章节内容</label>
+                            <label for="txtChapterContent">章节内容</label>
                             <textarea class="form-control" id="txtChapterContent" rows="10"></textarea>
                         </div>
                         
@@ -249,7 +253,9 @@
         // 测试抓取
         $("#btnTest").unbind('click').bind('click', function () {
 
-            TestCrawl();
+            //TestCrawl();
+
+            RecursiveCrawl(true);
 
         });
 
@@ -258,7 +264,7 @@
 
             $("#btnCrawl").attr("disabled", "disabled");
 
-            RecursiveCrawl();
+            RecursiveCrawl(false);
 
         });
 
@@ -270,13 +276,12 @@
         });
     });
 
-    // 章节标题
+    // 章节标题处理
     function ChapterTitle(chapter, type) {
-
-        //debugger;
 
         // 章节标题修正
         var chapterChar = $("#txtChapterChar").val();
+        if (chapterChar.length == 0) chapterChar = "第$2章";
         var chapterReg = /([第]{0,1})([○零一二三四五六七八九十百千\d]{1,})([节章]{0,1}[ ]{0,1}[：:]{0,1})([\s\S]*?)/;
         //var txtChapter = chapter.replace(chapterReg, "第$2章 $4");
         var txtChapter = chapter.replace(chapterReg, chapterChar + " $4");
@@ -334,7 +339,7 @@
         return txtChapter;
     }
 
-    // 测试抓取
+    // 测试抓取 (废弃)
     function TestCrawl() {
 
         var chapterUrl = $("#txtChapterUrl").val();
@@ -348,12 +353,17 @@
         var webUrl = $("#txtWebUrl").val();
         var novelUrl = $("#txtNovelUrl").val();
 
+        var annotationType = $("#txtAnnotationType").val(); // 正文类型：0-文本，1-HTML
+        var lineSign = $("#txtLineSign").val(); // 换行标识：无，<br><br>　
+
         if (urlCombine == "1") { // 地址是否需要组合？1-网站+章节地址
+            chapterUrl = chapterUrl.replace(webUrl, "");
             if (chapterUrl.startWith('/')) chapterUrl = chapterUrl.lTrim('/');
             if (!webUrl.endWith('/')) webUrl = webUrl + '/';
             chapterUrl = webUrl + chapterUrl;
         }
         if (urlCombine == "2") { // 地址是否需要组合？2-小说+章节地址
+            chapterUrl = chapterUrl.replace(novelUrl, "");
             if (chapterUrl.startWith('/')) chapterUrl = chapterUrl.lTrim('/');
             if (!webUrl.endWith('/')) webUrl = webUrl + '/';
             chapterUrl = novelUrl + chapterUrl;
@@ -365,7 +375,7 @@
             dataType: "html",
             success: function (result) {
 
-                debugger;
+                //debugger;
 
                 //正则表达式获取body块  
                 var reg = /<body[\s\S]*<\/body>/g;
@@ -388,10 +398,20 @@
                 if (txtChapter.length > 0) {
                     $("#txtChapterTitle").html(txtChapter);
                     contents += txtChapter + "\n";
-                    //$html[0].innerHTML = $html[0].innerHTML.replace("<br>", "\n");
-                    $.each($html, function () {
-                        contents += $(this).text().trim() + "\n";
-                    });
+
+                    if (annotationType == "0") { // 文本
+                        $.each($html, function() {
+                            contents += $(this).text().trim() + "\n";
+                        });
+                    }
+                    if (annotationType == "1") { // HTML
+                        var $innerHtml = $html[0].innerHTML;
+                        var lineReg = new RegExp(lineSign, "gi");
+                        contents += $innerHtml.replace(lineReg, "\n");
+
+                        var replaceReg = new RegExp("[Pp][Ss][\d]?[:：].*", "gi");
+                        contents = contents.replace(replaceReg, "");
+                    }
 
                     $("#txtContent").val(contents);
                 } else {
@@ -434,7 +454,7 @@
 
 
     // 递归抓取内容
-    function RecursiveCrawl() {
+    function RecursiveCrawl(test) {
 
         if (isEnd) return;
 
@@ -450,10 +470,19 @@
         var webUrl = $("#txtWebUrl").val();
         var novelUrl = $("#txtNovelUrl").val();
 
+        var annotationType = $("#txtAnnotationType").val(); // 正文类型：0-文本，1-HTML
+        var lineSign = $("#txtLineSign").val(); // 换行标识：无，<br><br>　
+
         if (urlCombine == "1") { // 地址是否需要组合？1-网站+章节地址
+            chapterUrl = chapterUrl.replace(webUrl, "");
+            if (chapterUrl.startWith('/')) chapterUrl = chapterUrl.lTrim('/');
+            if (!webUrl.endWith('/')) webUrl = webUrl + '/';
             chapterUrl = webUrl + chapterUrl;
         }
         if (urlCombine == "2") { // 地址是否需要组合？2-小说+章节地址
+            chapterUrl = chapterUrl.replace(novelUrl, "");
+            if (chapterUrl.startWith('/')) chapterUrl = chapterUrl.lTrim('/');
+            if (!webUrl.endWith('/')) webUrl = webUrl + '/';
             chapterUrl = novelUrl + chapterUrl;
         }
 
@@ -461,6 +490,7 @@
             url: chapterUrl,
             type: "GET",
             dataType: "html",
+            crossDomain: true,
             success: function (result) {
 
                 //正则表达式获取body块  
@@ -476,6 +506,7 @@
                 //console.log($header);
 
                 var txtChapter = $($header).text().trim();
+                txtChapter = ChapterTitle(txtChapter, chapterType);
 
                 // 章节标题修正
                 //var arrTitle = txtChapter.split(" ");
@@ -489,9 +520,9 @@
 
                 //debugger;
 
-                var chapterReg = /([第]{0,1})([○零一二三四五六七八九十百千\d]{1,})([节章]{0,1}[ ]{0,1}[：:]{0,1})([\s\S]*?)/;
-                txtChapter = txtChapter.replace(chapterReg, chapterChar + " $4");
-                txtChapter = ChapterTitle(txtChapter, chapterType);
+                //var chapterReg = /([第]{0,1})([○零一二三四五六七八九十百千\d]{1,})([节章]{0,1}[ ]{0,1}[：:]{0,1})([\s\S]*?)/;
+                //txtChapter = txtChapter.replace(chapterReg, chapterChar + " $4");
+                //txtChapter = ChapterTitle(txtChapter, chapterType);
 
                 //var testreg = txtChapter.replace(chapterReg, "$1-$2-$3-$4");
                 //$("#txtChapter").val(txtChapter);
@@ -499,11 +530,24 @@
                 if (txtChapter.length > 0) {
                     $("#txtChapterTitle").html(txtChapter);
                     contents += txtChapter + "\n";
-                    $.each($html, function() {
-                        content += $(this).text().trim() + "\n";
-                        contents += $(this).text().trim() + "\n";
-                    });
+
+                    if (annotationType == "0") { // 文本
+                        $.each($html, function () {
+                            content += $(this).text().trim() + "\n";
+                            contents += $(this).text().trim() + "\n";
+                        });
+                    }
+                    if (annotationType == "1") { // HTML
+                        var $innerHtml = $html[0].innerHTML;
+                        var lineReg = new RegExp(lineSign, "gi");
+                        contents += $innerHtml.replace(lineReg, "\n");
+
+                        var replaceReg = new RegExp("[Pp][Ss][\d]?[:：].*", "gi");
+                        contents = contents.replace(replaceReg, "");
+                    }
+
                     $("#txtContent").val(contents);
+
                 } else {
                     Hsp.Common.Message($(".error-message"), "章节标题为空！", "error", "fade");
                 }
@@ -539,6 +583,8 @@
                     return;
                 }
 
+                if (test) return;
+
                 // 内容保存
                 var params = {
                     NovelId: novelId,
@@ -561,8 +607,11 @@
                     data: params,
                     success: function (rst) {
                         if (rst && rst.success) {
+
+                            //debugger;
+
                             $("#txtChapterUrl").val(nextUrl);
-                            RecursiveCrawl(); // 递归抓取内容
+                            RecursiveCrawl(false); // 递归抓取内容
                         } else {
                             if (rst.Message) {
                                 Hsp.Common.Message($(".error-message"), rst.Message, "error");
@@ -628,6 +677,11 @@
                     $("#txtWebUrl").val(rst.WebUrl);
                     $("#txtNovelUrl").val(rst.NovelUrl);
                     $("#txtNovelTitle").val(rst.Title);
+
+                    $("#txtAnnotationType").val(rst.AnnotationType);
+                    $("#txtLineSign").val(rst.LineSign);
+
+                    // , AnnotationType, LineSign
                 }
             },
             complete: function (xhr, errorText, errorType) {

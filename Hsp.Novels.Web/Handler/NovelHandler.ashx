@@ -2,10 +2,12 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Web;
 using System.Web.Script.Serialization;
 using System.Web.SessionState;
 using Hsp.Novels.Bll;
+using Hsp.Novels.Common;
 using Hsp.Novels.Model;
 
 /// <summary>
@@ -17,6 +19,11 @@ public class NovelHandler : IHttpHandler, IRequiresSessionState
     ///   小说业务逻辑处理
     /// </summary>
     protected NovelBll NovelBll = new NovelBll();
+
+    /// <summary>
+    ///     章节业务逻辑处理
+    /// </summary>
+    protected ChapterBll ChapterBll = new ChapterBll();
 
     #region 获取小说信息分页列表信息
 
@@ -169,6 +176,11 @@ public class NovelHandler : IHttpHandler, IRequiresSessionState
             case "BATCHDELETE":
                 BatchDelete(context);
                 break;
+                
+            // 生成并下载小说
+            case "DOWNLOAD":
+                Download(context);
+                break;                
 
             //获取小说抓取参数
             case "CRAWL":
@@ -258,4 +270,67 @@ public class NovelHandler : IHttpHandler, IRequiresSessionState
 
     #endregion
 
+    #region 获取小说抓取参数
+
+    /// <summary>
+    ///   获取小说抓取参数
+    /// </summary>
+    /// <param name="context"></param>
+    private void Download(HttpContext context)
+    {
+        var strNovelId = context.Request.Params["Id"] ?? "";
+        if (strNovelId.Length > 0) strNovelId = strNovelId.Trim();
+
+        var model = NovelBll.NovelModel(strNovelId); // 小说数据
+
+        List<Chapters> list = ChapterBll.ChapterList(strNovelId); // 章节数据
+
+        var rootPath = "/Novels/";
+        var novelName = model.Title + ".txt";
+        var novelUrl = rootPath + novelName;
+        var novelPath = HttpContext.Current.Server.MapPath(rootPath);
+        FileHelper.FilePathCheck(novelPath); // 检查目录
+        if (!novelPath.EndsWith("\\")) novelPath += "\\";
+        novelPath += novelName;
+
+        try
+        {
+            if (File.Exists(novelPath)) File.Delete(novelPath); // 删除文件
+
+            var sw = File.CreateText(novelPath); // 创建文本
+
+            sw.WriteLine(model.Title);
+
+            foreach (var chapter in list)
+            {
+                sw.WriteLine(chapter.Chapter);
+                sw.WriteLine(chapter.Content);
+            }
+
+            sw.Close();
+
+            FileHelper.DownLoadold(novelPath, novelName, "txt");
+        }
+        catch (Exception)
+        {
+            
+            throw;
+            context.Response.StatusCode = 400; /* Bad Request */
+        }
+        
+
+        
+        
+        
+        
+        
+        //var json = new JavaScriptSerializer().Serialize(model);
+        //context.Response.Write(json);
+    }
+
+    #endregion   
+    
+    
+    
+    
 }

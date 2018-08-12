@@ -63,6 +63,22 @@ namespace Hsp.Novels.Dal
 
         #endregion
 
+        #region 根据小说编号获取小说章节数据
+
+        /// <summary>
+        /// 根据小说编号获取小说章节数据
+        /// </summary>
+        /// <param name="novelId">小说编号</param>
+        /// <returns></returns>
+        public static DataSet ChapterData(string novelId)
+        {
+            string strSql = string.Format(@"
+            SELECT * FROM dbo.Chapters WHERE (NovelId = '{0}') ORDER BY ChapterIdx;", novelId);
+            return DbHelperSql.Query(strSql);
+        }
+
+        #endregion
+
         #region 添加章节数据
 
         /// <summary>
@@ -93,8 +109,8 @@ namespace Hsp.Novels.Dal
 
         #endregion
 
-//SELECT     TOP (200) Id, NovelId, ChapterUrl, NextUrl, Chapter, ChapterIdx, ChapterName, HeadWord, Content, WordCount, UpdateTime
-//FROM         Chapters
+        //SELECT     TOP (200) Id, NovelId, ChapterUrl, NextUrl, Chapter, ChapterIdx, ChapterName, HeadWord, Content, WordCount, UpdateTime
+        //FROM         Chapters
 
         #region 编辑章节数据
 

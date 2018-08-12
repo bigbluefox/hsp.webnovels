@@ -35,6 +35,26 @@ namespace Hsp.Novels.Bll
 
         #endregion
 
+        #region 根据编号获取小说数据实体
+
+        /// <summary>
+        /// 根据编号获取小说数据实体
+        /// </summary>
+        /// <param name="novelId">小说编号</param>
+        /// <returns></returns>
+        public Model.Novels NovelModel(string novelId)
+        {
+            Model.Novels model = null;
+            DataSet ds = NovelDal.NovelData(novelId);
+            if (ds != null && ds.Tables[0].Rows.Count > 0)
+            {
+                model = new DataTableToList<Model.Novels>(ds.Tables[0]).ToList().FirstOrDefault();
+            }
+            return model;
+        }
+
+        #endregion
+
         #region 获取小说抓取参数实体
 
         /// <summary>

@@ -35,6 +35,26 @@ namespace Hsp.Novels.Bll
 
         #endregion
 
+        #region 根据小说编号获取小说章节数据
+
+        /// <summary>
+        /// 根据小说编号获取小说章节数据
+        /// </summary>
+        /// <param name="novelId">小说编号</param>
+        /// <returns></returns>
+        public List<Chapters> ChapterList(string novelId)
+        {
+            var list = new List<Chapters>();
+            DataSet ds = ChapterDal.ChapterData(novelId);
+            if (ds != null && ds.Tables[0].Rows.Count > 0)
+            {
+                list = new DataTableToList<Chapters>(ds.Tables[0]).ToList();
+            }
+            return list;
+        }
+
+        #endregion
+
         #region 添加章节信息
 
         /// <summary>

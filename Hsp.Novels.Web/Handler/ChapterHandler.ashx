@@ -13,8 +13,6 @@ using Hsp.Novels.Model;
 /// </summary>
 public class ChapterHandler : IHttpHandler, IRequiresSessionState
 {
-
-
     /// <summary>
     ///     章节业务逻辑处理
     /// </summary>
@@ -177,13 +175,24 @@ public class ChapterHandler : IHttpHandler, IRequiresSessionState
         var rst = "";
         var strChapterId = context.Request.Params["ID"] ?? ""; // 章节编号
         var strNovelId = context.Request.Params["NovelId"] ?? ""; // 小说编号
-        var strChapterUrl = context.Request.Params["ChapterChapterUrl"] ?? ""; // 章节地址
-        var strNextUrl = context.Request.Params["NextChapterUrl"] ?? ""; // 下一章地址
+        var strChapterUrl = context.Request.Params["ChapterUrl"] ?? ""; // 章节地址
+        var strNextUrl = context.Request.Params["NextUrl"] ?? ""; // 下一章地址
         var strChapter = context.Request.Params["Chapter"] ?? ""; // 章节
         var strContent = context.Request.Params["Content"] ?? ""; // 章节内容
         var iWordCount = int.Parse(context.Request.Params["WordCount"] ?? "0"); // 章节字数
         var iChapterIdx = int.Parse(context.Request.Params["ChapterIdx"] ?? "0"); // 章节字数
 
+        // var params = {
+        //    NovelId: novelId,
+        //    ChapterUrl: encodeURIComponent($("#txtChapterUrl").val()),
+        //    NextUrl: encodeURIComponent(nextUrl),
+        //    Chapter: encodeURIComponent(txtChapter),
+        //    Content: encodeURIComponent(content),
+        //    WordCount: contents.length,
+        //    ChapterIdx: $("#txtStartChapterIdx").val()
+        //    //,ChapterName: "", //HeadWord: ""
+        //};       
+        
         if (!string.IsNullOrEmpty(strChapterUrl)) strChapterUrl = HttpUtility.UrlDecode(strChapterUrl);
         if (!string.IsNullOrEmpty(strNextUrl)) strNextUrl = HttpUtility.UrlDecode(strNextUrl);
         if (!string.IsNullOrEmpty(strChapter)) strChapter = HttpUtility.UrlDecode(strChapter);

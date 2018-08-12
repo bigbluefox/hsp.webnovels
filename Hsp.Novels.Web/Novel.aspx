@@ -152,6 +152,9 @@
         selections = [],
         key = 'Id';
 
+    //var progressModalId = "progressModal", $progressModal = null; // 进度条窗体及对象定义
+    var circleModalId = "circleModal", $circleModal = null; // 圆形进度条窗体及对象
+
     var pageNumber = 1, width = 0, webId = "<% = WebId %>";
     var pageListUrl = "/Handler/NovelHandler.ashx?OP=LIST";
 
@@ -195,6 +198,9 @@
             $("#editModelLabel").html("小说信息添加");
             $('#editModel').modal('toggle'); // 弹出添加窗体            
         });
+
+        $circleModal = $("#" + circleModalId);
+
     });
 
     // 刷新表格数据
@@ -294,12 +300,12 @@
                         field: 'CreateTime',
                         title: '添加时间',
                         align: 'center',
-                        width: 105,
+                        width: 100,
                         visible: width > Hsp.Mobile.DefaultWidth,
                         formatter: dateFormatter
                     }, {
                         title: '操作',
-                        width: 90,
+                        width: 95,
                         align: 'center',
                         events: operateEvents,
                         formatter: operateFormatter
@@ -386,6 +392,9 @@
             '</a>  ',
             '<a class="remove" href="javascript:void(0)" title="删除小说">',
             '<i class="glyphicon glyphicon-remove"></i>',
+            '</a>  ',
+            '<a class="download" href="javascript:void(0)" title="下载小说">',
+            '<i class="glyphicon glyphicon-book"></i>',
             '</a>'
         ].join('');
     }
@@ -429,6 +438,53 @@
             });
 
             DelNovelById(row.Id); // 删除行数据，考虑要将上述表格响应纳入到删除操作中
+        },
+        'click .download': function (e, value, row, index) {
+
+            // 进度条调用
+            //Hsp.Modal.CircleMessage(circleModalId, "操作正在进行中，请稍候...");
+            //$("#" + circleModalId).modal("toggle");
+
+            var url = "/Handler/NovelHandler.ashx?OP=DOWNLOAD&ID=" + row.Id;
+            //$.get(url + "&rnd=" + (Math.random() * 10), function (data) {
+            //    //if (data) {
+            //    //    //modals.correct(data.Message);
+            //    //} else {
+            //    //    modals.error(data.Message);
+            //    //}
+
+            //    $circleModal.modal("hide");
+            //});
+
+            //$.ajax({
+            //    url: "/Handler/NovelHandler.ashx",
+            //    type: 'GET',
+            //    data: { OP: "DOWNLOAD", id: row.Id, rnd: Math.random() },
+            //    success: function (rst) {
+            //        $("#" + circleModalId).modal("hide");
+            //    }
+            //    , complete: function (xhr, errorText, errorType) {
+
+            //        //debugger;
+
+            //        //var p = "";
+
+            //        //alert("请求完成后");
+
+            //        //$circleModal.modal("hide");
+
+            //        //$("#" + circleModalId).modal("hide");
+            //    }
+            //    , error: function(xhr, errorText, errorType) {
+            //        alert("请求错误后");
+            //    }
+            //    , beforSend: function() {
+            //        alert("请求之前");
+            //    }
+            //});
+
+            window.open(url, "_blank");
+
         }
     };
 
