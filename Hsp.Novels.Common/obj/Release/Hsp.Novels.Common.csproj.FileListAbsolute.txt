@@ -1,0 +1,6 @@
+E:\My Documents\GitHub\hsp.webnovels\Hsp.Novels.Common\bin\Release\Hsp.Novels.Common.dll
+E:\My Documents\GitHub\hsp.webnovels\Hsp.Novels.Common\bin\Release\Hsp.Novels.Common.pdb
+E:\My Documents\GitHub\hsp.webnovels\Hsp.Novels.Common\bin\Release\log4net.dll
+E:\My Documents\GitHub\hsp.webnovels\Hsp.Novels.Common\obj\Release\Hsp.Novels.Common.dll
+E:\My Documents\GitHub\hsp.webnovels\Hsp.Novels.Common\obj\Release\Hsp.Novels.Common.pdb
+E:\My Documents\GitHub\hsp.webnovels\Hsp.Novels.Common\obj\Release\Hsp.Novels.Common.csprojResolveAssemblyReference.cache

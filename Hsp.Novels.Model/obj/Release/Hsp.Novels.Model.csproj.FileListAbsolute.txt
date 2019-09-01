@@ -1,0 +1,5 @@
+E:\My Documents\GitHub\hsp.webnovels\Hsp.Novels.Model\bin\Release\Hsp.Novels.Model.dll
+E:\My Documents\GitHub\hsp.webnovels\Hsp.Novels.Model\bin\Release\Hsp.Novels.Model.pdb
+E:\My Documents\GitHub\hsp.webnovels\Hsp.Novels.Model\obj\Release\Hsp.Novels.Model.csprojResolveAssemblyReference.cache
+E:\My Documents\GitHub\hsp.webnovels\Hsp.Novels.Model\obj\Release\Hsp.Novels.Model.dll
+E:\My Documents\GitHub\hsp.webnovels\Hsp.Novels.Model\obj\Release\Hsp.Novels.Model.pdb

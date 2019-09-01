@@ -66,7 +66,7 @@ namespace Hsp.Novels.Dal
 
             string strSql = string.Format(@"
             ;WITH PageTb AS (
-                SELECT ROW_NUMBER() OVER (ORDER BY n.Title) RowNumber, n.*, s.Name AS WebName 
+                SELECT ROW_NUMBER() OVER (ORDER BY n.CreateTime DESC) RowNumber, n.*, s.Name AS WebName 
                 , s.ContentName, s.HeaderName, s.NextName, s.NextTitle
                 FROM dbo.WebSites s
                 INNER JOIN dbo.Novels n ON n.WebId = s.Id
@@ -107,16 +107,35 @@ namespace Hsp.Novels.Dal
         /// <returns></returns>
         public static DataSet CrawlData(string webId, string novelId)
         {
+            #region 参数处理
+
+            string strQry = "";
+            
+            if (!string.IsNullOrEmpty(webId))
+            {
+                webId = Utility.MASK(webId);
+                strQry += string.Format(@" AND (w.Id = '{0}')", webId);
+            }
+
+            if (!string.IsNullOrEmpty(novelId))
+            {
+                novelId = Utility.MASK(novelId);
+                strQry += string.Format(@" AND (n.Id = '{0}')", novelId);
+            }
+
+            #endregion
+
             string strSql = string.Format(@"
-            SELECT n.Title, w.ContentName, w.HeaderName, w.NextName, w.NextTitle, NextTb.Chapter AS CurrentChapter
-            , CASE WHEN LEN(NextTb.NextUrl) > 0 THEN NextTb.NextUrl ELSE n.StartUrl END AS NextUrl
-            , CASE WHEN ISNULL(NextTb.ChapterIdx, 0) > 0 THEN NextTb.ChapterIdx ELSE n.StartChapterIdx END AS StartChapterIdx
+            SELECT n.Id, n.Title, w.ContentName, w.HeaderName, w.NextName, w.NextTitle
+            --, NextTb.Chapter AS CurrentChapter
+            --, CASE WHEN LEN(NextTb.NextUrl) > 0 THEN NextTb.NextUrl ELSE n.StartUrl END AS NextUrl
+            --, CASE WHEN ISNULL(NextTb.ChapterIdx, 0) > 0 THEN NextTb.ChapterIdx ELSE n.StartChapterIdx END AS StartChapterIdx
             , ISNULL(n.ChapterChar, '第$2章') AS ChapterChar, ISNULL(n.ChapterType, 0) AS ChapterType
-            , w.UrlCombine, n.NovelUrl, w.WebUrl, w.AnnotationType, w.LineSign
+            , w.UrlCombine, n.NovelUrl, w.WebUrl, w.AnnotationType, w.LineSign, w.Encoding
             FROM dbo.WebSites w
             INNER JOIN dbo.Novels n ON n.WebId = w.Id
-            LEFT OUTER JOIN (SELECT TOP (1) NovelId, ISNULL(NextUrl, '') AS NextUrl, Chapter, ChapterIdx FROM Chapters WHERE NovelId = '{1}' ORDER BY CreateTime DESC) AS NextTb ON NextTb.NovelId = n.Id
-            WHERE (w.Id = '{0}') AND (n.Id = '{1}')", webId, novelId);
+            --LEFT OUTER JOIN (SELECT TOP (1) NovelId, ISNULL(NextUrl, '') AS NextUrl, Chapter, ChapterIdx FROM Chapters WHERE NovelId = '{0}' ORDER BY CreateTime DESC) AS NextTb ON NextTb.NovelId = n.Id
+            WHERE (1 = 1){0} ", strQry);
             return DbHelperSql.Query(strSql);
         }
 

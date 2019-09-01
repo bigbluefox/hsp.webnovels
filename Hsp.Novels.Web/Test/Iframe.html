@@ -1,0 +1,227 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head;
+    any other head content must come *after* these tags -->
+    <meta name="renderer" content="webkit">
+    <title>内联框架 读取测试</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="/Scripts/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/Scripts/bootstrap/css/bootstrap-theme.min.css" rel="stylesheet"/>
+    <!-- 专业图标样式表 -->
+    <link href="/Scripts/bootstrap/css/bootstrap-glyphicons.min.css" rel="stylesheet"/>
+    <link href="/Scripts/bootstrap/css/bootstrap-awesome.min.css" rel="stylesheet"/>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <link href="/Scripts/bootstrap/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
+
+    <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
+    <!--[if lt IE 9]>
+        <script src="/Scripts/bootstrap/js/ie8-responsive-file-warning.js"></script>
+    <![endif]-->
+
+    <script src="/Scripts/bootstrap/js/ie-emulation-modes-warning.js"></script>
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="/Scripts/html5shiv.min.js"></script>
+        <script src="/Scripts/respond.min.js"></script>
+        <script src="/Scripts/html5media.min.js"></script>
+    <![endif]-->
+
+    <style type="text/css">
+        @media screen and (max-width: 768px) {
+            /* 移动平台 */
+        }
+
+        @media screen and (min-width: 768px) {
+            /* PC平台 */
+
+            body { padding-top: 30px; }
+        }
+
+        frame { border: 1px solid red; }
+
+        #iframe {
+            -webkit-overflow-scrolling: touch;
+            overflow: scroll;
+        }
+
+        .row .col-group {
+            padding-left: 0;
+            padding-right: 0;
+        }
+
+    </style>
+
+</head>
+<body>
+
+
+<!-- 主体区域 -->
+<div class="container">
+    <div class="row">
+
+
+        <form class="form-horizontal">
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label" for="txtLinkUrl">目录地址</label>
+                <div class="col-sm-4 col-group">
+                    <input type="text" class="form-control" id="txtLinkUrl" placeholder="目录地址" value="https://www.1909.tv/42195/">
+                </div>
+                <label class="col-sm-2 control-label" for="txtUrlObject">地址对象</label>
+                <div class="col-sm-4 col-group">
+                    <input type="text" class="form-control" id="txtUrlObject" placeholder="地址对象">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label" for="txtContentUrl">内容地址</label>
+                <div class="col-sm-4 col-group">
+                    <input type="text" class="form-control" id="txtContentUrl" placeholder="内容地址" value="http://localhost:10240/">
+                </div>
+                <label class="col-sm-2 control-label" for="txtContentObject">内容对象</label>
+                <div class="col-sm-4 col-group">
+                    <input type="text" class="form-control" id="txtContentObject" value="" placeholder="内容对象">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label" for="txtResult">读取结果</label>
+                <div class="col-sm-10 col-group">
+                    <textarea class="form-control" rows="3" id="txtResult" placeholder="读取结果"></textarea>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10 col-group">
+                    <button type="button" class="btn btn-default" id="btnLinkRead">
+                        <span class="fa fa-chain" aria-hidden="true"></span> 读取地址
+                    </button>
+                    <button type="button" class="btn btn-default" id="Button1">
+                        <span class="fa fa-chain" aria-hidden="true"></span> 获取地址
+                    </button>
+                    <button type="button" class="btn btn-primary" id="btnContentRead">
+                        <span class="fa fa-file-text" aria-hidden="true"></span> 读取内容
+                    </button>
+
+
+                </div>
+            </div>
+
+        </form>
+
+    </div>
+
+
+    <div class="row">
+        <div id="iframe" style="height: 200px; margin: 0 auto;">
+            <iframe id="iframes" name="iframes" src="" width="100%" height="200px" frameborder="0" marginheight="0" marginwidth="0" border="1" scrolling="auto"></iframe>
+        </div>
+
+    </div>
+
+</div>
+
+    <!-- Bootstrap 核心 JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ="
+        crossorigin="anonymous"></script>
+<script>window.jQuery || document.write('<script src="/Scripts/jquery/jquery-1.12.4.min.js"><\/script>')</script>
+<script src="/Scripts/bootstrap/js/bootstrap.min.js"></script>
+<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+<script src="/Scripts/bootstrap/js/ie10-viewport-bug-workaround.js"></script>
+
+<script src="/Scripts/Hsp.Base.js"></script>
+<script src="/Scripts/Hsp.Common.js"></script>
+<script src="/Scripts/Hsp.Modal.js"></script>
+
+<!-- 内容页面 JavaScript及CSS
+================================================== -->
+
+<script type="text/javascript">
+
+    $(function () {
+        var nua = navigator.userAgent;
+        var isAndroid = (nua.indexOf('Mozilla/5.0') > -1 && nua.indexOf('Android ') > -1 && nua.indexOf('AppleWebKit') > -1 && nua.indexOf('Chrome') === -1);
+        if (isAndroid) {
+            $('select.form-control').removeClass('form-control').css('width', '100%');
+        }
+    });
+
+    $(function () {
+
+        // 跨域不能使用这种方法，是网络底层协议确定，Tli，20190723
+        
+        $("#btnLinkRead").click(function () {
+
+            var linkUrl = $("#txtLinkUrl").val();
+
+            if (linkUrl.length == 0) return;
+
+            $("#iframes").attr("src", linkUrl);
+
+
+        });
+
+        $("#btnContentRead").click(function () {
+
+            var linkUrl = $("#txtContentUrl").val();
+
+            if (linkUrl.length == 0) return;
+
+            $("#iframes").attr("src", linkUrl);
+
+
+        });
+
+
+        $("#Button1").click(function () {
+
+            //var linkUrl = $("#txtResult").val();
+
+            //if (linkUrl.length == 0) return;
+
+            //$("#iframes").attr("src", linkUrl);
+
+            var iframeContent = frames["iframes"].window;
+
+            iframeContent = $("#iframes").contents();
+
+
+
+            var iframe = document.getElementsByTagName("iframe")[0];
+           var win = iframe.contentWindow;  // 通过contentWindow获取ifame子页面的window窗体对象。(不允许跨域名访问)            
+            //console.log(win);
+            var iframeDocument = iframe.contentWindow.document; // 本域内可以使用
+            //var input1 = iframeDocument.getElementById("id1");
+            //input1.onblur = function () { alert(11); }
+
+
+            if (window.console) window.console.log(iframeDocument);
+
+
+            //alert(iframeContent);
+
+
+
+            /**
+             * 使用document.domain解决iframe父子模块跨域的问题
+             */
+            var parentDomain = window.location.hostname;
+            console.log("domain",parentDomain); //localhost
+            document.domain = parentDomain;
+
+        });
+
+
+    });
+
+</script>
+
+</body>
+</html>

@@ -636,7 +636,7 @@ function _init() {
     return this.each(function () {
       //if a source is specified
       if (settings.source === "") {
-        if (window.console) {
+        if (window.console && window.console.log) {
           window.console.log("Please specify a source first - boxRefresh()");
         }
         return;

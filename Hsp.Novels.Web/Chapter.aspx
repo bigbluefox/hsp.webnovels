@@ -7,6 +7,7 @@
 
     <link href="/Scripts/bootstrap/css/bootstrap-table.min.css" rel="stylesheet"/>
     <link href="/Scripts/bootstrap/css/bootstrap-validator.css" rel="stylesheet"/>
+    <link href="/Styles/Hsp.Base.css" rel="stylesheet"/>
 
     <style type="text/css">
 
@@ -22,17 +23,17 @@
 
          .error-message{ padding: 0 15px;}
          .alert{ margin-bottom: 0;}
-         .modal-body{ padding-bottom: 0;}
+         /*.modal-body{ padding-bottom: 0;}*/
     </style>
 
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="ContainerContent" Runat="Server">
 
-    <h3 class="page-header">章节管理</h3>
+    <%--<h3 class="page-header">章节管理</h3>--%>
     
     <div class="result-message"></div>
 
-    <ol class="breadcrumb">
+<%--    <ol class="breadcrumb">
         <li>
             <a href="/Default.aspx">站点管理</a>
         </li>
@@ -40,7 +41,31 @@
             <a href="/Novel.aspx?webId=<% = WebId %>&webName=<% = HttpUtility.UrlEncode(WebName)%>"><% = WebName %></a>
         </li>        
         <li class="active"><% = NovelName %></li>
-    </ol>
+    </ol>--%>
+    
+    <div class="page-header" style="display: block;">
+        <h2 class="pull-left">
+            <i class="fa fa-address-card-o"></i>
+            <span>章节管理</span>
+        </h2>
+        <div class="pull-right">
+            <ul class="breadcrumb">
+                <li>
+                    <a href="/Default.aspx"><i class="glyphicon glyphicon-home"></i>首页</a>
+                </li>
+                <li class="separator">
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li>
+                    <a href="/Novel.aspx?webId=<% = WebId %>&webName=<% = HttpUtility.UrlEncode(WebName)%>"><% = WebName %></a>
+                </li>
+                <li class="separator">
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li class="active">章节管理</li>
+            </ul>
+        </div>
+    </div>
 
     <div id="toolbar">
         <div class="form-inline" role="form">
@@ -53,12 +78,21 @@
             <button id="remove" class="btn btn-danger" disabled>
                 <i class="glyphicon glyphicon-remove"></i> 批量删除
             </button>
-            <button id="btnAdd" class="btn btn-primary">
+            <button id="btnAdd" class="btn btn-primary" style="display: none;">
                 <i class="glyphicon icon-folder-plus"></i> 获取章节
+            </button>
+            <button id="btnCrawlContent" class="btn btn-primary">
+                <i class="glyphicon icon-folder-plus"></i> 抓取内容
+            </button>
+             <button id="btnClearContent" class="btn btn-primary">
+                <i class="glyphicon icon-folder-plus"></i> 清空内容
+            </button>           
+            <button id="btnClearNovelData" class="btn btn-primary">
+                <i class="glyphicon icon-folder-plus"></i> 清空数据
             </button>
         </div>
     </div>
-
+    
     <table id="chapter-table" data-mobile-responsive="true" data-toggle="table"></table>
 
 </asp:Content>
@@ -144,6 +178,9 @@
                     <button type="button" class="btn btn-primary" id="btnClear">
                         <span class="glyphicon glyphicon-floppy-saved" aria-hidden="true"></span> 清空
                     </button>
+                    <button type="button" class="btn btn-primary" id="btnLastChapter">
+                        <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span> 末章继续
+                    </button>
                     <button type="button" class="btn btn-primary" id="btnTest">
                         <span class="glyphicon glyphicon-floppy-saved" aria-hidden="true"></span> 测试
                     </button>
@@ -178,7 +215,13 @@
                     <%--SELECT     TOP (200) Id, NovelId, ChapterUrl, NextUrl, Chapter
                     , ChapterIdx, ChapterName, HeadWord, [Content], WordCount, UpdateTime, CreateTime
                     FROM         Chapters--%>
-
+                        <div class="form-group">
+                            <label for="selValidChapter">章节状态</label>
+                            <select class="form-control" id="selValidChapter">
+                              <option value="0">无效</option>
+                              <option value="1" selected="selected">有效</option>
+                            </select>
+                        </div>
                         <div class="form-group">
                             <div>
                                 <div class="error-message"></div>
@@ -199,7 +242,7 @@
                 </div>
             </div>
         </div>
-    </div>    
+    </div>      
 
 </asp:Content>
 <asp:Content ID="Content5" ContentPlaceHolderID="SubScriptContent" Runat="Server">
@@ -209,7 +252,10 @@
 <script src="/Scripts/bootstrap/js/bootstrap-validator.min.js"></script>
 <script src="/Scripts/bootstrap/js/locales/bootstrap-validator-zh-CN.js"></script>
 
+<script src="/Scripts/Hsp.Base.js"></script>
 <script src="/Scripts/Hsp.Formater.js"></script>
+<script src="/Scripts/Hsp.Common.js"></script>
+<script src="/Scripts/Hsp.Modal.js"></script>
 
 <script type="text/javascript">
 
@@ -221,6 +267,7 @@
     var pageNumber = 1, width = 0, isEnd = false;
     var webId = "<% = WebId %>", novelId = "<% = NovelId %>", novelName = "<% = NovelName %>";
     var pageListUrl = "/Handler/ChapterHandler.ashx?OP=LIST";
+    var circleModalId = "circleModal", $circleModal = null; // 圆形进度条窗体及对象
 
     $(function () {
 
@@ -248,13 +295,12 @@
             $('#crawlModel').modal('toggle'); // 弹出添加窗体            
         });
 
-        GetNovelInfo(); // 章节处理参数
+        //GetNovelInfo(); // 章节处理参数
 
         // 测试抓取
         $("#btnTest").unbind('click').bind('click', function () {
 
             //TestCrawl();
-
             RecursiveCrawl(true);
 
         });
@@ -274,6 +320,72 @@
             $("#txtContent").val("");
 
         });
+
+        // 更新读取的末章地址信息，以方便继续文章处理
+        $("#btnLastChapter").unbind('click').bind('click', function () {
+
+            alert("更新读取的末章地址信息，以方便继续文章处理");
+
+        });
+
+        // 抓取小说内容
+        $("#btnCrawlContent").unbind('click').bind('click', function () {
+
+            Hsp.Modal.CircleMessage(circleModalId, "操作进行中...");
+            $("#" + circleModalId).modal("toggle");
+
+            //setTimeout(function () {
+            //    $("#" + circleModalId).modal("hide");
+            //}, 5000); webId
+
+            var url = "/Handler/ChapterHandler.ashx?OP=CRAWLCONTENT&webId=" + webId + "&novelId=" + novelId;
+
+            //$.get("demo_test.asp", function (data, status) { 
+            //    alert("Data: " + data + "\nStatus: " + status);
+            //});
+
+            $.get(url + "&rnd=" + (Math.random() * 10), function (data) {
+                if (data && data.success) {
+                    $("#" + circleModalId).modal("hide");
+                    modals.correct(data.Message);
+                    refreshTable();
+                } else {
+                    modals.error(data.Message);
+                }
+            });
+
+        });
+
+        // 清空小说内容
+        $("#btnClearContent").unbind('click').bind('click', function () {
+
+            if (confirm("您确定要清空小说内容吗？")) {
+                var url = "/Handler/ChapterHandler.ashx?OP=CLEARCONTENT&ID=" + novelId + "&name=" + novelName;
+                $.get(url + "&rnd=" + (Math.random() * 10), function (data) {
+                    if (data && data.success) {
+                        modals.correct(data.Message);
+                    } else {
+                        modals.error(data.Message ? data.Message : "删除章节错误");
+                    }
+                });
+            }
+        });
+
+        // 清空小说数据
+        $("#btnClearNovelData").unbind('click').bind('click', function () {
+
+            if (confirm("您确定要清空小说数据吗？")) {
+                var url = "/Handler/ChapterHandler.ashx?OP=CLEARDATA&ID=" + novelId + "&name=" + novelName;
+                $.get(url + "&rnd=" + (Math.random() * 10), function (data) {
+                    if (data && data.success) {
+                        modals.correct(data.Message);
+                    } else {
+                        modals.error(data.Message ? data.Message : "删除章节错误");
+                    }
+                });
+            }
+        });
+
     });
 
     // 章节标题处理
@@ -451,8 +563,7 @@
             }
         });
     };
-
-
+    
     // 递归抓取内容
     function RecursiveCrawl(test) {
 
@@ -486,6 +597,8 @@
             chapterUrl = novelUrl + chapterUrl;
         }
 
+        //debugger;
+
         $.ajax({
             url: chapterUrl,
             type: "GET",
@@ -498,12 +611,18 @@
                 var html = reg.exec(result)[0];
 
                 var $html = $(contentName, $(html));
-                //console.log($html);
+
+                if (window.console && window.console.log) {
+                    console.log($html);
+                }
 
                 var contents = $("#txtContent").val(), content = "";
 
                 var $header = $(headerName, $(html));
-                //console.log($header);
+
+                if (window.console && window.console.log) {
+                    console.log($header);
+                }
 
                 var txtChapter = $($header).text().trim();
                 txtChapter = ChapterTitle(txtChapter, chapterType);
@@ -660,7 +779,11 @@
             type: 'GET',
             data: { OP: "CRAWL", webId: webId, novelId: novelId },
             success: function (rst) {
-                console.log(rst);
+
+                if (window.console && window.console.log) {
+                    console.log(rst);
+                }
+
                 if (rst) {
                     $("#txtChapterUrl").val(rst.NextUrl);
                     $("#txtContentName").val(rst.ContentName);
@@ -764,6 +887,12 @@
                         visible: false,
                         width: 60
                     }, {
+                        field: 'ChapterIdx',
+                        title: '章节序号',
+                        halign: 'center',
+                        align: 'center',
+                        width: 90
+                    }, {
                         field: 'Chapter',
                         title: '章节名称',
                         halign: 'center',
@@ -778,7 +907,7 @@
                     }, {
                         field: 'WordCount',
                         title: '章节字数',
-                        width: 105,
+                        width: 90,
                         align: 'center'
                     }, {
                         field: 'UpdateTime',
@@ -796,7 +925,7 @@
                         formatter: dateFormatter
                     }, {
                         title: '操作',
-                        width: 60,
+                        width: 75,
                         align: 'center',
                         events: operateEvents,
                         formatter: operateFormatter
@@ -892,6 +1021,7 @@
             $("#txtChapterId").val(row.Id);
             $("#txtChapterName").val(row.Chapter);
             $("#txtChapterContent").val(row.Content);
+            $("#selValidChapter").val(row.ValidChapter);
 
             $("#editModelLabel").html("章节信息修改");
             $('#editModel').modal('toggle'); // 弹出名称修改
@@ -909,7 +1039,7 @@
 
     // 获取内容高度
     function getHeight() {
-        return $(window).height() - $('h1').outerHeight(true) - $(".breadcrumb").outerHeight(true) - 36;
+        return $(window).height() - $(".page-header").outerHeight(true); // $('h1').outerHeight(true) - $(".breadcrumb").outerHeight(true) - 36;
     }
 
     /// <summary>
@@ -961,7 +1091,8 @@
             var params = {
                 id: $("#txtChapterId").val(),
                 chapter: $('#txtChapterName').val(),
-                content: $("#txtChapterContent").val()
+                content: $("#txtChapterContent").val(),
+                validChapter: $("#selValidChapter").val()
             };
 
             $.ajax({

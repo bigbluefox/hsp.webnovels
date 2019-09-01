@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+
+***********************************************************************************************
+website.publishproj
+
+警告: 请勿修改此文件，它将用于 Web 发布过程。
+
+版权所有 (C) Microsoft Corporation。保留所有权利。
+
+***********************************************************************************************
+-->
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>10.0.30319</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{cef60124-4595-45ce-9328-67334e9113c7}</ProjectGuid>
+    <SourceWebPhysicalPath>$(MSBuildThisFileDirectory)</SourceWebPhysicalPath>
+    <SourceWebVirtualPath>/Hsp.Novels.Web</SourceWebVirtualPath>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <SourceWebProject>http://localhost:10240</SourceWebProject>
+    <SourceWebMetabasePath>/IISExpress/7.5/LM/W3SVC/19/ROOT</SourceWebMetabasePath>
+  </PropertyGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <!-- for VS2010 we need to use 10.5 but for VS2012+ we should use VisualStudioVersion -->
+    <WebPublishTargetsVersion Condition=" '$(WebPublishTargetsVersion)' =='' and '$(VisualStudioVersion)' == 10.0 ">10.5</WebPublishTargetsVersion>
+    <WebPublishTargetsVersion Condition=" '$(WebPublishTargetsVersion)'=='' ">$(VisualStudioVersion)</WebPublishTargetsVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(WebPublishTargetsVersion)</VSToolsPath>
+    <_WebPublishTargetsPath Condition=" '$(_WebPublishTargetsPath)'=='' ">$(VSToolsPath)</_WebPublishTargetsPath>
+    <AssemblyFileVersion Condition="'$(AssemblyFileVersion)' == ''">1.0.0.0</AssemblyFileVersion>
+    <AssemblyVersion Condition="'$(AssemblyVersion)' == ''">1.0.0.0</AssemblyVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <AssemblyAttributes Include="AssemblyFileVersion">
+      <Value>$(AssemblyFileVersion)</Value>
+    </AssemblyAttributes>
+    <AssemblyAttributes Include="AssemblyVersion">
+      <Value>$(AssemblyVersion)</Value>
+    </AssemblyAttributes>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Hsp.Novels.Bll\Hsp.Novels.Bll.csproj">
+      <Project>{5F42BB4B-5935-4B6E-91C4-3232FFF3980A}</Project>
+      <Name>Hsp.Novels.Bll</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Hsp.Novels.Common\Hsp.Novels.Common.csproj">
+      <Project>{E17EAA52-938C-4822-B1EF-01026820F3CA}</Project>
+      <Name>Hsp.Novels.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Hsp.Novels.Dal\Hsp.Novels.Dal.csproj">
+      <Project>{DFC92AF7-AFBE-429A-9263-A4B205F33AE9}</Project>
+      <Name>Hsp.Novels.Dal</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Hsp.Novels.DbUtility\Hsp.Novels.DbUtility.csproj">
+      <Project>{49E67536-6BF3-4AE2-885A-7915D6E8C8A5}</Project>
+      <Name>Hsp.Novels.DbUtility</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Hsp.Novels.Model\Hsp.Novels.Model.csproj">
+      <Project>{CEE53DDB-EF50-4524-961F-1A9E8ED62F69}</Project>
+      <Name>Hsp.Novels.Model</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(_WebPublishTargetsPath)\Web\Microsoft.WebSite.Publishing.targets" />
+</Project>

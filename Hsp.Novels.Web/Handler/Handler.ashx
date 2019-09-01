@@ -21,7 +21,6 @@ public class Handler : IHttpHandler {
         
         //url: url, contentName: contentName, headerName: headerName, nextName: nextName
 
-
         string html = "", chapterTitle = "", chapterContent = "", nextUrl = "";
 
         try
@@ -122,7 +121,6 @@ public class Handler : IHttpHandler {
         finally
         {
         }
-
 
         context.Response.Write(chapterUrl + " * " + contentName + " * " + headerName + " * " + nextName + " * " + chapterContent);
     }

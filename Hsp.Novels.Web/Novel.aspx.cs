@@ -20,7 +20,7 @@ public partial class Novel : PageBase
     protected void Page_Load(object sender, EventArgs e)
     {
         WebId = Request.QueryString["webId"] ?? "";
-        WebName = Request.QueryString["webName"] ?? "";
+        WebName = Request.QueryString["webName"] ?? "小说检索";
         if (Page.IsPostBack) return;
     }
 }

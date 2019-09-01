@@ -212,5 +212,39 @@ namespace Hsp.Novels.Common
         }
 
         #endregion
+
+        #region 正则表达式内容替换
+
+        /// <summary>
+        /// 正则表达式内容替换
+        /// </summary>
+        /// <param name="exp"></param>
+        /// <param name="source"></param>
+        /// <param name="target"></param>
+        /// <returns></returns>
+        public static string RegexReplace(string exp, string source, string target)
+        {
+            Regex regex = new Regex(exp, RegexOptions.IgnoreCase | RegexOptions.Multiline);
+
+            MatchCollection matches = regex.Matches(source);
+            if (matches.Count > 0)
+            {
+                foreach (Match item in matches)
+                {
+                    var strReplace = item.Groups[0].ToString();
+                    if (!string.IsNullOrEmpty(strReplace))
+                    {
+                        source = Regex.Replace(source, exp, target);
+                        //source = source.Replace(strReplace, target);
+                    }
+                }
+            }
+
+            source = source.Replace("\n\r\n\r", "\n\r");
+            return source;
+        }
+
+        #endregion
+
     }
 }

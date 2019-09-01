@@ -79,7 +79,11 @@ namespace Hsp.Novels.Model
         [DataMember]
         public string LineSign { get; set; }
 
-
+        /// <summary>
+        /// 正文编码
+        /// </summary>
+        [DataMember]
+        public string Encoding { get; set; }
 
         /// <summary>
         /// 添加时间

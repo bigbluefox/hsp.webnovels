@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Web;
 using System.Web.Script.Serialization;
 using System.Web.SessionState;
@@ -54,9 +55,6 @@ public class WebHandler : IHttpHandler, IRequiresSessionState
             case "BATCHDELETE":
                 BatchDelete(context);
                 break;
-          
-                
-                
 
             default:
                 break;
@@ -123,6 +121,17 @@ public class WebHandler : IHttpHandler, IRequiresSessionState
     {
         var rst = "";
         var strId = context.Request.Params["ID"] ?? ""; // 站点编号
+        /*
+         * Assert（断言）用于检查不应该发生情况，用来帮助开发人员对问题的快速定位。异常处理用于对程序发生异常情况的处理，
+         * 增强程序的健壮性、容错性，减少程序使用中对用户不友好的行为，不让(通常也不必)用户知道发生了什么错误。
+         * 实际开发中，我们通常将Assert与异常混淆，不知道什么时候使用Assert，什么时候使用异常处理。
+         * 或者不用Assert，将一切情况都归为异常。这样一来，就掩盖了问题，当问题发生的时候，很难进行定位，
+         * 而这些问题本该是在开发的时候就解决掉的。同时，也增加了开销(在c#中，debug.Assert()编译成release版本时，
+         * 不会产生任何代码，而try/catch在debug/release版本中都是有代码产生，运行时需要开销)。        
+         */
+
+        Debug.Assert(string.IsNullOrEmpty(strId), "『站点编号』参数为空！");  
+              
         if (string.IsNullOrEmpty(strId)) return;
 
         var i = WebBll.Delete(strId);
@@ -150,6 +159,9 @@ public class WebHandler : IHttpHandler, IRequiresSessionState
     {
         var rst = "";
         var strIds = context.Request.Params["IDs"] ?? "";// 站点编号
+
+        Debug.Assert(string.IsNullOrEmpty(strIds), "『站点编号集合』参数为空！"); 
+        
         if (string.IsNullOrEmpty(strIds)) return;
 
         var i = WebBll.BatchDelete(strIds);
@@ -181,6 +193,7 @@ public class WebHandler : IHttpHandler, IRequiresSessionState
         var strName = context.Request.Params["Name"] ?? ""; // 站点名称
         var strWebUrl = context.Request.Params["WebUrl"] ?? ""; // 站点地址        
         var strContentName = context.Request.Params["ContentName"] ?? ""; // 内容对象
+        var strEncoding = context.Request.Params["Encoding"] ?? ""; // 内容编码
         var strHeaderName = context.Request.Params["HeaderName"] ?? ""; // 标题对象
         var strNextName = context.Request.Params["NextName"] ?? ""; // 地址对象
         var strNextTitle = context.Request.Params["NextTitle"] ?? ""; // 下一章地址对象结束标识
@@ -188,7 +201,9 @@ public class WebHandler : IHttpHandler, IRequiresSessionState
         var urlCombine = int.Parse(context.Request.Params["UrlCombine"] ?? "0"); // 是否有效
         
         // SELECT     TOP (200) Id, Name, WebUrl, Valid, ContentName, HeaderName, NextName, NextTitle, CreateTime
-        //FROM         WebSites
+        //FROM         WebSites Encoding
+        
+        //encoding
         
         try
         {
@@ -197,6 +212,7 @@ public class WebHandler : IHttpHandler, IRequiresSessionState
             model.Name = strName;
             model.WebUrl = strWebUrl;
             model.ContentName = strContentName;
+            model.Encoding = strEncoding;
             model.HeaderName = strHeaderName;
             model.NextName = strNextName;
             model.NextTitle = strNextTitle;

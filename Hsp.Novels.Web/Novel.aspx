@@ -8,22 +8,41 @@
     <link href="/Scripts/bootstrap/css/bootstrap-table.min.css" rel="stylesheet"/>
     <link href="/Scripts/bootstrap/css/bootstrap-validator.css" rel="stylesheet"/>
     <link href="/Scripts/bootstrap/css/bootstrap-datetimepicker.min.css" rel="stylesheet"/>
+    <link href="/Styles/Hsp.Base.css" rel="stylesheet"/>
 
     <style type="text/css"></style>
 
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="ContainerContent" Runat="Server">
 
-    <h3 class="page-header">小说管理</h3>
+     <div class="page-header" style="display: block;">
+        <h2 class="pull-left">
+            <i class="fa fa-address-card-o"></i>
+            <span>小说管理</span>
+        </h2>
+        <div class="pull-right">
+            <ul class="breadcrumb">
+                <li>
+                    <a href="/Default.aspx"><i class="glyphicon glyphicon-home"></i>首页</a>
+                </li>
+                <li class="separator">
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li class="active"><% = WebName %></li>
+            </ul>
+        </div>
+    </div>     
+
+    <%--<h3 class="page-header">小说管理</h3>--%>
 
     <div class="result-message"></div>
 
-    <ol class="breadcrumb">
+<%--    <ol class="breadcrumb">
         <li>
             <a href="/Default.aspx">站点管理</a>
         </li>
         <li class="active"><% = WebName %></li>
-    </ol>
+    </ol>--%>
 
     <div id="toolbar">
         <div class="form-inline" role="form">
@@ -58,6 +77,9 @@
             <button id="btnAdd" class="btn btn-primary">
                 <i class="glyphicon glyphicon-plus"></i> 添加小说
             </button>
+            <button id="btnCrawlContent" class="btn btn-primary">
+                <i class="glyphicon icon-folder-plus"></i> 抓取内容
+            </button>
         </div>
     </div>
 
@@ -78,16 +100,16 @@
 
                     <form>
                         <div class="form-group">
-                            <label for="txtTitle">小说名称<span class="required">*</span></label>
+                            <label for="txtTitle">小说名称&nbsp;<span class="required">*</span></label>
                             <input type="text" class="form-control" id="txtTitle" placeholder="小说名称" required="required">
                         </div>
                         <div class="form-group">
-                            <label for="txtNovelUrl">小说地址<span class="required">*</span></label>
+                            <label for="txtNovelUrl">小说地址&nbsp;<span class="required">*</span></label>
                             <input type="text" class="form-control" id="txtNovelUrl" placeholder="小说地址" required="required">
                         </div>
-                        <div class="form-group">
-                            <label for="txtStartUrl">起始地址</label>
-                            <input type="text" class="form-control" id="txtStartUrl" placeholder="起始地址">
+                        <div class="form-group" style="display: none;">
+                            <label for="txtStartUrl">起始地址&nbsp;<span class="required">*</span></label>
+                            <input type="text" class="form-control" id="txtStartUrl" placeholder="起始地址" required="required">
                         </div>
                         <div class="form-group">
                             <label for="txtAuthor">小说作者</label>
@@ -100,9 +122,9 @@
                         
                         <div class="form-group">
                             <label for="txtChapterChar">章节模板</label>
-                            <input type="text" class="form-control" id="txtChapterChar" placeholder="章节模板，默认“第$2章”">
+                            <input type="text" class="form-control" id="txtChapterChar" placeholder="章节模板，默认“第$2章”，可输入“第$2节”" value="第$2章">
                         </div>
-                        <div class="form-group">
+                        <div class="form-group" style="display: none;">
                             <label for="txtStartChapterIdx">起始序号</label>
                             <input type="text" class="form-control" id="txtStartChapterIdx" placeholder="起始章节序号，默认1">
                         </div>
@@ -110,7 +132,14 @@
                             <label for="txtChapterType">章节处理</label>
                             <input type="text" class="form-control" id="txtChapterType" placeholder="章节处理类型，默认0">
                         </div>                        
-                        
+                        <div class="form-group">
+                            <label for="selStatus">小说状态</label>
+                            <select class="form-control" id="selStatus">
+                              <option value="0" selected="selected">连载中...</option>
+                              <option value="1">已完本</option>
+                              <option value="2">已太监</option>
+                            </select>
+                        </div>                        
                         <div class="form-group">
                             <div>
                                 <div class="error-message"></div>
@@ -143,7 +172,10 @@
 <script src="/Scripts/bootstrap/js/bootstrap-datetimepicker.min.js"></script>
 <script src="/Scripts/bootstrap/js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
 
+<script src="/Scripts/Hsp.Base.js"></script>
 <script src="/Scripts/Hsp.Formater.js"></script>
+<script src="/Scripts/Hsp.Common.js"></script>
+<script src="/Scripts/Hsp.Modal.js"></script>
 
 <script type="text/javascript">
 
@@ -152,11 +184,9 @@
         selections = [],
         key = 'Id';
 
-    //var progressModalId = "progressModal", $progressModal = null; // 进度条窗体及对象定义
-    var circleModalId = "circleModal", $circleModal = null; // 圆形进度条窗体及对象
-
     var pageNumber = 1, width = 0, webId = "<% = WebId %>";
     var pageListUrl = "/Handler/NovelHandler.ashx?OP=LIST";
+    var circleModalId = "circleModal", $circleModal = null; // 圆形进度条窗体及对象
 
     $(function() {
 
@@ -201,6 +231,34 @@
 
         $circleModal = $("#" + circleModalId);
 
+        // 抓取小说内容
+        $("#btnCrawlContent").unbind('click').bind('click', function () {
+
+            Hsp.Modal.CircleMessage(circleModalId, "操作进行中...");
+            $("#" + circleModalId).modal("toggle");
+
+            //setTimeout(function () {
+            //    $("#" + circleModalId).modal("hide");
+            //}, 5000); webId
+
+            var url = "/Handler/ChapterHandler.ashx?OP=CRAWLCONTENT&webId=" + webId + "&novelId=";
+
+            //$.get("demo_test.asp", function (data, status) { 
+            //    alert("Data: " + data + "\nStatus: " + status);
+            //});
+
+            $.get(url + "&rnd=" + (Math.random() * 10), function (data) {
+                if (data && data.success) {
+                    $("#" + circleModalId).modal("hide");
+                    modals.correct(data.Message);
+
+                    refreshTable();
+                } else {
+                    modals.error(data.Message);
+                }
+            });
+
+        });
     });
 
     // 刷新表格数据
@@ -266,6 +324,13 @@
                         align: 'center',
                         visible: false,
                         width: 60
+                    }, {
+                        field: 'WebName',
+                        title: '站点',
+                        halign: 'center',
+                        align: 'left',
+                        visible: webId.length === 0,
+                        formatter: titleFormatter
                     }, {
                         field: 'Title',
                         title: '小说标题',
@@ -423,6 +488,8 @@
             $("#txtStartChapterIdx").val(row.StartChapterIdx);
             $("#txtChapterType").val(row.ChapterType);
 
+            $("#selStatus").val(row.Status);
+
             //SELECT     TOP (200) Id, WebId, Title, NovelUrl, StartUrl, LatestChapter, Author, TypeId
             //, Status, RecentUpdate, ChapterCount, CreateTime, ChapterChar, StartChapterIdx, ChapterType
             //FROM         Novels
@@ -490,7 +557,7 @@
 
     // 获取内容高度
     function getHeight() {
-        return $(window).height() - $('h1').outerHeight(true) - $(".breadcrumb").outerHeight(true) - 36;
+        return $(window).height() - $(".page-header").outerHeight(true); // $('h1').outerHeight(true) - $(".breadcrumb").outerHeight(true) - 36;
     }
 
     /// <summary>
@@ -542,6 +609,8 @@
             $("#txtStartChapterIdx").val("");
             $("#txtChapterType").val("");
 
+            $("#selStatus").val(0);
+
             //SELECT     TOP (200) Id, WebId, Title, NovelUrl, StartUrl, LatestChapter, Author, TypeId
             //, Status, RecentUpdate, ChapterCount, CreateTime, ChapterChar, StartChapterIdx, ChapterType
             //FROM         Novels
@@ -560,6 +629,7 @@
                 ChapterChar: $("#txtChapterChar").val(),
                 StartChapterIdx: $("#txtStartChapterIdx").val(),
                 ChapterType: $('#txtChapterType').val(),
+                Status: $("#selStatus").val()
             };
 
 

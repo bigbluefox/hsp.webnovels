@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Web;
 using System.Web.Script.Serialization;
@@ -76,6 +77,9 @@ public class NovelHandler : IHttpHandler, IRequiresSessionState
     {
         var rst = "";
         var strId = context.Request.Params["ID"] ?? ""; // 小说编号
+
+        Debug.Assert(string.IsNullOrEmpty(strId), "『小说编号』参数为空！"); 
+        
         if (string.IsNullOrEmpty(strId)) return;
 
         var i = NovelBll.Delete(strId);
@@ -103,6 +107,9 @@ public class NovelHandler : IHttpHandler, IRequiresSessionState
     {
         var rst = "";
         var strIds = context.Request.Params["IDs"] ?? ""; // 小说编号
+
+        Debug.Assert(string.IsNullOrEmpty(strIds), "『小说编号集合』参数为空！"); 
+        
         if (string.IsNullOrEmpty(strIds)) return;
 
         var i = NovelBll.BatchDelete(strIds);
@@ -217,7 +224,8 @@ public class NovelHandler : IHttpHandler, IRequiresSessionState
         var strChapterChar = context.Request.Params["ChapterChar"] ?? "第$2章"; // 章节模板，默认“第$2章”
         var strStartChapterIdx = context.Request.Params["StartChapterIdx"] ?? "1"; // 起始章节数字，默认1
         var strChapterType = context.Request.Params["ChapterType"] ?? "0"; // 章节处理类型，默认0
-
+        var strStatus = context.Request.Params["Status"] ?? "0"; // 小说状态，默认0
+        
         //SELECT     TOP (200) Id, WebId, Title, NovelUrl, StartUrl, LatestChapter, Author, TypeId
         //, Status, RecentUpdate, ChapterCount, CreateTime, ChapterChar, StartChapterIdx, ChapterType
         //FROM         Novels
@@ -233,7 +241,8 @@ public class NovelHandler : IHttpHandler, IRequiresSessionState
             model.Author = strAuthor;
             model.ChapterChar = strChapterChar;
             model.StartChapterIdx = string.IsNullOrEmpty(strStartChapterIdx) ? 1 : Int32.Parse(strStartChapterIdx);
-            model.ChapterType = string.IsNullOrEmpty(strChapterType) ? 0 : Int32.Parse(strChapterType); ;
+            model.ChapterType = string.IsNullOrEmpty(strChapterType) ? 0 : Int32.Parse(strChapterType);
+            model.Status = Int32.Parse(strStatus);
 
             var i = 0; // 数据添加/编辑影响行数
             if (string.IsNullOrEmpty(strNovelId))
@@ -299,12 +308,19 @@ public class NovelHandler : IHttpHandler, IRequiresSessionState
 
             var sw = File.CreateText(novelPath); // 创建文本
 
+            sw.WriteLine("");
             sw.WriteLine(model.Title);
-
+            sw.WriteLine("");
+            sw.WriteLine("作者：" + model.Author);
+            sw.WriteLine("");
+            
             foreach (var chapter in list)
             {
-                sw.WriteLine(chapter.Chapter);
+                if (chapter.WordCount <= 200) continue; // 短内容不输出
+                
+                sw.WriteLine(String.IsNullOrEmpty(chapter.Chapter) ? "第" + chapter.ChapterIdx + "章" : chapter.Chapter);
                 sw.WriteLine(chapter.Content);
+                sw.WriteLine("");
             }
 
             sw.Close();
@@ -313,24 +329,14 @@ public class NovelHandler : IHttpHandler, IRequiresSessionState
         }
         catch (Exception)
         {
-            
             throw;
             context.Response.StatusCode = 400; /* Bad Request */
         }
-        
-
-        
-        
-        
-        
         
         //var json = new JavaScriptSerializer().Serialize(model);
         //context.Response.Write(json);
     }
 
-    #endregion   
-    
-    
-    
+    #endregion
     
 }

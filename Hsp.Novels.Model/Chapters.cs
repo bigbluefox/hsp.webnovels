@@ -83,10 +83,12 @@ namespace Hsp.Novels.Model
         /// </summary>
         [DataMember]
         public DateTime CreateTime { get; set; }
-        
 
-
-        /** 下述对象不在表中 **/
+        /// <summary>
+        /// 有效章节：0-否；1-是；
+        /// </summary>
+        [DataMember]
+        public int ValidChapter { get; set; }
 
 
     }

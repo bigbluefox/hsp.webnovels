@@ -1,0 +1,16 @@
+E:\My Documents\GitHub\hsp.webnovels\Hsp.Novels.Dal\bin\Release\Hsp.Novels.Dal.dll
+E:\My Documents\GitHub\hsp.webnovels\Hsp.Novels.Dal\bin\Release\Hsp.Novels.Dal.pdb
+E:\My Documents\GitHub\hsp.webnovels\Hsp.Novels.Dal\bin\Release\Hsp.Novels.Common.dll
+E:\My Documents\GitHub\hsp.webnovels\Hsp.Novels.Dal\bin\Release\Hsp.Novels.DbUtility.dll
+E:\My Documents\GitHub\hsp.webnovels\Hsp.Novels.Dal\bin\Release\Hsp.Novels.Model.dll
+E:\My Documents\GitHub\hsp.webnovels\Hsp.Novels.Dal\bin\Release\Log4net.dll
+E:\My Documents\GitHub\hsp.webnovels\Hsp.Novels.Dal\bin\Release\Microsoft.Practices.EnterpriseLibrary.Data.dll
+E:\My Documents\GitHub\hsp.webnovels\Hsp.Novels.Dal\bin\Release\System.Data.SQLite.dll
+E:\My Documents\GitHub\hsp.webnovels\Hsp.Novels.Dal\bin\Release\Microsoft.Practices.EnterpriseLibrary.Common.dll
+E:\My Documents\GitHub\hsp.webnovels\Hsp.Novels.Dal\bin\Release\Microsoft.Practices.ObjectBuilder.dll
+E:\My Documents\GitHub\hsp.webnovels\Hsp.Novels.Dal\bin\Release\Hsp.Novels.Common.pdb
+E:\My Documents\GitHub\hsp.webnovels\Hsp.Novels.Dal\bin\Release\Hsp.Novels.DbUtility.pdb
+E:\My Documents\GitHub\hsp.webnovels\Hsp.Novels.Dal\bin\Release\Hsp.Novels.Model.pdb
+E:\My Documents\GitHub\hsp.webnovels\Hsp.Novels.Dal\obj\Release\Hsp.Novels.Dal.csprojResolveAssemblyReference.cache
+E:\My Documents\GitHub\hsp.webnovels\Hsp.Novels.Dal\obj\Release\Hsp.Novels.Dal.dll
+E:\My Documents\GitHub\hsp.webnovels\Hsp.Novels.Dal\obj\Release\Hsp.Novels.Dal.pdb

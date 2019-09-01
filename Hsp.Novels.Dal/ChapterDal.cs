@@ -77,6 +77,26 @@ namespace Hsp.Novels.Dal
             return DbHelperSql.Query(strSql);
         }
 
+        /// <summary>
+        /// 根据小说编号及章节地址获取小说章节数据
+        /// </summary>
+        /// <param name="novelId">小说编号</param>
+        /// <param name="chapterUrl">章节地址</param>
+        /// <returns></returns>
+        public static DataSet ChapterData(string novelId, string chapterUrl)
+        {
+            string strSql = string.Format(@"
+            SELECT * FROM dbo.Chapters WHERE (NovelId = '{0}') AND (ChapterUrl = '{1}') ORDER BY ChapterIdx;", novelId, chapterUrl);
+            return DbHelperSql.Query(strSql);
+        }
+
+        public static DataSet ChapterDataByChapterId(string chapterId)
+        {
+            string strSql = string.Format(@"
+            SELECT * FROM dbo.Chapters WHERE (Id = '{0}');", chapterId);
+            return DbHelperSql.Query(strSql);
+        }
+
         #endregion
 
         #region 添加章节数据
@@ -122,9 +142,9 @@ namespace Hsp.Novels.Dal
         public static int Edit(Chapters model)
         {
             string strSql = string.Format
-                (@"UPDATE Chapters SET Chapter='{1}', Content='{2}', WordCount='{3}'
+                (@"UPDATE Chapters SET Chapter='{1}', Content='{2}', WordCount='{3}', ValidChapter = '{4}'
                      WHERE (Id = '{0}');"
-                    , model.Id, model.Chapter, model.Content, model.Content.Length);
+                    , model.Id, model.Chapter, model.Content, model.Content.Length, model.ValidChapter);
             return DbHelperSql.ExecuteSql(strSql);
         }
 
@@ -160,5 +180,39 @@ namespace Hsp.Novels.Dal
         }
 
         #endregion
+
+
+
+        #region 清空小说内容数据
+
+        /// <summary>
+        /// 清空小说内容数据
+        /// </summary>
+        /// <param name="novelId">小说编号</param>
+        /// <returns></returns>
+        public static int ClearContent(string novelId)
+        {
+            string strSql = string.Format(@"UPDATE dbo.Chapters SET Content = '' WHERE (NovelId = '{0}');", novelId);
+            return DbHelperSql.ExecuteSql(strSql);
+        }
+
+        #endregion
+
+        #region 清空小说数据数据
+
+        /// <summary>
+        /// 清空小说数据数据
+        /// </summary>
+        /// <param name="novelId">小说编号</param>
+        /// <returns></returns>
+        public static int ClearData(string novelId)
+        {
+            string strSql = string.Format(@"DELETE FROM dbo.Chapters WHERE (NovelId = '{0}');", novelId);
+            return DbHelperSql.ExecuteSql(strSql);
+        }
+
+        #endregion
+
+
     }
 }

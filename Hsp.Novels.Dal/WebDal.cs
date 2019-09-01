@@ -85,9 +85,10 @@ namespace Hsp.Novels.Dal
         {
             string strSql = string.Format
                 (@"INSERT INTO WebSites
-                    (Name, WebUrl, ContentName, HeaderName, NextName, NextTitle, Valid, UrlCombine) 
-                    VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}');"
-                 , model.Name, model.WebUrl, model.ContentName, model.HeaderName, model.NextName, model.NextTitle, model.Valid, model.UrlCombine);
+                    (Name, WebUrl, ContentName, HeaderName, NextName, NextTitle, Valid, UrlCombine, Encoding) 
+                    VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}');"
+                 , model.Name, model.WebUrl, model.ContentName, model.HeaderName, model.NextName
+                 , model.NextTitle, model.Valid, model.UrlCombine, model.Encoding);
             return DbHelperSql.ExecuteSql(strSql);
         }
 
@@ -103,9 +104,10 @@ namespace Hsp.Novels.Dal
         public static int Edit(WebSites model)
         {
             string strSql = string.Format
-                (@"UPDATE WebSites SET Name='{1}', WebUrl='{2}', ContentName='{3}', HeaderName='{4}', NextName='{5}', NextTitle='{6}'
-                , Valid='{7}', UrlCombine='{8}' WHERE (Id = '{0}');"
-                 , model.Id, model.Name, model.WebUrl, model.ContentName, model.HeaderName, model.NextName, model.NextTitle, model.Valid, model.UrlCombine);
+                (@"UPDATE WebSites SET Name='{1}', WebUrl='{2}', ContentName='{3}', HeaderName='{4}', NextName='{5}'
+                , NextTitle='{6}', Valid='{7}', UrlCombine='{8}', Encoding='{9}' WHERE (Id = '{0}');"
+                 , model.Id, model.Name, model.WebUrl, model.ContentName, model.HeaderName, model.NextName
+                 , model.NextTitle, model.Valid, model.UrlCombine, model.Encoding);
             return DbHelperSql.ExecuteSql(strSql);
         }
 

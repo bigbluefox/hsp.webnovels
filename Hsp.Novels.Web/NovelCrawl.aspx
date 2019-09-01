@@ -13,10 +13,10 @@
     <title>小说内容抓取</title>
 
     <!-- Bootstrap core CSS -->
-    <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/Scripts/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-    <link href="Scripts/bootstrap/css/ie10-viewport-bug-workaround.css" rel="stylesheet"/>
+    <link href="/Scripts/bootstrap/css/ie10-viewport-bug-workaround.css" rel="stylesheet"/>
 
     <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
     <!--[if lt IE 9]><script src="/Scripts/ie8-responsive-file-warning.js"></script><![endif]-->
@@ -24,8 +24,8 @@
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
-        <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-        <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+        <script src="/Scripts/html5shiv.min.js"></script>
+        <script src="/Scripts/respond.min.js"></script>
     <![endif]-->
 
     <style type="text/css">
@@ -52,7 +52,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="#" style="padding: 16px 15px;">Haiyu Studio</a>
+            <a class="navbar-brand" href="#" style="padding: 16px 15px;">Haiyu Studio 前端抓取测试</a>
         </div>
         <div id="navbar" class="collapse navbar-collapse">
             <ul class="nav navbar-nav" style="display: none;">
@@ -165,12 +165,18 @@
                     var html = reg.exec(result)[0];
 
                     var $html = $(contentName, $(html));
-                    console.log($html);
+
+                    if (window.console && window.console.log) {
+                        console.log($html);
+                    }
 
                     var contents = $("#txtContent").val();
 
                     var $header = $(headerName, $(html));
-                    console.log($header);
+
+                    if (window.console && window.console.log) {
+                        console.log($header);
+                    }
 
                     var txtChapter = $($header).text().trim();
 
@@ -188,7 +194,10 @@
                     $("#txtContent").val(contents);
 
                     $nextUrl = $(nextName, $(html));
-                    console.log($nextUrl);
+
+                    if (window.console && window.console.log) {
+                        console.log($nextUrl);
+                    }
 
                     var nextUrl = $nextUrl[0].href;
                     //var nextUrlTitle = $nextNovelWebChapterUrl[0].innerText;
@@ -284,12 +293,18 @@
                 var html = reg.exec(result)[0];
 
                 var $html = $(contentName, $(html));
-                console.log($html);
+
+                if (window.console && window.console.log) {
+                    console.log($html);
+                }
 
                 var contents = $("#txtContent").val();
 
                 var $header = $(headerName, $(html));
-                console.log($header);
+
+                if (window.console && window.console.log) {
+                    console.log($header);
+                }
 
                 var txtChapter = $($header).text().trim();
 
@@ -320,7 +335,10 @@
                 $("#txtContent").val(contents);
 
                 $nextUrl = $(nextName, $(html));
-                console.log($nextUrl);
+
+                if (window.console && window.console.log) {
+                    console.log($nextUrl);
+                }
 
                 var nextUrl = $nextUrl[0].href;
                 var nextUrlTitle = $nextUrl[0].innerText;
@@ -432,7 +450,6 @@
     //$(".a1").load("userInfo.html .b");  
 
 </script>
-
 
 </body>
 </html>

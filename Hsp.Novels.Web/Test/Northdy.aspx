@@ -330,7 +330,10 @@
                 var html = htm.length > 0 ? htm[0] : "";// reg.exec(result)[0];
 
                 var $html = $(contentName, $(html));
-                //console.log($html);
+
+                if (window.console && window.console.log) {
+                    //console.log($html);
+                }
 
                 var contents = $("#txtContent").val();
 

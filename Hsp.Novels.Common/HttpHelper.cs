@@ -368,6 +368,7 @@ namespace Hsp.Novels.Common
         }
 
         #endregion
+
     }
 
     #region public calss
@@ -808,4 +809,7 @@ namespace Hsp.Novels.Common
     }
 
     #endregion
+
+
+
 }

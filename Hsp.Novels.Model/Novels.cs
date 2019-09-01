@@ -55,7 +55,7 @@ namespace Hsp.Novels.Model
         public int TypeId { get; set; }
 
         /// <summary>
-        /// 状态：1-连载，2-完本
+        /// 小说状态：0-连载中；1-已完本；2-已太监；
         /// </summary>
         [DataMember]
         public int Status { get; set; }
@@ -101,10 +101,6 @@ namespace Hsp.Novels.Model
         /// </summary>
         [DataMember]
         public int ChapterType { get; set; }
-
-        //ChapterChar	nvarchar(20)	Checked
-        //StartChapterIdx	int	Checked
-        //ChapterType	int	Checked
 
 
         /** 下述对象不在表中 **/
@@ -174,6 +170,12 @@ namespace Hsp.Novels.Model
         /// </summary>
         [DataMember]
         public string LineSign { get; set; }
+
+        /// <summary>
+        /// 正文编码
+        /// </summary>
+        [DataMember]
+        public string Encoding { get; set; }
         
     }
 }

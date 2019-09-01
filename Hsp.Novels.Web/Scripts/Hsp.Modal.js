@@ -154,7 +154,6 @@ openWin(模态窗体)
 //    }
 //})
 
-
 (function ($, window, document, undefined) {
     window.modals = window.modals || {};
 
@@ -290,7 +289,6 @@ openWin(模态窗体)
             removeModal();
             $(this).removeData("bs.modal");
         });
-
 
         return modal;
     }

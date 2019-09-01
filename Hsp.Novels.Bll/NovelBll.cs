@@ -74,6 +74,23 @@ namespace Hsp.Novels.Bll
             return model;
         }
 
+        /// <summary>
+        /// 获取小说抓取参数列表
+        /// </summary>
+        /// <param name="webId">站点编号</param>
+        /// <param name="novelId">小说编号</param>
+        /// <returns></returns>
+        public List<Model.Novels> CrawlList(string webId, string novelId)
+        {
+            List<Model.Novels> list = null;
+            DataSet ds = NovelDal.CrawlData(webId, novelId);
+            if (ds != null && ds.Tables[0].Rows.Count > 0)
+            {
+                list = new DataTableToList<Model.Novels>(ds.Tables[0]).ToList();
+            }
+            return list;
+        }
+
         #endregion
 
         #region 添加小说信息

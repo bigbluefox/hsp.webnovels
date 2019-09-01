@@ -4,7 +4,7 @@
 
 .required { color: red; }
 
-.breadcrumb { margin-bottom: 0; }
+/*.breadcrumb { margin-bottom: 0; }*/
 
 .checkbox { border: 0; }
 
@@ -27,3 +27,82 @@ tr td, .treeview li, .nav-sidebar li, .navbar-brand {
     text-overflow: ellipsis; /* for IE */
     white-space: nowrap;
 }
+
+
+/*
+ * BootStrap 头部样式表
+ */
+
+.page-header {
+    background: white;
+    border-bottom-color: #dddddd;
+    color: #222222;
+    height: 60px;
+    line-height: 60px;
+    margin: 20px 0 6px;
+    margin-left: 0;
+    margin-right: 0;
+    padding: 20px 20px 20px 20px;
+    *zoom: 1;
+}
+
+h3.page-header {
+    margin: 0 0 5px;
+    padding: 12px 10px;
+}
+
+.page-header h2 span {
+    color: inherit;
+    font-family: "Microsoft YaHei", 微软雅黑, "MicrosoftJhengHei", 华文细黑, STHeiti, MingLiu, Tahoma, Arial, Roboto, "Droid Sans", "Helvetica Neue", "Droid Sans Fallback", "Heiti SC", sans-self;
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    line-height: 1.1;
+}
+
+.page-header .pull-left,
+.page-header .pull-right { margin-top: 0px; }
+
+.page-header h1,
+.page-header h2,
+.page-header h3,
+.page-header h4,
+.page-header h5,
+.page-header h6 {
+    color: #222;
+    margin: 0;
+}
+
+h2 {
+    font-size: 16px;
+    font-weight: 300;
+    line-height: 16px;
+}
+
+h2 i {
+    font-size: 18px !important;
+    font-weight: bold;
+}
+
+.page-header ul.breadcrumb { background-color: #fff !important; }
+
+.page-header .breadcrumb > li + li::before { content: none; }
+
+.pull-right ul.breadcrumb {
+    height: 50px;
+    line-height: 50px;
+    margin-top: -20px;
+    padding: 5px 0;
+}
+
+
+.breadcrumb li a i {
+    font-size: 12px;
+    padding-right: 5px;
+}
+
+.fixed-table-toolbar .bs-bars,
+.fixed-table-toolbar .search,
+.fixed-table-toolbar .columns { margin-top: 2px; }
+
+.separator i { padding: 0 5px; }

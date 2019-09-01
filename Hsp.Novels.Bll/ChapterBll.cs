@@ -55,6 +55,43 @@ namespace Hsp.Novels.Bll
 
         #endregion
 
+        #region 根据小说编号及章节地址获取小说章节数据
+
+        /// <summary>
+        /// 根据小说编号及章节地址获取小说章节数据
+        /// </summary>
+        /// <param name="novelId">小说编号</param>
+        /// <param name="chapterUrl">章节地址</param>
+        /// <returns></returns>
+        public Chapters ChapterModel(string novelId, string chapterUrl)
+        {
+            Chapters model = null;
+            DataSet ds = ChapterDal.ChapterData(novelId, chapterUrl);
+            if (ds != null && ds.Tables[0].Rows.Count > 0)
+            {
+                model = new DataTableToList<Chapters>(ds.Tables[0]).ToList().FirstOrDefault();
+            }
+            return model;
+        }
+
+        /// <summary>
+        /// 根据章节编号获取章节数据
+        /// </summary>
+        /// <param name="chapterId">章节编号</param>
+        /// <returns></returns>
+        public Chapters ChapterModel(string chapterId)
+        {
+            Chapters model = null;
+            DataSet ds = ChapterDal.ChapterDataByChapterId(chapterId);
+            if (ds != null && ds.Tables[0].Rows.Count > 0)
+            {
+                model = new DataTableToList<Chapters>(ds.Tables[0]).ToList().FirstOrDefault();
+            }
+            return model;
+        }
+
+        #endregion
+
         #region 添加章节信息
 
         /// <summary>
@@ -108,5 +145,38 @@ namespace Hsp.Novels.Bll
 
         #endregion
 
+
+
+
+
+
+
+
+        #region 清空小说内容
+
+        /// <summary>
+        /// 清空小说内容
+        /// </summary>
+        /// <param name="novelId">小说编号</param>
+        public int ClearContent(string novelId)
+        {
+            return ChapterDal.ClearContent(novelId);
+        }
+
+        #endregion
+
+
+        #region 清空小说数据
+
+        /// <summary>
+        /// 清空小说数据
+        /// </summary>
+        /// <param name="novelId">小说编号</param>
+        public int ClearData(string novelId)
+        {
+            return ChapterDal.ClearData(novelId);
+        }
+
+        #endregion
     }
 }

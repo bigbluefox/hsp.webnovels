@@ -8,22 +8,46 @@
     <link href="/Scripts/bootstrap/css/bootstrap-table.min.css" rel="stylesheet"/>
     <link href="/Scripts/bootstrap/css/bootstrap-validator.css" rel="stylesheet"/>
     <link href="/Scripts/bootstrap/css/bootstrap-datetimepicker.min.css" rel="stylesheet"/>
+    <link href="/Styles/Hsp.Base.css" rel="stylesheet"/>
 
-    <style type="text/css"></style>
+    <style type="text/css">
+        .page-header{ 
+            /*margin-top: 20px;*/
+        }
+
+    </style>
 
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="ContainerContent" Runat="Server">
 
-    <h3 class="page-header">站点管理</h3>
+     <div class="page-header">
+        <h2 class="pull-left">
+            <i class="fa fa-address-card-o"></i>
+            <span>站点管理</span>
+        </h2>
+        <div class="pull-right">
+            <ul class="breadcrumb">
+                <li>
+                    <a href="/Default.aspx"><i class="glyphicon glyphicon-home"></i>首页</a>
+                </li>
+                <li class="separator">
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li class="active">站点管理</li>
+            </ul>
+        </div>
+    </div>   
+
+    <%--<h3 class="page-header">站点管理</h3>--%>
     
     <div class="result-message"></div>
 
-    <ol class="breadcrumb">
+<%--    <ol class="breadcrumb">
         <li>
             <a href="/Default.aspx">首页</a>
         </li>
         <li class="active">站点管理</li>
-    </ol>
+    </ol>--%>
 
     <div id="toolbar">
         <div class="form-inline" role="form">
@@ -57,6 +81,12 @@
             <button id="btnAdd" class="btn btn-primary">
                 <i class="glyphicon glyphicon-plus"></i> 添加站点
             </button>
+            <button id="btnCrawlContent" class="btn btn-primary">
+                <i class="glyphicon icon-folder-plus"></i> 抓取内容
+            </button>
+            <button id="btnNovelList" class="btn btn-primary">
+                <i class="glyphicon glyphicon-th-list"></i> 小说检索
+            </button>
         </div>
     </div>
 
@@ -76,18 +106,15 @@
                 <div class="modal-body">
                     <form>
                         <div class="form-group">
-                            <label for="txtName">站点名称<span class="required">*</span></label>
+                            <label for="txtName">站点名称&nbsp;<span class="required">*</span></label>
+                            <input type="hidden" id="txtId">
                             <input type="text" class="form-control" id="txtName" placeholder="站点名称..." required="required">
                         </div>
                         <div class="form-group">
-                            <label for="txtUrl">站点地址<span class="required">*</span></label>
+                            <label for="txtUrl">站点地址&nbsp;<span class="required">*</span></label>
                             <input type="text" class="form-control" id="txtUrl" placeholder="站点地址..." required="required">
                         </div>
-                        <div class="form-group">
-                            <label for="txtContentName">内容对象</label>
-                            <input type="text" class="form-control" id="txtContentName" placeholder="内容对象...">
-                        </div>
-                        <div class="form-group">
+                        <div class="form-group" style="display: none;">
                             <label for="txtHeaderName">标题对象</label>
                             <input type="text" class="form-control" id="txtHeaderName" placeholder="标题对象...">
                         </div>
@@ -100,22 +127,30 @@
                             <input type="text" class="form-control" id="txtNextName" placeholder="地址对象...">
                         </div>
                         <div class="form-group">
+                            <label for="txtContentName">内容对象</label>
+                            <input type="text" class="form-control" id="txtContentName" placeholder="内容对象...">
+                        </div>
+                        <div class="form-group">
+                            <label for="txtEncoding">内容编码</label>
+                            <input type="text" class="form-control" id="txtEncoding" placeholder="内容编码，如gbk，utf-8等...">
+                        </div>
+                        <div class="form-group" style="display: none;">
                             <label for="txtNextTitle">结束标识</label>
                             <input type="text" class="form-control" id="txtNextTitle" placeholder="下一章地址对象结束标识...">
                         </div>
                         <div class="form-group">
-                            <label for="txtNextTitle">地址组合</label>
+                            <label for="selUrlCombine">地址组合</label>
                             <select class="form-control" id="selUrlCombine">
-                              <option value="0">无</option>
-                              <option value="1">网站 + 章节地址</option>
-                              <option value="2">小说 + 章节地址</option>
+                              <option value="0">不需要</option>
+                              <option value="1">网站地址 + 章节地址</option>
+                              <option value="2">小说地址 + 章节地址</option>
                             </select>
                         </div>
                         <div class="form-group">
                             <label>是否有效</label>
                             <div class="checkbox">
                                 <label>
-                                    <input type="checkbox" id="chbValid">
+                                    <input type="checkbox" id="chbValid" checked="checked">
                                     站点是否有效
                                 </label>
                             </div>
@@ -137,7 +172,6 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <input type="hidden" id="txtId">
                     <button type="button" class="btn btn-default" data-dismiss="modal">
                         <span class="glyphicon glyphicon-floppy-remove" aria-hidden="true"></span> 关闭
                     </button>
@@ -159,7 +193,10 @@
 <script src="/Scripts/bootstrap/js/bootstrap-datetimepicker.min.js"></script>
 <script src="/Scripts/bootstrap/js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
 
+<script src="/Scripts/Hsp.Base.js"></script>
 <script src="/Scripts/Hsp.Formater.js"></script>
+<script src="/Scripts/Hsp.Common.js"></script>
+<script src="/Scripts/Hsp.Modal.js"></script>
 
 <script type="text/javascript">
 
@@ -170,6 +207,7 @@
 
     var pageNumber = 1, width = 0;
     var pageListUrl = "/Handler/WebHandler.ashx?OP=LIST";
+    var circleModalId = "circleModal", $circleModal = null; // 圆形进度条窗体及对象
 
     $(function() {
 
@@ -208,6 +246,41 @@
             $("#editModelLabel").html("站点信息添加");
             $('#editModel').modal('toggle'); // 弹出添加窗体            
         });
+
+        // 抓取小说内容
+        $("#btnCrawlContent").unbind('click').bind('click', function () {
+
+            Hsp.Modal.CircleMessage(circleModalId, "操作进行中...");
+            $("#" + circleModalId).modal("toggle");
+
+            //setTimeout(function () {
+            //    $("#" + circleModalId).modal("hide");
+            //}, 5000); webId
+
+            var url = "/Handler/ChapterHandler.ashx?OP=CRAWLCONTENT&webId=&novelId=";
+
+            //$.get("demo_test.asp", function (data, status) { 
+            //    alert("Data: " + data + "\nStatus: " + status);
+            //});
+
+            $.get(url + "&rnd=" + (Math.random() * 10), function (data) {
+                if (data && data.success) {
+                    $("#" + circleModalId).modal("hide");
+                    modals.correct(data.Message);
+
+                    refreshTable();
+                } else {
+                    modals.error(data.Message);
+                }
+            });
+
+        });
+
+        // 小说检索
+        $("#btnNovelList").unbind('click').bind('click', function () {
+            Page("Novel.aspx?webId=&webName=小说检索");
+        });
+
     });
 
     // 刷新表格数据
@@ -286,28 +359,35 @@
                         align: 'left',
                         formatter: titleFormatter
                     }, {
+                        field: 'HeaderName',
+                        title: '标题类名',
+                        width: 105,
+                        halign: 'center',
+                        align: 'left',
+                        visible: false
+                    }, {
+                        field: 'NextName',
+                        title: '地址类名',
+                        width: 105,
+                        halign: 'center',
+                        align: 'left',
+                    }, {
                         field: 'ContentName',
                         title: '内容类名',
                         width: 105,
                         halign: 'center',
                         align: 'left',
                     }, {
-                        field: 'HeaderName',
-                        title: '标题类名',
-                        width: 105,
-                        halign: 'center',
-                        align: 'left',
-                    }, {
-                        field: 'NextName',
-                        title: '下一章类名',
-                        width: 105,
-                        halign: 'center',
-                        align: 'left',
+                        field: 'Encoding',
+                        title: '内容编码',
+                        width: 75,
+                        align: 'center'
                     }, {
                         field: 'NextTitle',
                         title: '结束标识',
                         width: 105,
-                        align: 'center'
+                        align: 'center',
+                        visible: false
                     }, {
                         field: 'ChildCount',
                         title: '小说数',
@@ -433,9 +513,10 @@
             $("#txtId").val(row.Id);
             $("#txtName").val(row.Name);
             $("#txtUrl").val(row.WebUrl);
-            $("#txtContentName").val(row.ContentName);
             $("#txtHeaderName").val(row.HeaderName);
             $("#txtNextName").val(row.NextName);
+            $("#txtContentName").val(row.ContentName);
+            $("#txtEncoding").val(row.Encoding);
             $("#txtNextTitle").val(row.NextTitle);
 
             if (row.Valid == 1) {
@@ -463,7 +544,7 @@
 
     // 获取内容高度
     function getHeight() {
-        return $(window).height() - $('h1').outerHeight(true) - $(".breadcrumb").outerHeight(true) - 36;
+        return $(window).height() - $(".page-header").outerHeight(true); // $('h1').outerHeight(true) - $(".breadcrumb").outerHeight(true) - 36;
     }
 
     /// <summary>
@@ -505,17 +586,20 @@
         // 模态窗体关闭事件 
         $('#editModel').on('hidden.bs.modal', function () { // 关闭模态窗体事件
 
-            $("#txtId").val("");
-            $("#txtName").val("");
-            $("#txtUrl").val("");
-            $("#txtContentName").val("");
-            $("#txtHeaderName").val("");
-            $("#txtNextName").val("");
-            $("#txtNextTitle").val("");
+            //$("#txtId").val("");
+            //$("#txtName").val("");
+            //$("#txtUrl").val("");
+            //$("#txtContentName").val("");
+            //$("#txtHeaderName").val("");
+            //$("#txtNextName").val("");
+            //$("#txtNextTitle").val("");
 
-            $("#chbValid").removeAttr("checked");
-            //$("#chbUrlCombine").removeAttr("checked");
-            $("#selUrlCombine").val("0");
+            //$("#chbValid").removeAttr("checked");
+            ////$("#chbUrlCombine").removeAttr("checked");
+            //$("#selUrlCombine").val("0");
+
+            $('#editModel form')[0].reset();
+            $("input[type='hidden']").val("");
         });
 
         //SELECT TOP (200) Id, Name, WebUrl, Valid, ContentName, HeaderName, NextName, NextTitle, CreateTime
@@ -529,6 +613,7 @@
                 name: $("#txtName").val(),
                 webUrl: $('#txtUrl').val(),
                 contentName: $("#txtContentName").val(),
+                encoding: $("#txtEncoding").val(),
                 headerName: $('#txtHeaderName').val(),
                 nextName: $('#txtNextName').val(),
                 nextTitle: $('#txtNextTitle').val(),
